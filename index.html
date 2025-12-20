@@ -412,7 +412,7 @@
 		</form>
 	</div>
 
-	<script>/*
+	<script>
 		// Инициализация Telegram Web App
 		const tg = window.Telegram.WebApp;
 		tg.expand();
@@ -428,7 +428,7 @@
 			`;
 			throw new Error('Not in Telegram');
 		}
-*/
+
 		const user = tg.initDataUnsafe.user;
 		const giveawayId = new URLSearchParams(window.location.search).get('giveaway_id') || '1';
 
