@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Участие в розыгрыше</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+	<style>
+:root {
+		--primary: #3b82f6;
+		--primary-dark: #2563eb;
+		--bg-dark: #0f172a;
+		--card-bg: rgba(30, 41, 59, 0.6);
+		--text-primary: #f8fafc;
+		--text-secondary: #94a3b8;
+		--input-border: rgba(255, 255, 255, 0.1);
+		--danger: #dc3545;
+		--info: #fd7e14;
+		--warning: #ffc107;
+		--success: #198754;
+	}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		@font-face {
+			font-family: 'Standart';
+			src: url('pubg.woff');
+		}
+
+		body {
+			background: var(--bg-dark);
+			color: var(--text-primary);
+			padding: 20px;
+			min-height: 100dvh;
+			font-family: 'Standart', sans-serif;
+		}
+
+		.container {
+			max-width: 400px;
+			margin: 0 auto;
+			height: calc(100dvh - 40px);
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* Новый минималистичный хедер */
+		.header-minimal {
+			margin-bottom: 5px;
+		}
+
+		.badge-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			/*margin-bottom: 5px;*/
+			margin: 10px 0;
+		}
+
+		.giveaway-badge {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+
+		.badge-text {
+			font-size: 0.85rem;
+			color: var(--text-secondary);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.badge-id, .time {
+			color: var(--text-secondary);
+			font-size: 0.9rem;
+			background: var(--card-bg);
+			padding: 2px 8px;
+			border-radius: 6px;
+			border: 1px solid rgba(255, 255, 255, 0.05);
+		}
+
+		.countdown-badge {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 0.85rem;
+		}
+
+		.countdown-badge .label {
+			color: var(--text-secondary);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.main-title {
+			text-align: center;
+		}
+
+		.title-text {
+			font-size: 2.5rem;
+			line-height: 1;
+			color: var(--text-primary);
+			letter-spacing: -0.5px;
+		}
+
+		.subtitle-row {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			align-items: center;
+			margin-inline: 20px;
+			gap: 5px;
+		}
+
+		.subtitle {
+			text-align: center;
+			color: var(--text-secondary);
+			font-size: 0.85rem;
+			letter-spacing: 0.2px;
+			line-height: 1.4;
+			overflow: hidden;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		/* Остальные стили остаются без изменений */
+		.reg-form {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+		}
+
+		.form-group {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+		}
+
+		.form-group label {
+			font-size: 0.9rem;
+			letter-spacing: 0.5px;
+			text-align: center;
+			color: var(--text-secondary);
+		}
+
+		input {
+			width: 100%;
+			padding: 0 16px;
+			height: 67px;
+			border-radius: 20px;
+			font-size: 1.8rem;
+			background: rgba(255, 255, 255, 0.05);
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			color: white;
+			text-align: center;
+			outline: none;
+			font-family: 'Standart';
+		}
+
+		input:focus {
+			border-color: var(--primary);
+		}
+
+		input::placeholder {
+			color: rgba(255, 255, 255, 0.3);
+		}
+
+		#account {
+			letter-spacing: 6px;
+		}
+
+		.captcha-container {
+			background: var(--card-bg);
+			padding: 15px;
+			border-radius: 20px;
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.captcha-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.canvas-container {
+			width: 100%;
+			height: 67px;
+			background: #1a1a1a;
+			border-radius: 20px;
+			overflow: hidden;
+			border: 2px solid #3A4452;
+		}
+
+		#captchaCanvas {
+			width: 100%;
+			height: 100%;
+		}
+
+		.captcha-input-row {
+			display: flex;
+			gap: 15px;
+			width: 100%;
+		}
+
+		#captchaInput {
+			flex: 1;
+			font-size: 2rem;
+			letter-spacing: 4px;
+			text-transform: uppercase;
+		}
+
+		.refresh-btn {
+			width: 67px;
+			height: 67px;
+			border-radius: 20px;
+			background: rgba(255, 255, 255, 0.05);
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			color: white;
+			font-size: 28px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.btn-primary {
+			background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+			color: white;
+			font-size: 18px;
+			border-radius: 20px;
+			border: none;
+			width: 100%;
+			cursor: pointer;
+			height: 67px;
+			margin-top: auto;
+			text-transform: uppercase;
+			letter-spacing: 2;
+			font-weight: 700;
+		}
+
+		.btn-primary:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+
+		.form-groups {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+
+		.footer {
+			text-align: center;
+			margin: 10px 0;
+			color: var(--text-secondary);
+			font-size: 0.65rem;
+			line-height: 1.4;
+			opacity: .5;
+		}
+
+		.footer a {
+			color: var(--primary);
+			text-decoration: none;
+		}
+
+		.full-btn {
+			color: var(--text-secondary);
+			font-size: 0.9rem;
+			background: var(--card-bg);
+			padding: 2px 6px;
+			border-radius: 6px;
+			border: 1px solid rgba(255, 255, 255, 0.05);
+			margin-top: -3px;
+			font-weight: 800;
+		}
+
+		.danger-info {
+			padding: 16px;
+			border-radius: 20px;
+			background: rgba(255, 255, 255, 0.05);
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			color: white;
+			text-align: center;
+		}
+		.sumbit-profile {
+			display: flex;
+			background: rgba(255, 255, 255, 0.1);
+			padding: 3px 6px 3px 3px;
+			justify-content: center;
+			align-items: center;
+			width: fit-content;
+			margin: 0 auto;
+			border-radius: 15px 10px 10px 15px;
+			line-height: 1;
+			gap: 6px;
+		}
+		
+		.profile-img {
+			height: 20px;
+			width: 20px;
+			border-radius: 10px;
+			background-size: cover;
+			background-position: center;
+			background-color: var(--primary); /* Цвет фона если нет аватарки */
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<!-- Новый минималистичный хедер -->
+		<div class="header-minimal">
+			<div class="main-title">
+				<h1 class="title-text">Регистрация</h1>
+			</div>
+			<div class="subtitle-row">
+				<span class="subtitle">1.000.000 ₽ |
+					4 победителя по 250.000 ₽ на каждый сервер</span>
+				<button class="full-btn">ещё</button>
+			</div>
+			<div class="badge-row">
+				<div class="giveaway-badge">
+					<span class="badge-text">Розыгрыш</span>
+					<span class="badge-id">#1288</span>
+				</div>
+
+				<div class="countdown-badge">
+					<span class="label">До конца</span>
+					<span class="time" id="timer">--:--:--</span>
+				</div>
+			</div>
+		</div>
+
+		<form class="reg-form" id="registrationForm">
+			<div class="content">
+				<div class="form-groups">
+					<div class="form-group">
+						<label>Игровой никнейм</label>
+						<input type="text" id="nickname"
+						maxlength="20"
+						placeholder="Ivan_Ivanov"
+						autocomplete="off"
+						required>
+					</div>
+
+					<div class="form-group">
+						<label>Номер банка</label>
+						<input type="text" id="account"
+						minlength="1"
+						maxlength="7"
+						placeholder="123456"
+						pattern="[1-9][0-9]{0,6}"
+						oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 0 && this.value[0] === '0') this.value = this.value.substring(1);"
+						autocomplete="off"
+						required>
+					</div>
+
+					<div class="captcha-container">
+						<div class="captcha-wrapper">
+							<div class="canvas-container">
+								<canvas id="captchaCanvas"></canvas>
+							</div>
+							<div class="captcha-input-row">
+								<input type="text"
+								id="captchaInput"
+								placeholder="КАПЧА"
+								maxlength="6"
+								autocomplete="off"
+								required>
+								<button type="button" class="refresh-btn" id="refreshCaptcha" title="Обновить капчу">
+									<i class="bi bi-arrow-repeat"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				Нажимая кнопку <u>Участвовать</u> вы автоматически принимаете
+				<a href="#" target="_blank">Пользовательское соглашение</a> и
+				<a href="#" target="_blank">Политику конфиденциальности</a>
+			</div>
+			<button type="submit" class="btn-primary" id="submitBtn">
+				<p>Участвовать</p>
+				<p class="sumbit-profile">
+					<img class="profile-img" id="userAvatar" src="song.jpg">
+					<span id="userName">Qupin</span>
+				</p>
+			</button>
+		</form>
+	</div>
+
+	<script>
+		// Инициализация Telegram Web App
+		const tg = window.Telegram.WebApp;
+		tg.expand();
+		tg.enableClosingConfirmation();
+
+		// Проверка, что открыто в Telegram
+		if (!tg.initDataUnsafe?.user) {
+			document.body.innerHTML = `
+			<div style="text-align:center;margin-top:100px">
+			<h2 style="color:var(--danger);margin-bottom:10px">Ошибка</h2>
+			<p class="danger-info">Приложение должно быть открыто внутри Telegram!</p>
+			</div>
+			`;
+			throw new Error('Not in Telegram');
+		}
+		
+		const user = tg.initDataUnsafe.user;
+		const giveawayId = new URLSearchParams(window.location.search).get('giveaway_id') || '1';
+
+		// Функция для обновления данных пользователя в кнопке
+		function updateUserProfile() {
+			const userNameElement = document.getElementById('userName');
+			const userAvatarElement = document.getElementById('userAvatar');
+			
+			// Установка имени пользователя
+			if (user.first_name) {
+				userNameElement.textContent = user.first_name;
+			} else if (user.username) {
+				userNameElement.textContent = user.username;
+			} else {
+				userNameElement.textContent = 'User';
+			}
+			
+			// Установка аватарки пользователя
+			if (user.photo_url) {
+				userAvatarElement.src = user.photo_url;
+				userAvatarElement.style.backgroundImage = `url('${user.photo_url}')`;
+			} else {
+				// Если нет аватарки, можно использовать инициалы или оставить дефолтную
+				userAvatarElement.src = 'song.jpg';
+				userAvatarElement.style.backgroundImage = `url('song.jpg')`;
+			}
+			
+			// Обработчик ошибки загрузки аватарки
+			userAvatarElement.onerror = function() {
+				this.src = 'song.jpg';
+				this.style.backgroundImage = `url('song.jpg')`;
+			};
+		}
+
+		// Конфигурация капчи
+		const CAPTCHA_CONFIG = {
+			length: 6,
+			characters: 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789',
+			width: 300,
+			height: 67,
+			noise: 80,
+			lines: 8,
+			fonts: ['Arial',
+				'Verdana'],
+			colors: ['#3b82f6',
+				'#10b981',
+				'#f59e0b',
+				'#ef4444',
+				'#8b5cf6']
+		};
+
+		let currentCaptcha = '';
+		let canvas, ctx;
+
+		// Инициализация капчи
+		function initCaptcha() {
+			canvas = document.getElementById('captchaCanvas');
+			ctx = canvas.getContext('2d');
+
+			const dpr = window.devicePixelRatio || 1;
+			canvas.width = CAPTCHA_CONFIG.width * dpr;
+			canvas.height = CAPTCHA_CONFIG.height * dpr;
+			ctx.scale(dpr, dpr);
+
+			generateCaptcha();
+
+			document.getElementById('refreshCaptcha').addEventListener('click', () => {
+				generateCaptcha();
+				document.getElementById('captchaInput').value = '';
+			});
+		}
+
+		// Генерация капчи
+		function generateCaptcha() {
+			const width = CAPTCHA_CONFIG.width;
+			const height = CAPTCHA_CONFIG.height;
+
+			ctx.clearRect(0, 0, width, height);
+
+			// Фон
+			ctx.fillStyle = '#1a1a1a';
+			ctx.fillRect(0, 0, width, height);
+
+			// Генерация текста
+			currentCaptcha = '';
+			for (let i = 0; i < CAPTCHA_CONFIG.length; i++) {
+				currentCaptcha += CAPTCHA_CONFIG.characters.charAt(
+					Math.floor(Math.random() * CAPTCHA_CONFIG.characters.length)
+				);
+			}
+
+			// Шум
+			for (let i = 0; i < CAPTCHA_CONFIG.noise; i++) {
+				ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.1})`;
+				ctx.fillRect(
+					Math.random() * width,
+					Math.random() * height,
+					1, 1
+				);
+			}
+
+			// Линии помех
+			for (let i = 0; i < CAPTCHA_CONFIG.lines; i++) {
+				ctx.beginPath();
+				ctx.moveTo(Math.random() * width, Math.random() * height);
+				ctx.lineTo(Math.random() * width, Math.random() * height);
+				ctx.strokeStyle = `rgba(59, 130, 246, ${Math.random() * 0.2})`;
+				ctx.lineWidth = Math.random() * 2;
+				ctx.stroke();
+			}
+
+			// Отображение символов
+			const charWidth = width / (CAPTCHA_CONFIG.length + 1);
+
+			for (let i = 0; i < currentCaptcha.length; i++) {
+				const fontSize = 28 + Math.random() * 8;
+				const fontFamily = CAPTCHA_CONFIG.fonts[Math.floor(Math.random() * CAPTCHA_CONFIG.fonts.length)];
+				const color = CAPTCHA_CONFIG.colors[Math.floor(Math.random() * CAPTCHA_CONFIG.colors.length)];
+				const rotation = (Math.random() - 0.5) * 0.3;
+				const x = charWidth * (i + 0.8);
+				const y = height / 2 + (Math.random() - 0.5) * 10;
+
+				ctx.save();
+				ctx.translate(x, y);
+				ctx.rotate(rotation);
+
+				ctx.font = `bold ${fontSize}px ${fontFamily}`;
+				ctx.fillStyle = color;
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillText(currentCaptcha[i], 0, 0);
+
+				ctx.restore();
+			}
+		}
+
+		// Обработка ввода никнейма
+		const nicknameInput = document.getElementById('nickname');
+
+		nicknameInput.addEventListener('input', function() {
+			let value = this.value;
+
+			// Удаляем все недопустимые символы (оставляем только английские буквы и подчеркивание)
+			value = value.replace(/[^A-Za-z_]/g, '');
+
+			// Разрешаем только одно подчеркивание
+			const parts = value.split('_');
+			if (parts.length > 2) {
+				value = parts[0] + '_' + parts[1];
+			}
+
+			// Проверяем условия для подчеркивания
+			const hasUnderscore = value.includes('_');
+			const underscoreIndex = value.indexOf('_');
+
+			if (hasUnderscore) {
+				// Подчеркивание должно быть минимум после 2 букв
+				if (underscoreIndex < 2) {
+					// Удаляем подчеркивание, если оно раньше 2 букв
+					value = value.replace('_', '');
+				} else {
+					// Форматируем имя и фамилию
+					const [firstName,
+						lastName] = value.split('_');
+					let formatted = '';
+
+					// Форматируем имя
+					if (firstName) {
+						formatted = firstName.charAt(0).toUpperCase() +
+						(firstName.length > 1 ? firstName.slice(1).toLowerCase(): '');
+					}
+
+					// Добавляем фамилию если она есть
+					if (lastName !== undefined) {
+						formatted += '_';
+						if (lastName) {
+							formatted += lastName.charAt(0).toUpperCase() +
+							(lastName.length > 1 ? lastName.slice(1).toLowerCase(): '');
+						}
+					}
+
+					value = formatted;
+				}
+			} else {
+				// Если нет подчеркивания - просто делаем первую букву заглавной, остальные строчные
+				if (value.length > 0) {
+					value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+				}
+			}
+
+			this.value = value;
+		});
+
+		// Валидация формы
+		function validateForm() {
+			const nickname = document.getElementById('nickname').value.trim();
+			const account = document.getElementById('account').value.trim();
+
+			// Проверка никнейма
+			if (!nickname) {
+				alert('❌ Введите никнейм');
+				return false;
+			}
+
+			// Проверка формата никнейма
+			const hasUnderscore = nickname.includes('_');
+
+			if (hasUnderscore) {
+				// Формат с подчеркиванием: минимум 2 буквы до _, минимум 1 после
+				if (!/^[A-Z][a-z]+_[A-Z][a-z]+$/.test(nickname)) {
+					alert('❌ Неверный формат никнейма с фамилией!\nПример: Ivan_Ivanov\n• Первая буква имени заглавная\n• Минимум 2 буквы перед подчеркиванием\n• Первая буква фамилии заглавная\n• Подчеркивание только одно');
+					return false;
+				}
+			} else {
+				// Формат без подчеркивания: просто имя с заглавной буквы
+				if (!/^[A-Z][a-z]*$/.test(nickname)) {
+					alert('❌ Неверный формат никнейма!\nПервая буква должна быть заглавной, остальные строчные');
+					return false;
+				}
+			}
+
+			// Проверка номера счета
+			if (!/^[1-9][0-9]{0,6}$/.test(account)) {
+				alert('❌ Номер счета: 1-7 цифр, первая не 0');
+				return false;
+			}
+
+			// Проверка капчи
+			const captcha = document.getElementById('captchaInput').value.toUpperCase();
+			if (captcha !== currentCaptcha.toUpperCase()) {
+				alert('❌ Неверная капча!');
+				generateCaptcha();
+				document.getElementById('captchaInput').value = '';
+				return false;
+			}
+
+			return true;
+		}
+
+		// Обработка отправки формы
+		document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			if (!validateForm()) {
+				return;
+			}
+
+			const submitBtn = document.getElementById('submitBtn');
+			const originalHTML = submitBtn.innerHTML;
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<p>Отправка...</p>';
+
+			try {
+				// Эмуляция отправки
+				await new Promise(resolve => setTimeout(resolve, 1000));
+				const ticketNumber = Math.floor(Math.random() * 900000) + 100000;
+				// Перенаправление на страницу успеха
+				window.location.href = `success.html?ticket=${ticketNumber}&giveaway=1288`;
+
+			} catch (error) {
+				console.error('Ошибка:', error);
+				alert('⚠️ Ошибка соединения');
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = originalHTML;
+			}
+		});
+
+		// Авто-верхний регистр для капчи
+		document.getElementById('captchaInput').addEventListener('input', function() {
+			this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+		});
+
+		// Таймер
+		function updateTimer() {
+			const timerElement = document.getElementById('timer');
+
+			// Устанавливаем время окончания (например, через 24 часа)
+			const endTime = new Date();
+			endTime.setHours(endTime.getHours() + 24);
+
+			function update() {
+				const now = new Date();
+				const diff = endTime - now;
+
+				if (diff <= 0) {
+					timerElement.textContent = '00:00:00';
+					return;
+				}
+
+				const hours = Math.floor(diff / (1000 * 60 * 60));
+				const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+				timerElement.textContent =
+				`${hours.toString().padStart(2, '0')}:` +
+				`${minutes.toString().padStart(2, '0')}:` +
+				`${seconds.toString().padStart(2, '0')}`;
+			}
+
+			update();
+			setInterval(update, 1000);
+		}
+
+		// Инициализация при загрузке
+		document.addEventListener('DOMContentLoaded', () => {
+			// Обновляем данные пользователя
+			updateUserProfile();
+			
+			// Показываем информацию о пользователе в консоли для отладки
+			console.log('Данные пользователя Telegram:', user);
+			
+			initCaptcha();
+			updateTimer();
+		});
+	</script>
+</body>
+</html>
