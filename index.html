@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,19 +9,19 @@
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 	<style>
-:root {
-		--primary: #3b82f6;
-		--primary-dark: #2563eb;
-		--bg-dark: #0f172a;
-		--card-bg: rgba(30, 41, 59, 0.6);
-		--text-primary: #f8fafc;
-		--text-secondary: #94a3b8;
-		--input-border: rgba(255, 255, 255, 0.1);
-		--danger: #dc3545;
-		--info: #fd7e14;
-		--warning: #ffc107;
-		--success: #198754;
-	}
+		:root {
+			--primary: #3b82f6;
+			--primary-dark: #2563eb;
+			--bg-dark: #0f172a;
+			--card-bg: rgba(30, 41, 59, 0.6);
+			--text-primary: #f8fafc;
+			--text-secondary: #94a3b8;
+			--input-border: rgba(255, 255, 255, 0.1);
+			--danger: #dc3545;
+			--info: #fd7e14;
+			--warning: #ffc107;
+			--success: #198754;
+		}
 
 		* {
 			box-sizing: border-box;
@@ -76,7 +77,8 @@
 			letter-spacing: 1px;
 		}
 
-		.badge-id, .time {
+		.badge-id,
+		.time {
 			color: var(--text-secondary);
 			font-size: 0.9rem;
 			background: var(--card-bg);
@@ -103,9 +105,9 @@
 		}
 
 		.name-title {
-            margin-block: 20px 50px
+			margin-block: 20px
 		}
-		
+
 		.title-text {
 			font-size: 2.5rem;
 			line-height: 1;
@@ -304,7 +306,9 @@
 			border: 2px solid rgba(255, 255, 255, 0.1);
 			color: white;
 			text-align: center;
+			width: fit-content;
 		}
+
 		.sumbit-profile {
 			display: flex;
 			background: rgba(255, 255, 255, 0.1);
@@ -317,17 +321,19 @@
 			line-height: 1;
 			gap: 6px;
 		}
-		
+
 		.profile-img {
 			height: 20px;
 			width: 20px;
 			border-radius: 10px;
 			background-size: cover;
 			background-position: center;
-			background-color: var(--primary); /* Цвет фона если нет аватарки */
+			background-color: var(--primary);
+			/* Цвет фона если нет аватарки */
 		}
 	</style>
 </head>
+
 <body>
 	<div class="container">
 		<!-- Новый минималистичный хедер -->
@@ -335,11 +341,6 @@
 			<div class="main-title">
 				<h1 class="name-title">MalCoin</h1>
 				<h1 class="title-text">Регистрация</h1>
-			</div>
-			<div class="subtitle-row">
-				<span class="subtitle">1.000.000 ₽ |
-					4 победителя по 250.000 ₽ на каждый сервер</span>
-				<button class="full-btn">ещё</button>
 			</div>
 			<div class="badge-row">
 				<div class="giveaway-badge">
@@ -352,6 +353,11 @@
 					<span class="time" id="timer">--:--:--</span>
 				</div>
 			</div>
+			<div class="subtitle-row">
+				<span class="subtitle">1.000.000 ₽ |
+					4 победителя по 250.000 ₽ на каждый сервер</span>
+				<button class="full-btn">ещё</button>
+			</div>
 		</div>
 
 		<form class="reg-form" id="registrationForm">
@@ -359,23 +365,16 @@
 				<div class="form-groups">
 					<div class="form-group">
 						<label>Игровой никнейм</label>
-						<input type="text" id="nickname"
-						maxlength="20"
-						placeholder="Ivan_Ivanov"
-						autocomplete="off"
-						required>
+						<input type="text" id="nickname" maxlength="20" placeholder="Ivan_Ivanov" autocomplete="off"
+							required>
 					</div>
 
 					<div class="form-group">
 						<label>Номер банка</label>
-						<input type="text" id="account"
-						minlength="1"
-						maxlength="7"
-						placeholder="123456"
-						pattern="[1-9][0-9]{0,6}"
-						oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 0 && this.value[0] === '0') this.value = this.value.substring(1);"
-						autocomplete="off"
-						required>
+						<input type="text" id="account" minlength="1" maxlength="7" placeholder="123456"
+							pattern="[1-9][0-9]{0,6}"
+							oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 0 && this.value[0] === '0') this.value = this.value.substring(1);"
+							autocomplete="off" required>
 					</div>
 
 					<div class="captcha-container">
@@ -384,12 +383,8 @@
 								<canvas id="captchaCanvas"></canvas>
 							</div>
 							<div class="captcha-input-row">
-								<input type="text"
-								id="captchaInput"
-								placeholder="КАПЧА"
-								maxlength="6"
-								autocomplete="off"
-								required>
+								<input type="text" id="captchaInput" placeholder="КАПЧА" maxlength="6"
+									autocomplete="off" required>
 								<button type="button" class="refresh-btn" id="refreshCaptcha" title="Обновить капчу">
 									<i class="bi bi-arrow-repeat"></i>
 								</button>
@@ -429,7 +424,7 @@
 			`;
 			throw new Error('Not in Telegram');
 		}
-		
+
 		const user = tg.initDataUnsafe.user;
 		const giveawayId = new URLSearchParams(window.location.search).get('giveaway_id') || '1';
 
@@ -437,7 +432,7 @@
 		function updateUserProfile() {
 			const userNameElement = document.getElementById('userName');
 			const userAvatarElement = document.getElementById('userAvatar');
-			
+
 			// Установка имени пользователя
 			if (user.first_name) {
 				userNameElement.textContent = user.first_name;
@@ -446,7 +441,7 @@
 			} else {
 				userNameElement.textContent = 'User';
 			}
-			
+
 			// Установка аватарки пользователя
 			if (user.photo_url) {
 				userAvatarElement.src = user.photo_url;
@@ -456,9 +451,9 @@
 				userAvatarElement.src = 'song.jpg';
 				userAvatarElement.style.backgroundImage = `url('song.jpg')`;
 			}
-			
+
 			// Обработчик ошибки загрузки аватарки
-			userAvatarElement.onerror = function() {
+			userAvatarElement.onerror = function () {
 				this.src = 'song.jpg';
 				this.style.backgroundImage = `url('song.jpg')`;
 			};
@@ -569,7 +564,7 @@
 		// Обработка ввода никнейма
 		const nicknameInput = document.getElementById('nickname');
 
-		nicknameInput.addEventListener('input', function() {
+		nicknameInput.addEventListener('input', function () {
 			let value = this.value;
 
 			// Удаляем все недопустимые символы (оставляем только английские буквы и подчеркивание)
@@ -599,7 +594,7 @@
 					// Форматируем имя
 					if (firstName) {
 						formatted = firstName.charAt(0).toUpperCase() +
-						(firstName.length > 1 ? firstName.slice(1).toLowerCase(): '');
+							(firstName.length > 1 ? firstName.slice(1).toLowerCase() : '');
 					}
 
 					// Добавляем фамилию если она есть
@@ -607,7 +602,7 @@
 						formatted += '_';
 						if (lastName) {
 							formatted += lastName.charAt(0).toUpperCase() +
-							(lastName.length > 1 ? lastName.slice(1).toLowerCase(): '');
+								(lastName.length > 1 ? lastName.slice(1).toLowerCase() : '');
 						}
 					}
 
@@ -699,7 +694,7 @@
 		});
 
 		// Авто-верхний регистр для капчи
-		document.getElementById('captchaInput').addEventListener('input', function() {
+		document.getElementById('captchaInput').addEventListener('input', function () {
 			this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
 		});
 
@@ -725,9 +720,9 @@
 				const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
 				timerElement.textContent =
-				`${hours.toString().padStart(2, '0')}:` +
-				`${minutes.toString().padStart(2, '0')}:` +
-				`${seconds.toString().padStart(2, '0')}`;
+					`${hours.toString().padStart(2, '0')}:` +
+					`${minutes.toString().padStart(2, '0')}:` +
+					`${seconds.toString().padStart(2, '0')}`;
 			}
 
 			update();
@@ -738,13 +733,14 @@
 		document.addEventListener('DOMContentLoaded', () => {
 			// Обновляем данные пользователя
 			updateUserProfile();
-			
+
 			// Показываем информацию о пользователе в консоли для отладки
 			console.log('Данные пользователя Telegram:', user);
-			
+
 			initCaptcha();
 			updateTimer();
 		});
 	</script>
 </body>
+
 </html>
