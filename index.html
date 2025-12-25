@@ -122,7 +122,7 @@
 			flex-wrap: nowrap;
 			align-items: center;
 			margin-inline: 20px;
-            margin-block: 5px 10px;
+			margin-block: 5px 10px;
 			gap: 5px;
 		}
 
@@ -325,14 +325,16 @@
 		}
 
 		.only-telegram {
-			padding: 5px;
+			gap: 20px;
+			padding: 10px 20px;
 			background: #1c2235;
-			border-radius: 5px;
+			border-radius: 14px;
 			width: fit-content;
-    		margin: 100px auto;
+			margin: 100px auto;
 			display: flex;
 			flex-direction: row;
 			align-items: center;
+			max-width: 400px;
 		}
 	</style>
 </head>
@@ -356,7 +358,7 @@
 			<div class="main-title">
 				<h1 class="title-text">Регистрация</h1>
 			</div>
-			
+
 			<div class="subtitle-row">
 				<span class="subtitle">1.000.000 ₽ |
 					4 победителя по 250.000 ₽ на каждый сервер</span>
@@ -422,9 +424,9 @@
 		if (!tg.initDataUnsafe?.user) {
 			document.body.innerHTML = `
 			<div class="only-telegram">
-				<i class="bi bi-x-square"></i>
+				<i class="bi bi-x-circle" style="font-size:35px;line-height:0.9;color:var(--danger)"></i>
 				<div>
-					<h2 style="color:var(--danger);margin-bottom:10px">Ошибка</h2>
+					<h2 style="color:var(--danger);font-weight:500">Ошибка</h2>
 					<p class="danger-info">Приложение должно быть открыто внутри Telegram!</p>
 				</div>
 			</div>
