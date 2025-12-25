@@ -334,6 +334,12 @@
 			background-color: var(--primary);
 			/* Цвет фона если нет аватарки */
 		}
+
+		.only-telegram {
+			padding: 5px;
+			background: #1c2235;
+			border-radius: 5px;
+		}
 	</style>
 </head>
 
@@ -421,9 +427,12 @@
 		// Проверка, что открыто в Telegram
 		if (!tg.initDataUnsafe?.user) {
 			document.body.innerHTML = `
-			<div style="text-align:center;margin-top:100px">
-			<h2 style="color:var(--danger);margin-bottom:10px">Ошибка</h2>
-			<p class="danger-info">Приложение должно быть открыто внутри Telegram!</p>
+			<div class="only-telegram">
+				<i class="bi bi-x-square"></i>
+				<div>
+					<h2 style="color:var(--danger);margin-bottom:10px">Ошибка</h2>
+					<p class="danger-info">Приложение должно быть открыто внутри Telegram!</p>
+				</div>
 			</div>
 			`;
 			throw new Error('Not in Telegram');
