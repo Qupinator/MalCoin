@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Регистрация на розыгрыш</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Inter', system-ui, -apple-system, sans-serif;
+			-webkit-tap-highlight-color: transparent;
+			font-family: 'Standart';
+		}
+
+		*:root {
+			--primary: #4B67FE;
+			--primary-dark: #111834;
+			--bg-dark: #0D0E12;
+			--card-bg: rgba(30, 41, 59, 0.6);
+			--text-primary: #f8fafc;
+			--text-secondary: #94a3b8;
+			--input-border: rgba(255, 255, 255, 0.1);
+			--danger: #ff253b;
+			--info: #fd7e14;
+			--warning: #ffc107;
+			--success: #198754;
+			--body-bg: linear-gradient(to bottom, #111834, #0D0E12);
+		}
+
+		html, body {
+			height: 100%;
+			max-height: 100vh;
+			max-width: 400px;
+			overflow: hidden;
+		}
+
+		body {
+			color: var(--text-primary);
+			display: flex;
+			flex-direction: column;
+			background: var(--body-bg);
+		}
+
+		header {
+			width: 100%;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-shrink: 0;
+			gap: 10px;
+		}
+
+		@font-face {
+			font-family: 'Standart';
+			src: url('stealfont.woff');
+		}
+
+		.tg-user-container {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 5px;
+			flex: 1;
+			min-width: 0;
+		}
+
+		.tg-profile-image {
+			width: 50px;
+			height: 50px;
+			border-radius: 20px;
+			overflow: hidden;
+			border: 1px solid var(--input-border);
+		}
+
+		.tg-profile-names {
+			display: flex;
+			flex-direction: column;
+			font-size: 16px;
+			flex: 1;
+			min-width: 0;
+		}
+
+		.tg-name {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.tg-username {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			font-size: 13px;
+			padding-right: 10px;
+			color: var(--primary);
+			text-decoration: none;
+			background: var(--primary-dark);
+			width: fit-content;
+			border-radius: 8px;
+			gap: 5px;
+			border: 1px solid var(--primary);
+			max-width: 130px;
+		}
+
+		#username {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			min-width: 0;
+			line-height: 1;
+			margin-bottom: -1px;
+		}
+
+		.user-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 17px;
+			height: 17px;
+			border-radius: 7px;
+			background: var(--primary);
+			color: var(--text-primary);
+			line-height: 1;
+			font-size: 15px;
+			flex-shrink: 0;
+		}
+
+		.support {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding: 5px;
+			background: var(--primary);
+			color: #fff;
+			text-decoration: none;
+			border-radius: 10px;
+			gap: 5px;
+			padding-right: 10px;
+			letter-spacing: 1.1;
+		}
+
+		.icon {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 30px;
+			width: 30px;
+			background: var(--input-border);
+			border-radius: 8px;
+		}
+
+		.content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			padding: 15px;
+			min-height: 0;
+		}
+
+		.container {
+			flex: 1;
+			margin-bottom: 15px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.footer, .head {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+		}
+
+		.btn {
+			flex-shrink: 0;
+		}
+
+		.btn button {
+			width: 100%;
+			height: 60px;
+			background: var(--primary);
+			color: white;
+			border: none;
+			border-radius: 12px;
+			font-size: 20px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.3s;
+			letter-spacing: 1.1;
+		}
+
+		.btn button:hover {
+			background: var(--primary-dark);
+		}
+
+		.items {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			gap: 15px;
+		}
+
+		.item {
+			width: 100%;
+			height: 60px;
+			background: var(--primary-dark);
+			border-radius: 12px;
+			padding: 5px;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.item-icon {
+			flex-shrink: 0;
+			height: 50px;
+			width: 50px;
+			background: var(--bg-dark);
+			border-radius: 10px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 40px;
+			color: var(--primary);
+		}
+
+		.item-info {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.item-title {
+			color: var(--primary);
+			display: flex;
+			flex-wrap: nowrap;
+			gap: 6px;
+			align-items: center;
+		}
+
+		.footer-text {
+			text-align: center;
+			color: var(--text-secondary);
+			font-size: 0.65rem;
+			line-height: 1.4;
+			opacity: .5;
+		}
+
+		.footer-text a {
+			color: var(--primary);
+			text-decoration: none;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 25px;
+		}
+
+		.input-container {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+		}
+
+		.input-title {
+			color: var(--primary);
+			text-align: center;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			flex-shrink: 0;
+			background: var(--bg-dark);
+			border: 1px solid var(--primary);
+			border-radius: 12px;
+			overflow: hidden;
+		}
+
+		.input .item-icon {
+			border: none;
+			height: 60px;
+			width: 60px;
+			border-radius: 10px;
+			background: var(--primary);
+			color: var(--text-primary);
+		}
+
+		.input-container input {
+			height: 100%;
+			width: 100%;
+			padding: 10px;
+			background: transparent;
+			border: none;
+			outline: none;
+			color: var(--text-primary);
+			font-size: 25px;
+			letter-spacing: 1.5;
+		}
+
+		.details-btn {
+			border: none;
+			border-radius: 10px;
+			padding: 4px 8px;
+			background: var(--primary);
+			display: flex;
+			align-items: center;
+			flex-direction: row;
+			line-height: 1;
+			gap: 5px;
+			cursor: pointer;
+			color: white;
+			font-size: 12px;
+			font-family: inherit;
+		}
+
+		.none {
+			color: red;
+		}
+
+		.toast {
+			position: fixed;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%) translateY(100px);
+			background: var(--success);
+			color: white;
+			padding: 12px 24px;
+			border-radius: 10px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+			z-index: 1000;
+			transition: transform 0.3s ease;
+			font-size: 14px;
+		}
+
+		.toast.show {
+			transform: translateX(-50%) translateY(0);
+		}
+
+		.toast.error {
+			background: var(--danger);
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.8);
+			z-index: 1001;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+		}
+
+		.modal.show {
+			display: flex;
+		}
+
+		.modal-content {
+			background: var(--card-bg);
+			border-radius: 15px;
+			padding: 20px;
+			max-width: 350px;
+			width: 100%;
+			border: 1px solid var(--primary);
+			backdrop-filter: blur(10px);
+			animation: modalAppear 0.3s ease;
+		}
+
+		@keyframes modalAppear {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.modal-title {
+			color: var(--primary);
+			font-size: 18px;
+		}
+
+		.close-modal {
+			background: none;
+			border: none;
+			color: var(--text-secondary);
+			font-size: 24px;
+			cursor: pointer;
+			line-height: 1;
+			padding: 0;
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal-body {
+			color: var(--text-primary);
+			line-height: 1.5;
+			font-size: 14px;
+		}
+
+		.modal-body ul {
+			margin-left: 20px;
+			margin-top: 10px;
+			margin-bottom: 15px;
+		}
+
+		.modal-body li {
+			margin-bottom: 5px;
+		}
+
+		@keyframes pulse {
+			0% { transform: scale(1); }
+			50% { transform: scale(1.05); }
+			100% { transform: scale(1); }
+		}
+
+		.btn button:active {
+			animation: pulse 0.3s ease;
+		}
+
+		.only-telegram {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			padding: 20px;
+			text-align: center;
+			gap: 15px;
+		}
+
+		.danger-info {
+			color: var(--text-secondary);
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="tg-user-container">
+			<img id="userAvatar" src="non-pic.png" class="tg-profile-image" alt="Profile Picture">
+			<div class="tg-profile-names">
+				<span class="tg-name" id="FirstName"><i>Empty</i></span>
+				<a href="#" class="tg-username" id="usernameLink">
+					<span class="user-icon">
+						<i class="bi bi-at"></i>
+					</span>
+					<span id="username"><i class="none">none</i></span>
+				</a>
+			</div>
+		</div>
+		<a href="https://t.me/qupinator" class="support" target="_blank">
+			<span class="icon"><i class="bi bi-info-lg"></i></span>
+			Поддержка
+		</a>
+	</header>
+
+	<form class="content" id="registrationForm">
+		<div class="container">
+			<div class="head">
+				<h1>Регистрация на розыгрыш</h1>
+				<div class="input-container">
+					<span class="input-title">Игровой никнейм</span>
+					<div class="input">
+						<div class="item-icon">
+							<i class="bi bi-person"></i>
+						</div>
+						<input type="text" placeholder="Ivan_Ivanov" id="nickname" maxlength="20" autocomplete="off" required>
+					</div>
+				</div>
+				<div class="input-container">
+					<span class="input-title">Номер банка</span>
+					<div class="input">
+						<div class="item-icon">
+							<i style="font-size:30px" class="bi bi-bank"></i>
+						</div>
+						<input type="text" id="account" minlength="1" maxlength="7" placeholder="1234567"
+						pattern="[1-9][0-9]{0,6}"
+						oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 0 && this.value[0] === '0') this.value = this.value.substring(1);"
+						autocomplete="off" required>
+					</div>
+				</div>
+				<div
+					style="height: 100px"
+					id="captcha-container"
+					class="smart-captcha"
+					data-sitekey="ysc1_OtHNu2r206J14VG8HchZ5wsOCBMsKcKPN1EhKDHsd4b15af8">
+				</div>
+			</div>
+
+			<div class="footer">
+				<div class="item">
+					<div class="item-icon">
+						<i class="bi bi-gift"></i>
+					</div>
+					<div class="item-info">
+						<span class="item-title">Приз 
+							<button type="button" class="details-btn" id="prizeDetailsBtn">
+								Детали <i class="bi bi-chevron-down"></i>
+							</button>
+						</span>
+						<span class="item-subtitle" id="giveaway-price">120 миллиардов долларов</span>
+					</div>
+				</div>
+				<div class="items">
+					<div class="item">
+						<div class="item-icon">
+							<i class="bi bi-hash"></i>
+						</div>
+						<div class="item-info">
+							<span class="item-title">Розыгрыш</span>
+							<span class="item-subtitle" id="giveaway-id">#1228</span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="item-icon">
+							<i style="font-size:30px" class="bi bi-clock"></i>
+						</div>
+						<div class="item-info">
+							<span class="item-title">До конца</span>
+							<span class="item-subtitle" id="timer">--:--:--</span>
+						</div>
+					</div>
+				</div>
+				<div class="footer-text">
+					Нажимая кнопку <u>Участвовать</u> вы автоматически принимаете
+					<a href="#" target="_blank">Пользовательское соглашение</a> и
+					<a href="#" target="_blank">Политику конфиденциальности</a>
+				</div>
+			</div>
+		</div>
+		<div class="btn">
+			<button type="submit" id="submitBtn">Участвовать</button>
+		</div>
+	</form>
+
+	<!-- Модальное окно с деталями приза -->
+	<div class="modal" id="prizeModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Детали розыгрыша</h3>
+				<button class="close-modal" id="closeModal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<p><strong>Название розыгрыша:</strong> Mega Giveaway #1228</p>
+				<p><strong>Главный приз:</strong> 120 миллиардов долларов</p>
+				<p><strong>Дополнительные призы:</strong></p>
+				<ul>
+					<li>1 место: 120 миллиардов долларов</li>
+					<li>2-3 место: 10 миллиардов долларов</li>
+					<li>4-10 место: 1 миллиард долларов</li>
+					<li>11-100 место: 100 миллионов долларов</li>
+				</ul>
+				<p><strong>Условия участия:</strong></p>
+				<p>1. Заполнить форму регистрации</p>
+				<p>2. Иметь действующий банковский счет</p>
+				<p>3. Быть зарегистрированным пользователем Telegram</p>
+				<p><strong>Дата розыгрыша:</strong> 15 января 2024 года</p>
+				<p><strong>Способ определения победителей:</strong> Случайный выбор с использованием блокчейн-технологии</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Уведомление -->
+	<div class="toast" id="toast"></div>
+
+	<script>
+		// Инициализация Telegram Web App
+		const tg = window.Telegram.WebApp;
+		
+		// Проверка, что открыто в Telegram
+		if (typeof Telegram === 'undefined' || !tg || !tg.initDataUnsafe?.user) {
+			document.body.innerHTML = `
+				<div class="only-telegram">
+					<i class="bi bi-x-circle" style="font-size:35px;line-height:0.9;color:var(--danger)"></i>
+					<div>
+						<h2 style="color:var(--danger);font-weight:500">Ошибка</h2>
+						<p class="danger-info">Приложение должно быть открыто внутри Telegram!</p>
+					</div>
+				</div>
+			`;
+			throw new Error('Not in Telegram');
+		}
+		
+		tg.expand();
+		tg.enableClosingConfirmation();
+		
+		const user = tg.initDataUnsafe.user;
+		const giveawayId = new URLSearchParams(window.location.search).get('giveaway_id') || '1228';
+
+		// Функция для отображения уведомлений
+		function showToast(message, isError = false) {
+			const toast = document.getElementById('toast');
+			toast.textContent = message;
+			toast.className = 'toast' + (isError ? ' error' : '') + ' show';
+			
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		}
+
+		// Функция для обновления данных пользователя
+		function updateUserProfile() {
+			const firstNameElement = document.getElementById('FirstName');
+			const userAvatarElement = document.getElementById('userAvatar');
+			const usernameElement = document.getElementById('username');
+			const usernameLink = document.getElementById('usernameLink');
+			
+			// Установка имени пользователя
+			if (user.first_name) {
+				firstNameElement.textContent = user.first_name;
+			} else if (user.username) {
+				firstNameElement.textContent = user.username;
+			} else {
+				firstNameElement.textContent = 'User';
+			}
+
+			// Установка username
+			if (user.username) {
+				usernameElement.textContent = user.username;
+				usernameElement.classList.remove('none');
+				usernameLink.href = `https://t.me/${user.username}`;
+				usernameLink.target = "_blank";
+			} else {
+				usernameElement.innerHTML = '<i class="none">none</i>';
+				usernameLink.href = "#";
+				usernameLink.onclick = (e) => {
+					e.preventDefault();
+					showToast("У пользователя нет username", true);
+				};
+			}
+
+			// Установка аватарки пользователя
+			if (user.photo_url) {
+				userAvatarElement.src = user.photo_url;
+			} else {
+				userAvatarElement.src = 'song.jpg';
+			}
+
+			// Обработчик ошибки загрузки аватарки
+			userAvatarElement.onerror = function () {
+				this.src = 'song.jpg';
+			};
+		}
+
+		// Обработка ввода никнейма
+		const nicknameInput = document.getElementById('nickname');
+
+		nicknameInput.addEventListener('input', function () {
+			let value = this.value;
+			value = value.replace(/[^A-Za-z_]/g, '');
+			const parts = value.split('_');
+			if (parts.length > 2) {
+				value = parts[0] + '_' + parts[1];
+			}
+
+			const hasUnderscore = value.includes('_');
+			const underscoreIndex = value.indexOf('_');
+
+			if (hasUnderscore) {
+				if (underscoreIndex < 2) {
+					value = value.replace('_', '');
+				} else {
+					const [firstName, lastName] = value.split('_');
+					let formatted = '';
+					if (firstName) {
+						formatted = firstName.charAt(0).toUpperCase() +
+						(firstName.length > 1 ? firstName.slice(1).toLowerCase() : '');
+					}
+					if (lastName !== undefined) {
+						formatted += '_';
+						if (lastName) {
+							formatted += lastName.charAt(0).toUpperCase() +
+							(lastName.length > 1 ? lastName.slice(1).toLowerCase() : '');
+						}
+					}
+					value = formatted;
+				}
+			} else {
+				if (value.length > 0) {
+					value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+				}
+			}
+			this.value = value;
+		});
+
+		// Валидация формы
+		function validateForm() {
+			const nickname = document.getElementById('nickname').value.trim();
+			const account = document.getElementById('account').value.trim();
+
+			if (!nickname) {
+				showToast('❌ Введите никнейм', true);
+				return false;
+			}
+
+			const hasUnderscore = nickname.includes('_');
+			if (hasUnderscore) {
+				if (!/^[A-Z][a-z]+_[A-Z][a-z]+$/.test(nickname)) {
+					showToast('❌ Неверный формат никнейма! Пример: Ivan_Ivanov', true);
+					return false;
+				}
+			} else {
+				if (!/^[A-Z][a-z]*$/.test(nickname)) {
+					showToast('❌ Неверный формат никнейма! Первая буква должна быть заглавной', true);
+					return false;
+				}
+			}
+
+			if (!/^[1-9][0-9]{0,6}$/.test(account)) {
+				showToast('❌ Номер счета: 1-7 цифр, первая не 0', true);
+				return false;
+			}
+
+			return true;
+		}
+
+		// Обработка отправки формы
+		document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			if (!validateForm()) {
+				return;
+			}
+
+			const submitBtn = document.getElementById('submitBtn');
+			const originalText = submitBtn.textContent;
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'Отправка...';
+
+			try {
+				// Имитация отправки данных
+				await new Promise(resolve => setTimeout(resolve, 1000));
+				
+				// Показываем успешное уведомление
+				showToast('✅ Регистрация успешно завершена!');
+				
+				// Ждем еще немного и перенаправляем
+				setTimeout(() => {
+					const ticketNumber = Math.floor(Math.random() * 900000) + 100000;
+					window.location.href = `success.html?ticket=${ticketNumber}&giveaway=1288`;
+				}, 1500);
+				
+			} catch (error) {
+				console.error('Ошибка:', error);
+				showToast('⚠️ Ошибка соединения', true);
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.textContent = originalText;
+			}
+		});
+
+		// Таймер
+		function updateTimer() {
+			const timerElement = document.getElementById('timer');
+			const endTime = new Date();
+			endTime.setHours(endTime.getHours() + 24);
+
+			function update() {
+				const now = new Date();
+				const diff = endTime - now;
+
+				if (diff <= 0) {
+					timerElement.textContent = '00:00:00';
+					// Показываем уведомление при окончании времени
+					if (!timerElement.hasShownEndNotification) {
+						showToast('Время розыгрыша истекло!', true);
+						timerElement.hasShownEndNotification = true;
+					}
+					return;
+				}
+
+				const hours = Math.floor(diff / (1000 * 60 * 60));
+				const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+				timerElement.textContent =
+				`${hours.toString().padStart(2, '0')}:` +
+				`${minutes.toString().padStart(2, '0')}:` +
+				`${seconds.toString().padStart(2, '0')}`;
+				
+				// Уведомление за 1 час до конца
+				if (hours === 1 && minutes === 0 && seconds === 0) {
+					showToast('⏰ До конца розыгрыша остался 1 час!');
+				}
+			}
+
+			update();
+			setInterval(update, 1000);
+		}
+
+		// Управление модальным окном с деталями приза
+		const prizeModal = document.getElementById('prizeModal');
+		const prizeDetailsBtn = document.getElementById('prizeDetailsBtn');
+		const closeModal = document.getElementById('closeModal');
+		const detailsIcon = prizeDetailsBtn.querySelector('i');
+
+		prizeDetailsBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			prizeModal.classList.add('show');
+			// Анимация кнопки
+			detailsIcon.classList.remove('bi-chevron-down');
+			detailsIcon.classList.add('bi-chevron-up');
+		});
+
+		closeModal.addEventListener('click', () => {
+			prizeModal.classList.remove('show');
+			detailsIcon.classList.remove('bi-chevron-up');
+			detailsIcon.classList.add('bi-chevron-down');
+		});
+
+		// Закрытие модального окна при клике вне его
+		prizeModal.addEventListener('click', (e) => {
+			if (e.target === prizeModal) {
+				prizeModal.classList.remove('show');
+				detailsIcon.classList.remove('bi-chevron-up');
+				detailsIcon.classList.add('bi-chevron-down');
+			}
+		});
+
+		// Инициализация при загрузке
+		document.addEventListener('DOMContentLoaded', () => {
+			updateUserProfile();
+			updateTimer();
+			
+			// Автофокус на поле никнейма
+			setTimeout(() => {
+				document.getElementById('nickname').focus();
+			}, 500);
+			
+			// Показываем приветственное сообщение
+			setTimeout(() => {
+				if (user.first_name) {
+					showToast(`Добро пожаловать, ${user.first_name}!`);
+				}
+			}, 1000);
+		});
+
+		// Проверка соединения с интернетом
+		window.addEventListener('online', () => {
+			showToast('Соединение восстановлено');
+		});
+
+		window.addEventListener('offline', () => {
+			showToast('Нет соединения с интернетом', true);
+		});
+	</script>
+</body>
+</html>
