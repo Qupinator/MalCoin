@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* отключаем подсветку при касании */
         }
 
         :root {
@@ -239,7 +240,7 @@
             opacity: 1;
             transform: translateX(-50%) scale(1.1);
             color: #fff;
-            animation: pause;
+            animation: none;
         }
         @keyframes bounceDown {
             0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
@@ -517,7 +518,7 @@
             color: var(--text-secondary);
         }
 
-        /* ===== PLACEHOLDER (теперь точно как соцсети) ===== */
+        /* ===== PLACEHOLDER ===== */
         .placeholder-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -694,6 +695,45 @@
             }
             .news-header .carousel-nav {
                 display: none;
+            }
+
+            /* ===== ОТКЛЮЧАЕМ HOVER НА МОБИЛЬНЫХ (возврат в исходное состояние) ===== */
+            .social-card:hover,
+            .placeholder-card:hover,
+            .nav-links li a:hover,
+            .carousel-controls button:hover,
+            .news-header .carousel-nav button:hover,
+            .scroll-down:hover {
+                transform: none !important;
+                background: initial !important;
+                border-color: initial !important;
+                box-shadow: none !important;
+                color: initial !important;
+            }
+            .social-card:hover::before,
+            .placeholder-card:hover::before {
+                opacity: 0 !important;
+            }
+            .carousel-controls button:hover {
+                background: rgba(26, 26, 26, 0.7) !important;
+                border-color: var(--dark-border) !important;
+                transform: none !important;
+            }
+            .news-header .carousel-nav button:hover {
+                background: rgba(26, 26, 26, 0.7) !important;
+                border-color: var(--dark-border) !important;
+                transform: none !important;
+            }
+            .scroll-down:hover {
+                opacity: 0.7 !important;
+                color: var(--red) !important;
+                transform: translateX(-50%) !important;
+                animation: bounceDown 2s infinite !important;
+            }
+            /* Для активных ссылок оставляем активный класс */
+            .nav-links li a.active:hover {
+                color: var(--red) !important;
+                background: rgba(232, 30, 63, 0.15) !important;
             }
         }
 
