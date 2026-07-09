@@ -64,14 +64,14 @@
 
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 3px;
         }
         ::-webkit-scrollbar-track {
             background: var(--dark);
         }
         ::-webkit-scrollbar-thumb {
             background: var(--red);
-            border-radius: 4px;
+            border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: var(--red-dark);
@@ -113,7 +113,7 @@
         .logo i {
             color: var(--red);
             font-size: 1.8rem;
-	    margin-right: 15px;
+            margin-right: 15px;
         }
         .logo span {
             color: var(--red);
@@ -162,7 +162,7 @@
             margin-right: 6px;
         }
 
-        /* ===== HERO (full-screen, стиль как у остального сайта) ===== */
+        /* ===== HERO ===== */
         .hero {
             min-height: 100dvh;
             height: 100vh;
@@ -171,7 +171,7 @@
             justify-content: center;
             padding-top: 76px;
             width: 100%;
-	    background: radial-gradient(ellipse at 0% 0%, rgba(232, 30, 63, 0.3) 0%, transparent 50%),
+            background: radial-gradient(ellipse at 0% 0%, rgba(232, 30, 63, 0.3) 0%, transparent 50%),
                         radial-gradient(ellipse at 100% 100%, rgba(232, 30, 63, 0.2) 0%, transparent 50%),
                         var(--dark);
             border-bottom: 1px solid var(--dark-border);
@@ -179,17 +179,17 @@
             position: relative;
         }
 
-	.hero::before {
-	    content: '';
-	    position: absolute;
-	    background-image: url("malcoin.png");
+        .hero::before {
+            content: '';
+            position: absolute;
+            background-image: url("malcoin.png");
             background-size: cover;
-	    background-position: center;
-	    width: 100%;
-	    height: 100%;
+            background-position: center;
+            width: 100%;
+            height: 100%;
             z-index: 3;
-	    opacity: 0.01;
-	}
+            opacity: 0.01;
+        }
 
         .hero .container {
             position: relative;
@@ -221,7 +221,7 @@
             box-shadow: 0 0 40px var(--red-glow);
         }
 
-        /* Стрелка вниз (центр, внизу hero) */
+        /* Стрелка вниз */
         .scroll-down {
             position: absolute;
             bottom: 30px;
@@ -275,7 +275,13 @@
             font-size: 1.05rem;
         }
 
-        /* ===== NEWS HEADER (заголовок + кнопки справа) ===== */
+        /* ===== NEWS ===== */
+        section#news {
+            background: radial-gradient(ellipse at 100% 0%, rgba(232, 30, 63, 0.3) 0%, transparent 50%),
+                        var(--dark);
+        }
+
+        /* ===== NEWS HEADER ===== */
         .news-header {
             display: flex;
             align-items: center;
@@ -319,7 +325,7 @@
             }
         }
 
-        /* ===== CAROUSEL (content overlay) ===== */
+        /* ===== CAROUSEL ===== */
         .carousel-wrapper {
             position: relative;
             overflow: hidden;
@@ -357,7 +363,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-	    height: 100%;
+            height: 100%;
             padding: 24px 28px 28px;
             background: rgba(0, 0, 0, 0.75) !important;
             display: flex;
@@ -371,7 +377,7 @@
         .carousel-slide .tag {
             display: inline-block;
             background: linear-gradient(145deg, rgba(26,26,26,0.7), rgba(18,18,18,0.9));
-	    border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.06);
             color: var(--red);
             font-size: 0.7rem;
             font-weight: 700;
@@ -456,16 +462,8 @@
                 display: none;
             }
         }
-        @media (max-width: 768px) {
-            .carousel-controls button {
-                display: flex;
-            }
-            .news-header .carousel-nav {
-                display: none;
-            }
-        }
 
-        /* ===== SOCIAL BLOCKS (градиентный стиль) ===== */
+        /* ===== SOCIAL BLOCKS ===== */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -519,10 +517,10 @@
             color: var(--text-secondary);
         }
 
-        /* ===== PLACEHOLDER BLOCK ===== */
+        /* ===== PLACEHOLDER (теперь точно как соцсети) ===== */
         .placeholder-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 24px;
         }
         .placeholder-card {
@@ -640,15 +638,62 @@
                 padding: 40px 0;
             }
 
-            .carousel-slide .content {
-                padding: 18px 16px 20px;
-            }
-
             .social-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             .placeholder-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            /* ===== MOBILE CAROUSEL (текст под изображением) ===== */
+            .carousel-slide {
+                display: flex;
+                flex-direction: column;
+                aspect-ratio: auto;
+                min-height: auto;
+            }
+            .carousel-slide .img-wrap {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 42 / 13;
+                flex-shrink: 0;
+            }
+            .carousel-slide .img-wrap img {
+                position: relative;
+                height: auto;
+            }
+            .carousel-slide .content {
+                position: relative;
+                height: auto;
+                padding: 16px 18px 20px;
+                background: var(--dark-card) !important;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                justify-content: flex-start;
+                pointer-events: auto;
+            }
+            .carousel-slide .content p {
+                color: var(--text-secondary);
+            }
+            .carousel-slide .content .meta {
+                color: var(--text-secondary);
+            }
+            .carousel-slide .content .meta i {
+                color: var(--red);
+            }
+            .carousel-slide .content h3 {
+                color: #fff;
+            }
+            .carousel-slide .tag {
+                align-self: flex-start;
+            }
+            .carousel-controls button {
+                display: flex;
+            }
+            .news-header .carousel-nav {
+                display: none;
             }
         }
 
@@ -659,13 +704,6 @@
 
             .hero h1 {
                 font-size: 2.2rem;
-            }
-
-            .placeholder-grid {
-                grid-template-columns: 1fr;
-            }
-            .social-grid {
-                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -705,7 +743,7 @@
         </div>
     </header>
 
-    <!-- ===== HERO (с добавленной стрелкой вниз) ===== -->
+    <!-- ===== HERO ===== -->
     <section class="hero" id="home">
         <div class="container">
             <h1>MalCoin <br />Новостное сообщество</h1>
@@ -713,10 +751,9 @@
                 Всё о проекте «Малиновка — Онлайн игра про Россию».<br />
                 Свежие новости, анонсы и жизнь сообщества.
             </p>
-	    <div class="badge">CRMP · Малиновка</div>
+            <div class="badge">CRMP · Малиновка</div>
         </div>
 
-        <!-- Стрелка вниз (скролл к новостям) -->
         <a href="#news" class="scroll-down" aria-label="Прокрутить к новостям">
             <i class="fas fa-chevron-down"></i>
         </a>
@@ -795,7 +832,7 @@
         </div>
     </section>
 
-    <!-- ===== SOCIAL (соцсети сообщества) ===== -->
+    <!-- ===== SOCIAL ===== -->
     <section id="social">
         <div class="container">
             <div class="section-title">
@@ -828,7 +865,7 @@
         </div>
     </section>
 
-    <!-- ===== ПЛАНИРУЕМЫЕ РЕАЛИЗАЦИИ ===== -->
+    <!-- ===== FUTURE ===== -->
     <section id="future">
         <div class="container">
             <div class="section-title">
@@ -865,7 +902,7 @@
         </div>
     </section>
 
-    <!-- ===== OFFICIAL SOCIAL (перемещено сюда, после "Скоро на MalCoin") ===== -->
+    <!-- ===== OFFICIAL SOCIAL ===== -->
     <section id="official-social" class="official-social">
         <div class="container">
             <div class="section-title">
