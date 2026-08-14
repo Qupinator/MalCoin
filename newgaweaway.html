@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Розыгрыш · Giveaway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0b0c12;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100dvh;
+            color: #fff;
+        }
+
+        .app-container {
+        	display: flex;
+        	flex-direction: column;
+            width: 100%;
+            max-width: 500px;
+            min-height: 100dvh;
+            background: linear-gradient(165deg, #15171f 0%, #0d0e14 100%);
+            padding: 16px;
+            position: relative;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            margin: 0 auto;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        .top-header {
+            z-index: 30;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(26, 27, 36, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+            gap: 10px;
+            height: 66px;
+        }
+
+        .top-header.scrolled {
+            background: rgba(26, 27, 36, 0.95);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #a0a0b8;
+        }
+
+        .header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .header-user {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .header-user .name-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+
+        .header-user .username {
+            font-size: 12px;
+            color: #8888aa;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .header-user .username i {
+            font-size: 10px;
+            color: #8888aa;
+            margin-bottom: -1px;
+        }
+
+        .support-btn {
+            width: 44px;
+            height: 44px;
+            background: #E4E4E4;
+			color: #393939;
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 22px;
+        }
+
+        .support-btn:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* остальное без изменений */
+}
+
+        /* ===== КАРТОЧКА РЕГИСТРАЦИИ ===== */
+        .register-card {
+            background: rgba(26, 27, 36, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            padding: 15px;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .register-title {
+        	width: 100%;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+            color: #fff;
+        }
+
+        .register-title i {
+            color: #b0b0c8;
+            font-size: 22px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #c8c8e0;
+            margin-bottom: 5px;
+            letter-spacing: -0.2px;
+        }
+
+        .field-group label i {
+            margin-right: 6px;
+            color: #8888aa;
+            font-size: 13px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 13px 48px 13px 16px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: 0.25s;
+            letter-spacing: 0.3px;
+        }
+
+        .field-input::placeholder {
+            color: #666688;
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+
+        .field-input:focus {
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02);
+        }
+
+        .field-input.error {
+            border-color: #e74c5e;
+            background: rgba(231, 76, 94, 0.06);
+        }
+
+        .field-input.success {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.04);
+        }
+
+        .input-hint-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: #E4E4E4;
+			color: #393939;
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .input-hint-btn:active {
+            transform: translateY(-50%) scale(0.82);
+        }
+
+        .input-hint-btn.error {
+            background: #e74c5e;
+            color: 393939;
+        }
+
+        /* ===== ВСПЛЫВАЮЩАЯ ПОДСКАЗКА ===== */
+        .hint-popup {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #1e1f2b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            min-width: 200px;
+            max-width: 280px;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+            color: #d0d0e0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .hint-popup.open {
+            display: block;
+        }
+
+        .hint-popup .hint-text {
+            margin-bottom: 0;
+        }
+
+        .hint-popup .hint-divider {
+            display: none;
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 8px 0;
+        }
+
+        .hint-popup .hint-error {
+            display: none;
+            color: #e74c5e;
+            font-weight: 500;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .hint-popup .hint-error i {
+            font-size: 12px;
+        }
+
+        .hint-popup.has-error .hint-divider {
+            display: block;
+        }
+
+        .hint-popup.has-error .hint-error {
+            display: flex;
+        }
+
+        /* ===== БЛОКИ ИНФОРМАЦИИ ===== */
+        .prize-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 25px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            height: 66px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .prize-card .icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #b0b0c8;
+            flex-shrink: 0;
+        }
+
+        .prize-card .info-content {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .prize-card .info-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #7777a0;
+        }
+
+        .prize-card .info-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .prize-card .info-value .prize-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .prize-card .info-value .detail-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #b0b0c8;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            margin-left: 2px;
+        }
+
+        .prize-card .info-value .detail-btn:active {
+            transform: scale(0.94);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .prize-card .info-value .detail-btn i {
+            font-size: 11px;
+        }
+
+        .meta-grid {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .meta-grid .info-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 25px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            height: 66px;
+            min-width: 0;
+        }
+
+        .meta-grid .info-card .icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #b0b0c8;
+            flex-shrink: 0;
+        }
+
+        .meta-grid .info-card .info-content {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .meta-grid .info-card .info-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #7777a0;
+        }
+
+        .meta-grid .info-card .info-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .meta-grid .info-card .info-value .timer {
+            color: #fff;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .meta-grid .info-card .info-value .timer.urgent {
+            color: #e74c5e;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer-actions {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .terms-text {
+            font-size: 10px;
+            color: #7777a0;
+            text-align: center;
+            line-height: 1.6;
+            padding: 0 4px;
+        }
+
+        .terms-text a {
+            color: #a0a0c8;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            text-wrap: nowrap;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .terms-text a:active {
+            color: #fff;
+        }
+
+        .participate-btn {
+            width: 100%;
+            height: 66px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            font-size: 20px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.04);
+            color: #8888a0;
+            cursor: not-allowed;
+            transition: 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: -0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .participate-btn.active {
+            background: #E4E4E4;
+            color: #393939;
+            border-color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            box-shadow: 0 6px 28px rgba(255, 255, 255, 0.08);
+        }
+
+        .participate-btn.active:active {
+            transform: scale(0.97);
+            box-shadow: 0 3px 16px rgba(255, 255, 255, 0.04);
+        }
+
+        .participate-btn .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #1a1b26;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .participate-btn.loading .spinner {
+            display: block;
+        }
+
+        .participate-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== МОДАЛКА ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1a1b26;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 28px 24px 24px;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-box h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+        }
+
+        .modal-box h2 i {
+            color: #b0b0c8;
+        }
+
+        .modal-box p {
+            color: #b0b0c8;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .modal-box ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-box ul li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 14px;
+            color: #c8c8e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .modal-box ul li i {
+            color: #b0b0c8;
+            width: 18px;
+            text-align: center;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #e0e0f0;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close-btn:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* утилиты */
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        /* скроллбар */
+        .app-container::-webkit-scrollbar {
+            width: 3px;
+        }
+        .app-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .app-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="appContainer">
+
+        <!-- ===== ХЕДЕР ===== -->
+        <header class="top-header" id="topHeader">
+            <div class="header-avatar" id="userAvatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="header-user">
+                <div class="name-row">
+                    <span class="first-name" id="userFirstName">Имя</span>
+                    <span class="last-name" id="userLastName">Пользователя</span>
+                    <span class="badge"><i class="fa-brands fa-telegram"></i></span>
+                </div>
+                <div class="username">
+					<i class="fas fa-at"></i>
+                    <span id="userUsername">username</span>
+                </div>
+            </div>
+            <button class="support-btn" id="supportBtn" title="Поддержка">
+                <i class="fas fa-headset"></i>
+            </button>
+        </header>
+
+        <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+        <div class="content">
+
+            <!-- Карточка регистрации -->
+            <div class="register-card">
+                <div class="register-title">
+                    Участвуй в розыгрыше!
+                </div>
+
+                <!-- Поле: Игровой никнейм -->
+                <div class="field-group">
+                    <label><i class="fas fa-user-tag"></i> Игровой никнейм</label>
+                    <div class="input-wrapper">
+                        <input
+                        class="field-input"
+                        id="nicknameInput"
+                        type="text"
+                        placeholder="Name_Surname"
+                        maxlength="20"
+                        autocomplete="off"
+                        spellcheck="false"
+                        />
+                        <button class="input-hint-btn" id="nicknameHintBtn" type="button">
+                            <i class="fas fa-question"></i>
+                        </button>
+                        <div class="hint-popup" id="nicknameHintPopup">
+                            <div class="hint-text">
+                                <strong>Формат:</strong> Имя_Фамилия<br>
+                                Только латиница, одно подчёркивание.<br>
+                                Минимум 2 символа в имени и фамилии.<br>
+                                Общая длина 5–20 символов.
+                            </div>
+                            <hr class="hint-divider" />
+                            <div class="hint-error" id="nicknameHintError">
+                                <i class="fas fa-circle-exclamation"></i>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Поле: Игровой банк-счёт -->
+                <div class="field-group">
+                    <label><i class="fas fa-coins"></i> Игровой банк-счёт</label>
+                    <div class="input-wrapper">
+                        <input
+                        class="field-input"
+                        id="bankInput"
+                        type="text"
+                        placeholder="Введите номер счёта"
+                        maxlength="7"
+                        autocomplete="off"
+                        inputmode="numeric"
+                        />
+                        <button class="input-hint-btn" id="bankHintBtn" type="button">
+                            <i class="fas fa-question"></i>
+                        </button>
+                        <div class="hint-popup" id="bankHintPopup">
+                            <div class="hint-text">
+                                <strong>Формат:</strong> только цифры.<br>
+                                Длина от 1 до 7 символов.
+                            </div>
+                            <hr class="hint-divider" />
+                            <div class="hint-error" id="bankHintError">
+                                <i class="fas fa-circle-exclamation"></i>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+			<div 
+			  style="height:100px;margin-top:10px"
+			  id="captcha-container"
+			  class="smart-captcha"
+			  data-sitekey="ysc1_XT0AcpQuxy1f9oFWNufENdtqb4AfGvw3ujn4EFoz66e4650a"
+			></div>
+
+            <!-- ===== БЛОК ПРИЗА (отдельная строка) ===== -->
+            <div class="prize-card">
+                <div class="icon-wrap"><i class="fas fa-crown"></i></div>
+                <div class="info-content">
+                    <span class="info-label">Приз</span>
+                    <div class="info-value">
+                        <span class="prize-name" id="prizeName">🕹️ Набор</span>
+                        <button class="detail-btn" id="detailsBtn"><i class="fas fa-circle-info"></i> Детали</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== БЛОКИ НОМЕРА И ТАЙМЕРА (в ряд) ===== -->
+            <div class="meta-grid">
+                <div class="info-card">
+                    <div class="icon-wrap"><i class="fas fa-hashtag"></i></div>
+                    <div class="info-content">
+                        <span class="info-label">Розыгрыш</span>
+                        <div class="info-value">
+                            <span id="raffleNumber">#1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="icon-wrap"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="info-content">
+                        <span class="info-label">Осталось</span>
+                        <div class="info-value">
+                            <span class="timer" id="raffleTimer">23:59:59</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ФУТЕР: кнопка участия ===== -->
+            <div class="footer-actions">
+                <div class="terms-text">
+                    Нажимая кнопку «Участвовать» вы автоматически принимаете
+                    <a href="#" id="termsLinkFooter">Пользовательское соглашение</a>
+                    и <a href="#" id="policyLinkFooter">Политику конфиденциальности</a>.
+                </div>
+                <button class="participate-btn" id="participateBtn" disabled>
+                    <span class="btn-text">Участвовать</span>
+                    <span class="spinner"></span>
+                </button>
+            </div>
+
+        </div><!-- /content -->
+
+        <!-- ===== МОДАЛКА ДЕТАЛЕЙ ===== -->
+        <div class="modal-overlay" id="detailsModal">
+            <div class="modal-box">
+                <h2><i class="fas fa-circle-info"></i> Детали розыгрыша</h2>
+                <p>Всё, что нужно знать об участии:</p>
+                <ul>
+                    <li><i class="fas fa-gem"></i> Приз: <strong>🕹️ Игровой набор</strong></li>
+                    <li><i class="fas fa-users"></i> Участников: <strong>47</strong></li>
+                    <li><i class="fas fa-calendar-day"></i> Дата розыгрыша: <strong>15.05.2026</strong></li>
+                    <li><i class="fas fa-clock"></i> Время: <strong>20:00 МСК</strong></li>
+                    <li><i class="fas fa-check-circle"></i> Победитель определяется случайным образом</li>
+                </ul>
+                <button class="modal-close-btn" id="modalCloseBtn"><i class="fas fa-xmark"></i> Закрыть</button>
+            </div>
+        </div>
+
+    </div><!-- /app-container -->
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== ЭЛЕМЕНТЫ =====
+            const nicknameInput = document.getElementById('nicknameInput');
+            const bankInput = document.getElementById('bankInput');
+            const participateBtn = document.getElementById('participateBtn');
+            const detailsBtn = document.getElementById('detailsBtn');
+            const detailsModal = document.getElementById('detailsModal');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const raffleTimer = document.getElementById('raffleTimer');
+            const topHeader = document.getElementById('topHeader');
+            const appContainer = document.getElementById('appContainer');
+
+            // Элементы подсказок
+            const nicknameHintBtn = document.getElementById('nicknameHintBtn');
+            const nicknameHintPopup = document.getElementById('nicknameHintPopup');
+            const nicknameHintError = document.getElementById('nicknameHintError').querySelector('span');
+            const bankHintBtn = document.getElementById('bankHintBtn');
+            const bankHintPopup = document.getElementById('bankHintPopup');
+            const bankHintError = document.getElementById('bankHintError').querySelector('span');
+
+            // ===== Telegram WebApp =====
+            const tg = window.Telegram?.WebApp;
+            if (tg) {
+                tg.ready();
+                tg.expand();
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    document.getElementById('userFirstName').textContent = user.first_name || 'Имя';
+                    document.getElementById('userLastName').textContent = user.last_name || 'Фамилия';
+                    document.getElementById('userUsername').textContent = user.username || 'username';
+                    const avatarEl = document.getElementById('userAvatar');
+                    if (user.photo_url) {
+                        avatarEl.innerHTML = `<img src="${user.photo_url}" alt="avatar" />`;
+                    } else {
+                        avatarEl.innerHTML = `<i class="fas fa-user"></i>`;
+                    }
+                }
+            } else {
+            }
+
+            // ===== УПРАВЛЕНИЕ ПОДСКАЗКАМИ =====
+            function toggleHint(popup, btn) {
+                const isOpen = popup.classList.contains('open');
+                // Закрываем все
+                document.querySelectorAll('.hint-popup').forEach(p => p.classList.remove('open'));
+                if (!isOpen) {
+                    popup.classList.add('open');
+                }
+            }
+
+            nicknameHintBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleHint(nicknameHintPopup, this);
+            });
+
+            bankHintBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleHint(bankHintPopup, this);
+            });
+
+            // Закрывать попапы при клике вне
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.input-wrapper')) {
+                    document.querySelectorAll('.hint-popup').forEach(p => p.classList.remove('open'));
+                }
+            });
+
+            // ===== ВАЛИДАЦИЯ НИКНЕЙМА =====
+            function validateNickname(value) {
+                let cleaned = value.replace(/[^a-zA-Z_]/g, '');
+                const parts = cleaned.split('_');
+                if (parts.length > 2) {
+                    cleaned = parts[0] + '_' + parts.slice(1).join('');
+                }
+                const underscoreCount = (cleaned.match(/_/g) || []).length;
+                if (underscoreCount > 1) {
+                    const firstUnderscore = cleaned.indexOf('_');
+                    const lastUnderscore = cleaned.lastIndexOf('_');
+                    if (firstUnderscore !== lastUnderscore) {
+                        cleaned = cleaned.substring(0, firstUnderscore + 1) +
+                            cleaned.substring(lastUnderscore + 1).replace(/_/g, '');
+                    }
+                }
+                const parts2 = cleaned.split('_');
+                if (parts2.length === 2) {
+                    const firstName = parts2[0];
+                    const lastName = parts2[1];
+                    if (firstName.length > 0 && lastName.length > 0) {
+                        const formattedFirst = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+                        const formattedLast = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+                        cleaned = formattedFirst + '_' + formattedLast;
+                    }
+                } else if (parts2.length === 1 && parts2[0].length > 0) {
+                    // только имя
+                }
+                if (cleaned.length > 20) cleaned = cleaned.slice(0, 20);
+
+                let error = '';
+                const partsCheck = cleaned.split('_');
+                if (partsCheck.length !== 2) {
+                    error = 'Используйте формат Имя_Фамилия (одно подчёркивание)';
+                } else if (partsCheck[0].length < 2 || partsCheck[1].length < 2) {
+                    error = 'Имя и фамилия минимум 2 символа';
+                } else if (cleaned.length < 5) {
+                    error = 'Минимум 5 символов (с учётом _)';
+                } else if (cleaned.length > 20) {
+                    error = 'Максимум 20 символов';
+                } else if (!/^[A-Z][a-z]*_[A-Z][a-z]*$/.test(cleaned)) {
+                    const [f, l] = cleaned.split('_');
+                    if (!/^[A-Z][a-z]*$/.test(f) || !/^[A-Z][a-z]*$/.test(l)) {
+                        error = 'Имя и фамилия с заглавной буквы, остальные строчные';
+                    }
+                }
+                return { value: cleaned, error };
+            }
+
+            // ===== ВАЛИДАЦИЯ БАНК-СЧЁТА =====
+            function validateBank(value) {
+                const digits = value.replace(/\D/g, '');
+                if (digits.length > 7) return { value: digits.slice(0, 7), error: 'Максимум 7 цифр' };
+                if (digits.length === 0) return { value: digits, error: '' };
+                if (digits.length < 1) return { value: digits, error: 'Минимум 1 цифра' };
+                return { value: digits, error: '' };
+            }
+
+            // ===== ОБЩАЯ ПРОВЕРКА =====
+            function validateAll() {
+                const nickRaw = nicknameInput.value;
+                const nickResult = validateNickname(nickRaw);
+                const nickValid = nickResult.error === '' && nickResult.value.length >= 5;
+
+                const bankRaw = bankInput.value;
+                const bankResult = validateBank(bankRaw);
+                const bankValid = bankResult.error === '' && bankResult.value.length >= 1 && bankResult.value.length <= 7;
+
+                // Обновляем UI полей
+                // Никнейм
+                if (nickRaw.length === 0) {
+                    nicknameInput.classList.remove('error', 'success');
+                    nicknameHintBtn.classList.remove('error');
+                    nicknameHintPopup.classList.remove('has-error');
+                    nicknameHintError.textContent = '';
+                } else if (nickValid) {
+                    nicknameInput.classList.remove('error');
+                    nicknameInput.classList.add('success');
+                    nicknameHintBtn.classList.remove('error');
+                    nicknameHintPopup.classList.remove('has-error');
+                    nicknameHintError.textContent = '';
+                } else {
+                    nicknameInput.classList.remove('success');
+                    nicknameInput.classList.add('error');
+                    nicknameHintBtn.classList.add('error');
+                    nicknameHintPopup.classList.add('has-error');
+                    nicknameHintError.textContent = nickResult.error || 'Неверный формат';
+                }
+
+                // Банк
+                if (bankRaw.length === 0) {
+                    bankInput.classList.remove('error', 'success');
+                    bankHintBtn.classList.remove('error');
+                    bankHintPopup.classList.remove('has-error');
+                    bankHintError.textContent = '';
+                } else if (bankValid) {
+                    bankInput.classList.remove('error');
+                    bankInput.classList.add('success');
+                    bankHintBtn.classList.remove('error');
+                    bankHintPopup.classList.remove('has-error');
+                    bankHintError.textContent = '';
+                } else {
+                    bankInput.classList.remove('success');
+                    bankInput.classList.add('error');
+                    bankHintBtn.classList.add('error');
+                    bankHintPopup.classList.add('has-error');
+                    bankHintError.textContent = bankResult.error || 'Неверный формат';
+                }
+
+                // Синхронизация значений
+                if (nickResult.value !== nickRaw) {
+                    nicknameInput.value = nickResult.value;
+                }
+                if (bankResult.value !== bankRaw) {
+                    bankInput.value = bankResult.value;
+                }
+
+                // Кнопка участия
+                const allValid = nickValid && bankValid;
+                if (allValid) {
+                    participateBtn.disabled = false;
+                    participateBtn.classList.add('active');
+                } else {
+                    participateBtn.disabled = true;
+                    participateBtn.classList.remove('active');
+                }
+
+                return allValid;
+            }
+
+            // ===== СОБЫТИЯ ВВОДА =====
+            nicknameInput.addEventListener('input', function() {
+                let val = this.value;
+                val = val.replace(/[^a-zA-Z_]/g, '');
+                const parts = val.split('_');
+                if (parts.length > 2) {
+                    val = parts[0] + '_' + parts.slice(1).join('');
+                }
+                const parts2 = val.split('_');
+                if (parts2.length === 2) {
+                    const f = parts2[0];
+                    const l = parts2[1];
+                    if (f.length > 0 && l.length > 0) {
+                        val = f.charAt(0).toUpperCase() + f.slice(1).toLowerCase() +
+                            '_' +
+                            l.charAt(0).toUpperCase() + l.slice(1).toLowerCase();
+                    }
+                } else if (parts2.length === 1 && parts2[0].length > 0) {
+                    val = parts2[0].charAt(0).toUpperCase() + parts2[0].slice(1).toLowerCase();
+                }
+                if (val.length > 20) val = val.slice(0, 20);
+                this.value = val;
+                validateAll();
+            });
+
+            bankInput.addEventListener('input', function() {
+                let val = this.value.replace(/\D/g, '');
+                if (val.length > 7) val = val.slice(0, 7);
+                this.value = val;
+                validateAll();
+            });
+
+            // ===== КНОПКА УЧАСТИЯ =====
+            participateBtn.addEventListener('click', function() {
+                if (this.disabled) return;
+                this.classList.add('loading');
+                this.disabled = true;
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                    this.disabled = false;
+                    if (tg) {
+                        tg.showPopup({
+                            title: '✅ Успешно!',
+                            message: 'Вы успешно зарегистрировались в розыгрыше! Ждите результатов.',
+                            buttons: [{ type: 'ok' }]
+                        });
+                    } else {
+                        alert('✅ Вы успешно зарегистрировались в розыгрыше!');
+                    }
+                }, 1800);
+            });
+
+            // ===== МОДАЛКА ДЕТАЛЕЙ =====
+            function openModal() {
+                detailsModal.classList.add('open');
+            }
+
+            function closeModal() {
+                detailsModal.classList.remove('open');
+            }
+
+            detailsBtn.addEventListener('click', openModal);
+            modalCloseBtn.addEventListener('click', closeModal);
+            detailsModal.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // ===== ТАЙМЕР =====
+            let endTime = Date.now() + 24 * 3600 * 1000 + 37 * 60 * 1000 + 15 * 1000;
+
+            function updateTimer() {
+                const now = Date.now();
+                let diff = endTime - now;
+                if (diff < 0) {
+                    raffleTimer.textContent = '00:00:00';
+                    raffleTimer.classList.add('urgent');
+                    return;
+                }
+                const hours = String(Math.floor(diff / 3600000)).padStart(2, '0');
+                diff %= 3600000;
+                const mins = String(Math.floor(diff / 60000)).padStart(2, '0');
+                diff %= 60000;
+                const secs = String(Math.floor(diff / 1000)).padStart(2, '0');
+                raffleTimer.textContent = `${hours}:${mins}:${secs}`;
+                if (hours === '00' && mins < '30') {
+                    raffleTimer.classList.add('urgent');
+                } else {
+                    raffleTimer.classList.remove('urgent');
+                }
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+
+            // ===== ССЫЛКИ (заглушки) =====
+            document.querySelectorAll('a[href="#"]').forEach(a => {
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (tg) {
+                        tg.showPopup({
+                            title: '📄 Документ',
+                            message: 'Полная версия документа будет доступна в официальном канале.',
+                            buttons: [{ type: 'ok' }]
+                        });
+                    } else {
+                        alert('📄 Документ будет доступен в официальном канале.');
+                    }
+                });
+            });
+
+            // ===== ПОДДЕРЖКА =====
+            document.getElementById('supportBtn').addEventListener('click', function() {
+                if (tg) {
+                    tg.showPopup({
+                        title: '🛟 Поддержка',
+                        message: 'Свяжитесь с нами: @support_bot или напишите в чат.',
+                        buttons: [{ type: 'ok' }]
+                    });
+                } else {
+                    alert('🛟 Поддержка: @support_bot');
+                }
+            });
+
+            // ===== СКРОЛЛ ХЕДЕРА =====
+            let lastScrollY = 0;
+            let ticking = false;
+
+            function handleScroll() {
+                const scrollY = appContainer.scrollTop;
+                if (scrollY > 20) {
+                    topHeader.classList.add('scrolled');
+                } else {
+                    topHeader.classList.remove('scrolled');
+                }
+                lastScrollY = scrollY;
+            }
+
+            appContainer.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // ===== ИНИЦИАЛИЗАЦИЯ =====
+            validateAll();
+            handleScroll();
+
+        })();
+    </script>
+
+</body>
+</html>
