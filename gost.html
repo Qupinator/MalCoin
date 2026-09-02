@@ -13,37 +13,99 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         @font-face{font-family:'GOST-R-50577-93';src:url('https://cdn.jsdelivr.net/gh/stanlapru/rus-carplates-font@main/GOST-R-50577-93.ttf') format('truetype');font-weight:normal;font-style:normal}
-        body{background-color:#0f1016;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px;padding-top:30px}
+        body{background-color:#0f1016;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px;padding-top:30px;transition:background-color .4s,color .4s}
+        body.light-theme{background-color:#f0f2f5;color:#1a1b24}
+        body.light-theme .controls select,body.light-theme .controls input[type="text"]{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1b24}
+        body.light-theme .controls select option{background:#fff;color:#1a1b24}
+        body.light-theme .controls .btn-group button{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1b24}
+        body.light-theme .controls .btn-group .btn-update{background:rgba(0,0,0,0.08)}
+        body.light-theme .controls .btn-group .btn-update:hover{background:rgba(0,0,0,0.14)}
+        body.light-theme .controls .btn-group .btn-save{background:#1a1b24;color:#fff;border-color:#1a1b24}
+        body.light-theme .controls .btn-group .btn-save:hover{background:#333}
+        body.light-theme .controls .btn-group .btn-save i{color:#fff}
+        body.light-theme .d-wrap{color:rgba(0,0,0,0.5)}
+        body.light-theme .d-short{color:rgba(0,0,0,0.6)}
+        body.light-theme .d-short:hover{color:#000}
+        body.light-theme .d-full{color:rgba(0,0,0,0.45)}
+        body.light-theme .d-full strong{color:rgba(0,0,0,0.6)}
+        body.light-theme .d-toggle{color:rgba(0,0,0,0.4);border-color:rgba(0,0,0,0.08);background:rgba(0,0,0,0.04)}
+        body.light-theme .d-toggle:hover{background:rgba(0,0,0,0.08);color:rgba(0,0,0,0.7)}
+        body.light-theme .cs-trigger{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1b24}
+        body.light-theme .cs-trigger:hover{background:rgba(0,0,0,0.08)}
+        body.light-theme .cs-trigger .cs-arrow{color:#666}
+        body.light-theme .cs-dropdown{background:#fff;border-color:rgba(0,0,0,0.1)}
+        body.light-theme .cs-option{color:#1a1b24}
+        body.light-theme .cs-option:hover{background:rgba(0,0,0,0.06)}
+        body.light-theme .cs-option.selected{background:rgba(0,0,0,0.1);color:#1a1b24}
+        body.light-theme .cs-option:disabled{color:#999;background:#f0f0f0}
+        body.light-theme .controls input[type="text"]:focus{border-color:#1a1b24;box-shadow:0 0 0 4px rgba(26,27,36,0.2),0 0 0 8px rgba(26,27,36,0.05)}
+
         .app-container{width:100%;max-width:640px;margin:0 auto}
-        .controls{display:flex;flex-direction:column;max-width:520px;gap:18px;margin-bottom:24px;margin-inline:auto}
+        .controls{display:flex;flex-direction:column;max-width:520px;gap:18px;margin-bottom:24px;margin-inline:auto;position:relative}
         .controls-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
-        .controls select,.controls input[type="text"]{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 6px;color:#fff;font-size:20px;font-weight:600;text-align:center;height:52px;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none;font-family:'Inter',sans-serif;letter-spacing:.5px;flex:1 1 0;min-width:52px}
-        .controls select{padding-right:20px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px 8px;cursor:pointer;width:70px;flex:0 0 auto}
-        .controls select:focus,.controls input[type="text"]:focus{border-color:rgba(255,255,255,0.25);box-shadow:0 0 0 3px rgba(255,255,255,0.05)}
-        .controls select option{background:#1a1b24;color:#fff;font-size:18px}
-        .controls select option:disabled{color:#666;background:#2a2b36}
+        .controls input[type="text"]{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 6px;color:#fff;font-size:20px;font-weight:600;text-align:center;height:52px;outline:none;transition:border-color .2s,box-shadow .2s,background .4s,color .4s,border-color .4s;font-family:'Inter',sans-serif;letter-spacing:.5px;flex:1 1 0;min-width:52px}
+        .controls input[type="text"]:focus{border-color:#E4E4E4;box-shadow:0 0 0 4px rgba(228,228,228,0.25),0 0 0 8px rgba(228,228,228,0.06);outline:none}
         .controls .digits-input{width:90px;min-width:80px;font-size:24px;letter-spacing:4px;text-align:center;flex:0 0 auto}
         .controls .region-input{width:76px;min-width:68px;font-size:22px;letter-spacing:1px;flex:0 0 auto}
         .controls .btn-group{display:flex;align-items:center;justify-content:center;gap:10px;flex:1 1 0}
-        .controls .btn-group button{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 20px;height:52px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif;letter-spacing:.2px;white-space:nowrap;flex:1 1 0;min-width:90px}
+        .controls .btn-group button{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 20px;height:52px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif;letter-spacing:.2px;white-space:nowrap;flex:1 1 0;min-width:90px}
         .controls .btn-group button:active{transform:scale(.95)}
         .controls .btn-group .btn-update{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.12)}
         .controls .btn-group .btn-update:hover{background:rgba(255,255,255,0.16)}
+        body.light-theme .controls .btn-group .btn-update{background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.1)}
+        body.light-theme .controls .btn-group .btn-update:hover{background:rgba(0,0,0,0.1)}
         .controls .btn-group .btn-save{background:#E4E4E4;color:#1a1b24;border-color:#E4E4E4}
         .controls .btn-group .btn-save:hover{background:#f0f0f0}
         .controls .btn-group .btn-save:active{background:#c8c8c8}
         .controls .btn-group .btn-save i{color:#1a1b24}
-        .plate-wrapper{display:flex;justify-content:center;margin-block:6px}
-        .plate{font-family:'GOST-R-50577-93',sans-serif;width:520px;height:112px;background:#000;border:5px solid #000;box-sizing:border-box;display:flex;align-items:stretch;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,0.6);gap:5px;border-radius:15px;flex-shrink:0;transform-origin:center center;transition:transform .2s;overflow:hidden}
+        body.light-theme .controls .btn-group .btn-save{background:#1a1b24;color:#fff;border-color:#1a1b24}
+        body.light-theme .controls .btn-group .btn-save:hover{background:#333}
+        body.light-theme .controls .btn-group .btn-save i{color:#fff}
+
+        /* ===== КАСТОМНЫЙ СЕЛЕКТ ===== */
+        .cs-wrapper{position:relative;flex:1 1 0;min-width:52px;max-width:120px}
+        @media (min-width:521px){.cs-wrapper{max-width:140px}.cs-trigger{padding:0 10px 0 18px;font-size:22px}}
+        .cs-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 8px 0 14px;height:52px;color:#fff;font-size:20px;font-weight:600;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .4s,color .4s;font-family:'Inter',sans-serif;letter-spacing:.5px;user-select:none;gap:4px}
+        .cs-trigger:hover{background:rgba(255,255,255,0.1)}
+        .cs-trigger:focus-visible{outline:2px solid rgba(255,255,255,0.3)}
+        .cs-trigger .cs-value{flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .cs-trigger .cs-arrow{display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);color:rgba(255,255,255,0.4);flex-shrink:0;width:20px}
+        .cs-trigger .cs-arrow.open{transform:rotate(180deg)}
+        body.light-theme .cs-trigger .cs-arrow{color:rgba(0,0,0,0.3)}
+
+        .cs-dropdown{position:fixed;z-index:50;background:#1a1b24;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px;max-height:400px;overflow-y:auto;display:none;box-shadow:0 12px 40px rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;max-width:320px;min-width:200px}
+        .cs-dropdown.open{display:block;animation:dropFade .2s ease}
+        @keyframes dropFade{0%{opacity:0;transform:translateY(-6px)}100%{opacity:1;transform:translateY(0)}}
+        .cs-dropdown::-webkit-scrollbar{width:4px}
+        .cs-dropdown::-webkit-scrollbar-track{background:transparent}
+        .cs-dropdown::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:4px}
+
+        .cs-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px}
+        .cs-option{display:flex;align-items:center;justify-content:center;padding:6px 0;border-radius:10px;border:none;background:transparent;color:#fff;font-size:18px;font-weight:600;cursor:pointer;transition:background .15s,color .15s;font-family:'Inter',sans-serif;min-height:40px}
+        .cs-option:hover{background:rgba(255,255,255,0.08)}
+        .cs-option.selected{background:rgba(255,255,255,0.12);color:#E4E4E4}
+        .cs-option:disabled{opacity:0.3;cursor:not-allowed;background:transparent!important;color:#666!important}
+
+        .native-select{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;opacity:0}
+
+        .plate-wrapper{display:flex;justify-content:center;margin-block:6px;position:relative}
+        .plate{font-family:'GOST-R-50577-93',sans-serif;width:520px;height:112px;background:#000;border:5px solid #000;box-sizing:border-box;display:flex;align-items:stretch;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,0.6);gap:5px;border-radius:15px;flex-shrink:0;transform-origin:center center;transition:transform .2s,box-shadow .4s;overflow:hidden;cursor:pointer;position:relative}
         .plate .main{flex-grow:1;display:flex;justify-content:center;align-items:center;font-weight:600;font-size:76px;line-height:1;text-transform:uppercase;overflow:hidden;border-radius:10px;background:#fff}
         .plate .main-text{display:flex;align-items:center;justify-content:center;height:100%;width:100%;gap:5px}
         .plate .letters,.plate .numbers{display:inline-flex;align-items:center;justify-content:center;height:100%;font-size:76px;line-height:1;font-weight:600;margin-bottom:-28px;letter-spacing:5px}
         .plate .region{min-width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 10px;border-radius:10px;background:#fff;gap:5px;font-family:'GOST-R-50577-93',sans-serif}
         .plate .region-code{font-size:64px;line-height:1;display:flex;align-items:center;justify-content:center;margin-bottom:-15px}
         .plate .region-bottom{width:100%;display:flex;align-items:center;gap:5px;justify-content:flex-end;margin-bottom:-10px}
-        .plate .rus{font-weight:600;font-size:20px;margin-bottom:-3px;letter-spacing:2px;font-family:sans-serif}
+        .plate .rus{font-weight:600;font-size:20px;margin-bottom:-3px;letter-spacing:2px;font-family:sans-serif;transition:color .3s}
         .plate .flag{width:35px;height:20px;background:linear-gradient(to bottom,#FFFFFF 33%,#0039A6 33%,#0039A6 66%,#D52B1E 66%);border:2px solid #000;box-sizing:border-box;flex-shrink:0}
-        .d-wrap{max-width:520px;margin:16px auto 0;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;text-align:center}
+
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+        .shake{animation:shake .25s ease-in-out}
+
+        .rain-item{position:fixed;pointer-events:none;z-index:9999;font-family:'GOST-R-50577-93',sans-serif;color:#fff;font-size:12px;background:rgba(0,0,0,0.7);padding:2px 4px;border-radius:2px;border:1px solid #666;white-space:nowrap;opacity:0.8;animation:rainFall linear forwards}
+        @keyframes rainFall{0%{transform:translateY(-20px) rotate(0deg);opacity:0.8}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+
+        .d-wrap{max-width:520px;margin:16px auto 0;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;text-align:center;transition:color .4s}
         .d-short{cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,0.6);transition:color .2s;padding:4px 0}
         .d-short:hover{color:rgba(255,255,255,0.85)}
         .d-short i{font-size:14px}
@@ -52,6 +114,7 @@
         .d-full strong{color:rgba(255,255,255,0.6)}
         .d-toggle{background:0 0;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;padding:4px 14px;border-radius:30px;background:rgba(255,255,255,0.04);transition:background .2s,color .2s;margin-top:8px;letter-spacing:.3px}
         .d-toggle:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7)}
+
         @media (max-width:640px){.plate{transform:scale(.65)}}
         @media print{body{background:#fff}.controls{display:none!important}.plate{box-shadow:none!important;margin:0 auto!important;transform:scale(1)!important}.plate-wrapper{padding:0}.app-container{padding:0;background:transparent}}
     </style>
@@ -60,21 +123,42 @@
 <div class="app-container">
     <div class="controls">
         <div class="controls-row">
-            <select id="letter1"></select>
+            <div class="cs-wrapper" id="cs-wrapper-1">
+                <button class="cs-trigger" id="cs-trigger-1" aria-expanded="false">
+                    <span class="cs-value" id="cs-value-1">М</span>
+                    <span class="cs-arrow" id="cs-arrow-1"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="cs-dropdown" id="cs-dropdown-1"></div>
+                <select id="letter1" class="native-select"></select>
+            </div>
             <input type="text" id="digitsInput" class="digits-input" value="976" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="000">
-            <select id="letter2"></select>
-            <select id="letter3"></select>
+            <div class="cs-wrapper" id="cs-wrapper-2">
+                <button class="cs-trigger" id="cs-trigger-2" aria-expanded="false">
+                    <span class="cs-value" id="cs-value-2">М</span>
+                    <span class="cs-arrow" id="cs-arrow-2"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="cs-dropdown" id="cs-dropdown-2"></div>
+                <select id="letter2" class="native-select"></select>
+            </div>
+            <div class="cs-wrapper" id="cs-wrapper-3">
+                <button class="cs-trigger" id="cs-trigger-3" aria-expanded="false">
+                    <span class="cs-value" id="cs-value-3">М</span>
+                    <span class="cs-arrow" id="cs-arrow-3"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="cs-dropdown" id="cs-dropdown-3"></div>
+                <select id="letter3" class="native-select"></select>
+            </div>
         </div>
         <div class="controls-row">
             <input type="text" id="regionInput" class="region-input" value="77" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="Рег">
             <div class="btn-group">
-                <button class="btn-update" onclick="updatePlate()"><i class="fas fa-rotate-right"></i> Обновить</button>
+                <button class="btn-update" id="updateBtn" onclick="updatePlate()"><i class="fas fa-rotate-right"></i> Обновить</button>
                 <button class="btn-save" onclick="savePNG()"><i class="fas fa-download"></i> PNG</button>
             </div>
         </div>
     </div>
     <div class="plate-wrapper">
-        <div class="plate" id="plateElement">
+        <div class="plate" id="plateElement" title="Клик — копировать">
             <div class="main">
                 <div class="main-text" id="mainText">
                     <span class="letters" id="letterLeft">М</span>
@@ -85,7 +169,7 @@
             <div class="region">
                 <div class="region-code" id="regionCode">77</div>
                 <div class="region-bottom">
-                    <span class="rus">RUS</span>
+                    <span class="rus" id="rusLabel">RUS</span>
                     <div class="flag"></div>
                 </div>
             </div>
@@ -98,7 +182,7 @@
         <i class="fas fa-chevron-down"></i>
       </div>
       <div class="d-full">
-        <strong>Официальное предупреждение:</strong> Данный генератор номерных знаков создан исключительно в демонстрационных и ознакомительных целях. Сгенерированное изображение не является официальным регистрационным документом, не подтверждает право собственности на транспортное средство и не может использоваться для идентификации автомобиля на дорогах общего пользования.
+        <strong>Важное предупреждение:</strong> Данный генератор номерных знаков создан исключительно в демонстрационных и ознакомительных целях. Сгенерированное изображение не является официальным регистрационным документом, не подтверждает право собственности на транспортное средство и не может использоваться для идентификации автомобиля на дорогах общего пользования.
         <br><br>
         В соответствии с законодательством Российской Федерации (ст. 12.2 КоАП РФ, ст. 326 УК РФ) использование поддельных, видоизменённых или нечитаемых государственных регистрационных знаков влечёт за собой административную или уголовную ответственность. Все создаваемые номера предназначены исключительно для личного использования в некоммерческих целях (например, для макетов, дизайн-проектов, монтажа видео или игр).
         <br><br>
@@ -108,13 +192,571 @@
     </div>
 </div>
 <script>
-const ALLOWED_LETTERS=['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
-function populateSelects(){['letter1','letter2'].forEach(id=>{const sel=document.getElementById(id);if(!sel)return;sel.innerHTML='';ALLOWED_LETTERS.forEach(ch=>{const opt=document.createElement('option');opt.value=ch;opt.textContent=ch;sel.appendChild(opt)});});document.getElementById('letter1').value='М';document.getElementById('letter2').value='М';updateLetter3Options()}
-function updateLetter3Options(){const l1=document.getElementById('letter1').value,l2=document.getElementById('letter2').value,sel=document.getElementById('letter3'),cur=sel.value;let opts=ALLOWED_LETTERS.map(ch=>({value:ch,label:ch,disabled:false}));if(l1==='М'&&l2==='А'&&!opts.some(o=>o.value==='Л'))opts.push({value:'Л',label:'Л',disabled:false});if(l1==='Х'&&l2==='У'&&!opts.some(o=>o.value==='Й'))opts.push({value:'Й',label:'Й',disabled:true});sel.innerHTML='';opts.forEach(o=>{const opt=document.createElement('option');opt.value=o.value;opt.textContent=o.label;if(o.disabled)opt.disabled=true;sel.appendChild(opt)});if(Array.from(sel.options).some(o=>o.value===cur&&!o.disabled))sel.value=cur;else{for(let o of sel.options)if(!o.disabled){sel.value=o.value;break}}updatePlate()}
-function restrictInputs(){const d=document.getElementById('digitsInput');if(d){d.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,3)});d.addEventListener('blur',function(){if(this.value==='')this.value='0';this.value=this.value.padStart(3,'0');updatePlate()})}const r=document.getElementById('regionInput');if(r){r.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,3)});r.addEventListener('blur',function(){if(this.value==='')this.value='77';updatePlate()})}document.getElementById('letter1').addEventListener('change',updateLetter3Options);document.getElementById('letter2').addEventListener('change',updateLetter3Options);document.getElementById('letter3').addEventListener('change',updatePlate)}
-function updatePlate(){const l1=document.getElementById('letter1').value||'А',l2=document.getElementById('letter2').value||'А',l3=document.getElementById('letter3').value||'А';let raw=document.getElementById('digitsInput').value.replace(/\D/g,'');if(raw==='')raw='0';const digits=raw.padStart(3,'0'),region=document.getElementById('regionInput').value.replace(/\D/g,'')||'77';document.getElementById('letterLeft').textContent=l1;document.getElementById('digitsDisplay').textContent=digits;document.getElementById('letterRight').textContent=l2+l3;document.getElementById('regionCode').textContent=region}
-function savePNG(){const plate=document.getElementById('plateElement');if(!plate)return;const origTransform=plate.style.transform;plate.style.transform='scale(1)';const left=document.getElementById('letterLeft').textContent||'O',digits=document.getElementById('digitsDisplay').textContent||'000',right=document.getElementById('letterRight').textContent||'OO',region=document.getElementById('regionCode').textContent||'00',fileName=((left+digits+right).toLowerCase()+'_'+region+'.png');const btn=document.querySelector('.btn-save'),origText=btn.innerHTML;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> ...';btn.disabled=true;html2canvas(plate,{width:520,height:112,scale:1,useCORS:true,backgroundColor:null,logging:false,allowTaint:true,onclone:doc=>{const cloned=doc.getElementById('plateElement');if(cloned){cloned.style.fontFamily="'GOST-R-50577-93', sans-serif";cloned.style.transform='scale(1)'}}}).then(canvas=>{const link=document.createElement('a');link.download=fileName;link.href=canvas.toDataURL('image/png');link.click();plate.style.transform=origTransform||'';btn.innerHTML=origText;btn.disabled=false}).catch(err=>{console.error(err);alert('Ошибка сохранения PNG. Попробуйте ещё раз.');plate.style.transform=origTransform||'';btn.innerHTML=origText;btn.disabled=false})}
-document.addEventListener('DOMContentLoaded',function(){populateSelects();restrictInputs();document.getElementById('digitsInput').addEventListener('input',updatePlate);document.getElementById('regionInput').addEventListener('input',updatePlate)});
+// ======================= Глобальные переменные =======================
+let cheatMode = false;
+let rainInterval = null;
+let theme = 'dark';
+let showShadow = true;
+
+// ======================= Константы =======================
+const ALLOWED_LETTERS_RU = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'];
+const ALLOWED_LETTERS_EN = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const GOST_LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
+
+// ======================= Кастомный селект =======================
+const csData = {
+    'letter1': { wrapper: 'cs-wrapper-1', trigger: 'cs-trigger-1', value: 'cs-value-1', arrow: 'cs-arrow-1', dropdown: 'cs-dropdown-1' },
+    'letter2': { wrapper: 'cs-wrapper-2', trigger: 'cs-trigger-2', value: 'cs-value-2', arrow: 'cs-arrow-2', dropdown: 'cs-dropdown-2' },
+    'letter3': { wrapper: 'cs-wrapper-3', trigger: 'cs-trigger-3', value: 'cs-value-3', arrow: 'cs-arrow-3', dropdown: 'cs-dropdown-3' }
+};
+
+function getLettersList(selectId) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return [];
+    return Array.from(sel.options).map(o => ({ value: o.value, label: o.textContent, disabled: o.disabled }));
+}
+
+function positionDropdown(selectId) {
+    const data = csData[selectId];
+    if (!data) return;
+    const trigger = document.getElementById(data.trigger);
+    const dropdown = document.getElementById(data.dropdown);
+    if (!trigger || !dropdown) return;
+    const triggerRect = trigger.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollX = window.scrollX || window.pageXOffset;
+
+    // Ширина дропдауна: максимум 320px, минимум 200px
+    let width = 320;
+    // Если экран уже, подстраиваемся
+    if (window.innerWidth < 400) {
+        width = Math.min(320, window.innerWidth - 30);
+    }
+    if (width < 200) width = 200;
+
+    // Центрируем дропдаун под триггером
+    let left = triggerRect.left + (triggerRect.width - width) / 2;
+    // Проверяем, чтобы не выходил за экран
+    const maxLeft = window.innerWidth - width - 10;
+    if (left < 10) left = 10;
+    if (left > maxLeft) left = maxLeft;
+
+    dropdown.style.left = left + 'px';
+    dropdown.style.top = (triggerRect.bottom + 6 + scrollY) + 'px';
+    dropdown.style.width = width + 'px';
+}
+
+function renderCustomSelect(selectId) {
+    const sel = document.getElementById(selectId);
+    const data = csData[selectId];
+    if (!sel || !data) return;
+    const trigger = document.getElementById(data.trigger);
+    const valueEl = document.getElementById(data.value);
+    const arrowEl = document.getElementById(data.arrow);
+    const dropdown = document.getElementById(data.dropdown);
+
+    valueEl.textContent = sel.value || 'А';
+
+    const opts = getLettersList(selectId);
+    dropdown.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'cs-options';
+    opts.forEach(o => {
+        const btn = document.createElement('button');
+        btn.className = 'cs-option' + (o.value === sel.value ? ' selected' : '');
+        btn.textContent = o.label || o.value;
+        btn.dataset.value = o.value;
+        if (o.disabled) btn.disabled = true;
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (this.disabled) return;
+            sel.value = this.dataset.value;
+            sel.dispatchEvent(new Event('change'));
+            closeAllDropdowns();
+            renderCustomSelect(selectId);
+            if (selectId === 'letter1' || selectId === 'letter2') {
+                updateLetter3Options();
+            } else {
+                updatePlate();
+            }
+        });
+        grid.appendChild(btn);
+    });
+    dropdown.appendChild(grid);
+
+    trigger.onclick = function(e) {
+        e.stopPropagation();
+        const isOpen = dropdown.classList.contains('open');
+        closeAllDropdowns();
+        if (!isOpen) {
+            dropdown.classList.add('open');
+            arrowEl.classList.add('open');
+            trigger.setAttribute('aria-expanded', 'true');
+            renderCustomSelect(selectId);
+            positionDropdown(selectId);
+        }
+    };
+}
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.cs-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.cs-arrow').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.cs-trigger').forEach(t => t.setAttribute('aria-expanded', 'false'));
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.cs-wrapper')) {
+        closeAllDropdowns();
+    }
+});
+
+window.addEventListener('resize', function() {
+    closeAllDropdowns();
+});
+
+// ======================= Базовые функции =======================
+function getPlateNumber() {
+    const l1 = document.getElementById('letter1').value || 'А';
+    const l2 = document.getElementById('letter2').value || 'А';
+    const l3 = document.getElementById('letter3').value || 'А';
+    let raw = document.getElementById('digitsInput').value.replace(/\D/g,'');
+    if (raw === '') raw = '0';
+    const digits = raw.padStart(3,'0');
+    return { left: l1, middle: digits, right: l2 + l3, full: l1 + digits + l2 + l3 };
+}
+
+function updatePlate() {
+    const { left, middle, right } = getPlateNumber();
+    const region = document.getElementById('regionInput').value.replace(/\D/g,'') || '77';
+    document.getElementById('letterLeft').textContent = left;
+    document.getElementById('digitsDisplay').textContent = middle;
+    document.getElementById('letterRight').textContent = right;
+    document.getElementById('regionCode').textContent = region;
+
+    const rusLabel = document.getElementById('rusLabel');
+    if (left === 'К' && right[0] === 'У' && right[1] === 'П') {
+        rusLabel.textContent = 'QPN';
+        rusLabel.style.color = '#FFD700';
+    } else {
+        rusLabel.textContent = 'RUS';
+        rusLabel.style.color = '';
+    }
+
+    // Тень
+    const plate = document.getElementById('plateElement');
+    const l1=left, l2=right[0], l3=right[1];
+    const digits = middle;
+    const reg = region;
+    const sameLetters = (l1 === l2 && l2 === l3);
+    const sameDigits = (digits[0] === digits[1] && digits[1] === digits[2]);
+    const sameRegion = (reg.length === 2 && reg[0] === reg[1]) || (reg.length === 3 && reg[0] === reg[1] && reg[1] === reg[2]);
+
+    let shadow = '0 10px 30px rgba(0,0,0,0.6)';
+    if (showShadow) {
+        if (sameLetters && sameDigits && sameRegion) {
+            shadow = '0 0 50px #FFD700, 0 0 30px #FFD700';
+        } else if (sameLetters && sameDigits) {
+            shadow = '0 0 50px #ff3333, 0 0 30px #ff3333';
+        } else if (sameLetters || sameDigits) {
+            shadow = '0 0 40px #00ff44, 0 0 20px #00ff44';
+        }
+    }
+    plate.style.boxShadow = shadow;
+
+    saveSettings();
+    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
+}
+
+// ======================= Двойной клик по кнопке "Обновить" — переключение тени =======================
+document.getElementById('updateBtn').addEventListener('dblclick', function() {
+    showShadow = !showShadow;
+    updatePlate();
+    showToast(showShadow ? '✨ Тень включена' : '🚫 Тень выключена');
+});
+
+// ======================= Сохранение / загрузка =======================
+function saveSettings() {
+    const settings = {
+        letter1: document.getElementById('letter1').value,
+        letter2: document.getElementById('letter2').value,
+        letter3: document.getElementById('letter3').value,
+        digits: document.getElementById('digitsInput').value,
+        region: document.getElementById('regionInput').value,
+        theme: theme,
+        showShadow: showShadow
+    };
+    try { localStorage.setItem('plateSettings', JSON.stringify(settings)); } catch(e) {}
+}
+
+function loadSettings() {
+    try {
+        const data = JSON.parse(localStorage.getItem('plateSettings'));
+        if (data) {
+            if (data.letter1) document.getElementById('letter1').value = data.letter1;
+            if (data.letter2) document.getElementById('letter2').value = data.letter2;
+            if (data.letter3) document.getElementById('letter3').value = data.letter3;
+            if (data.digits) document.getElementById('digitsInput').value = data.digits;
+            if (data.region) document.getElementById('regionInput').value = data.region;
+            if (data.theme) { theme = data.theme; applyTheme(theme); }
+            if (data.showShadow !== undefined) showShadow = data.showShadow;
+        }
+    } catch(e) {}
+}
+
+// ======================= Тема =======================
+function toggleTheme() {
+    theme = (theme === 'dark') ? 'light' : 'dark';
+    applyTheme(theme);
+    saveSettings();
+    showToast('Тема: ' + (theme === 'dark' ? '🌙 Тёмная' : '☀️ Светлая'));
+}
+function applyTheme(t) { document.body.classList.toggle('light-theme', t === 'light'); }
+
+// ======================= Заполнение выпадающих списков =======================
+function populateSelects() {
+    const ids = ['letter1', 'letter2'];
+    ids.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = '';
+        let letters = cheatMode ? [...ALLOWED_LETTERS_RU, ...ALLOWED_LETTERS_EN] : GOST_LETTERS;
+        letters.forEach(ch => {
+            const opt = document.createElement('option');
+            opt.value = ch;
+            opt.textContent = ch;
+            sel.appendChild(opt);
+        });
+    });
+    updateLetter3Options();
+}
+
+function updateLetter3Options() {
+    const l1 = document.getElementById('letter1').value;
+    const l2 = document.getElementById('letter2').value;
+    const sel = document.getElementById('letter3');
+    const cur = sel.value;
+    let opts = (cheatMode ? [...ALLOWED_LETTERS_RU, ...ALLOWED_LETTERS_EN] : GOST_LETTERS).map(ch => ({ value: ch, label: ch, disabled: false }));
+    if (!cheatMode) {
+        if (l1 === 'М' && l2 === 'А' && !opts.some(o => o.value === 'Л')) opts.push({ value: 'Л', label: 'Л', disabled: false });
+        if (l1 === 'Х' && l2 === 'У' && !opts.some(o => o.value === 'Й')) opts.push({ value: 'Й', label: 'Й', disabled: true });
+    }
+    sel.innerHTML = '';
+    opts.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.value;
+        opt.textContent = o.label;
+        if (o.disabled) opt.disabled = true;
+        sel.appendChild(opt);
+    });
+    if (Array.from(sel.options).some(o => o.value === cur && !o.disabled)) sel.value = cur;
+    else {
+        for (let o of sel.options) if (!o.disabled) { sel.value = o.value; break; }
+    }
+    updatePlate();
+}
+
+// ======================= Ограничение ввода =======================
+function restrictInputs() {
+    const d = document.getElementById('digitsInput');
+    if (d) {
+        d.addEventListener('input', function() {
+            if (!cheatMode) this.value = this.value.replace(/\D/g,'').slice(0,3);
+            this.value = this.value.slice(0,3);
+        });
+        d.addEventListener('blur', function() {
+            if (this.value === '') this.value = '0';
+            if (!cheatMode) this.value = this.value.padStart(3,'0');
+            updatePlate();
+        });
+        d.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === '') {
+                this.classList.remove('shake');
+                void this.offsetWidth;
+                this.classList.add('shake');
+                setTimeout(() => this.classList.remove('shake'), 300);
+            }
+        });
+    }
+    const r = document.getElementById('regionInput');
+    if (r) {
+        r.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g,'').slice(0,3);
+        });
+        r.addEventListener('blur', function() {
+            if (this.value === '') this.value = '77';
+            updatePlate();
+        });
+        r.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === '') {
+                this.classList.remove('shake');
+                void this.offsetWidth;
+                this.classList.add('shake');
+                setTimeout(() => this.classList.remove('shake'), 300);
+            }
+        });
+    }
+    document.getElementById('letter1').addEventListener('change', function() { updateLetter3Options(); saveSettings(); });
+    document.getElementById('letter2').addEventListener('change', function() { updateLetter3Options(); saveSettings(); });
+    document.getElementById('letter3').addEventListener('change', function() { updatePlate(); saveSettings(); });
+    document.getElementById('digitsInput').addEventListener('input', function() { updatePlate(); saveSettings(); });
+    document.getElementById('regionInput').addEventListener('input', function() { updatePlate(); saveSettings(); });
+}
+
+// ======================= Чит-мод: ввод с клавиатуры =======================
+function setupCheatKeyboard() {
+    document.querySelectorAll('.cs-trigger').forEach(trigger => {
+        trigger.addEventListener('focus', function() {
+            this._cheatListener = function(e) {
+                if (!cheatMode) return;
+                const key = e.key;
+                if (key.length === 1 && key.match(/[a-zA-Zа-яА-ЯёЁ]/)) {
+                    e.preventDefault();
+                    let char = key;
+                    if (e.shiftKey) {
+                        if (key >= 'a' && key <= 'z') char = key.toUpperCase();
+                        else if (key >= 'A' && key <= 'Z') char = key;
+                        else char = key.toUpperCase();
+                    } else {
+                        if (key >= 'A' && key <= 'Z') char = key;
+                        else if (key >= 'a' && key <= 'z') char = key;
+                        else char = key;
+                    }
+                    const wrapper = this.closest('.cs-wrapper');
+                    if (!wrapper) return;
+                    const selectId = wrapper.querySelector('.native-select')?.id;
+                    if (!selectId) return;
+                    const sel = document.getElementById(selectId);
+                    if (!sel) return;
+                    const options = Array.from(sel.options);
+                    const found = options.find(opt => opt.value === char && !opt.disabled);
+                    if (found) {
+                        sel.value = char;
+                        sel.dispatchEvent(new Event('change'));
+                        if (selectId === 'letter1' || selectId === 'letter2') {
+                            updateLetter3Options();
+                        } else {
+                            updatePlate();
+                        }
+                        renderCustomSelect(selectId);
+                        closeAllDropdowns();
+                    }
+                }
+            };
+            document.addEventListener('keydown', this._cheatListener);
+        });
+        trigger.addEventListener('blur', function() {
+            if (this._cheatListener) {
+                document.removeEventListener('keydown', this._cheatListener);
+                delete this._cheatListener;
+            }
+        });
+    });
+}
+
+// ======================= Отключение чит-мода =======================
+function disableCheatMode() {
+    cheatMode = false;
+    populateSelects();
+    document.getElementById('digitsInput').maxLength = 3;
+    document.getElementById('digitsInput').pattern = '[0-9]*';
+    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
+    updatePlate();
+    showToast('🧠 Cheat mode выключен');
+}
+
+// ======================= Горячие клавиши =======================
+document.addEventListener('keydown', function(e) {
+    const activeTag = document.activeElement?.tagName;
+    if (activeTag === 'INPUT' || activeTag === 'SELECT') {
+        if (!e.ctrlKey && !e.altKey) return;
+    }
+    if (e.ctrlKey && e.altKey && (e.key === 'R' || e.key === 'r')) { e.preventDefault(); generateRandomPlate(); }
+    else if (e.ctrlKey && e.altKey && (e.key === 'T' || e.key === 't')) { e.preventDefault(); toggleTheme(); }
+    else if (e.ctrlKey && e.altKey && (e.key === 'S' || e.key === 's')) { e.preventDefault(); saveSVG(); }
+    else if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); copyPlateNumber(); }
+    else if (e.ctrlKey && e.shiftKey && (e.key === 'V' || e.key === 'v')) { e.preventDefault(); pasteFromClipboard(); }
+});
+
+// ======================= Случайный номер =======================
+function generateRandomPlate() {
+    const letters = cheatMode ? [...ALLOWED_LETTERS_RU, ...ALLOWED_LETTERS_EN] : GOST_LETTERS;
+    const randLetter = () => letters[Math.floor(Math.random() * letters.length)];
+    const randDigit = () => Math.floor(Math.random() * 10).toString();
+    document.getElementById('letter1').value = randLetter();
+    document.getElementById('letter2').value = randLetter();
+    document.getElementById('letter3').value = randLetter();
+    document.getElementById('digitsInput').value = randDigit() + randDigit() + randDigit();
+    document.getElementById('regionInput').value = String(Math.floor(Math.random() * 99) + 1).padStart(2,'0');
+    updateLetter3Options();
+    updatePlate();
+    const plate = document.getElementById('plateElement');
+    plate.style.transition = 'box-shadow 0.2s';
+    plate.style.boxShadow = '0 0 30px rgba(255,255,255,0.5)';
+    setTimeout(() => updatePlate(), 300);
+}
+
+// ======================= Копирование номера =======================
+function copyPlateNumber() {
+    const { left, middle, right } = getPlateNumber();
+    const region = document.getElementById('regionCode').textContent || '77';
+    const text = left + middle + right + ' ' + region;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => showToast('Скопировано: ' + text)).catch(() => {});
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('Скопировано: ' + text);
+    }
+}
+document.getElementById('plateElement').addEventListener('click', copyPlateNumber);
+
+// ======================= Вставка из буфера =======================
+async function pasteFromClipboard() {
+    try {
+        let text = '';
+        if (navigator.clipboard) text = await navigator.clipboard.readText();
+        else {
+            const ta = document.createElement('textarea');
+            ta.style.cssText = 'position:fixed;opacity:0';
+            document.body.appendChild(ta);
+            ta.focus();
+            document.execCommand('paste');
+            text = ta.value;
+            ta.remove();
+        }
+        if (!text) { showToast('Буфер пуст'); return; }
+        const match = text.trim().match(/^([А-ЯA-Z])(\d{3})([А-ЯA-Z]{2})\s+(\d{2,3})$/i);
+        if (match) {
+            const [, l1, digits, rightLetters, region] = match;
+            document.getElementById('letter1').value = l1.toUpperCase();
+            document.getElementById('digitsInput').value = digits;
+            document.getElementById('letter2').value = rightLetters[0].toUpperCase();
+            document.getElementById('letter3').value = rightLetters[1].toUpperCase();
+            document.getElementById('regionInput').value = region;
+            updateLetter3Options();
+            updatePlate();
+            showToast('Вставлено: ' + text);
+        } else {
+            showToast('Неверный формат. Ожидается: A123BC 12');
+        }
+    } catch (err) { showToast('Ошибка чтения буфера'); console.error(err); }
+}
+
+// ======================= Экспорт SVG =======================
+function saveSVG() {
+    const { left, middle, right } = getPlateNumber();
+    const region = document.getElementById('regionCode').textContent || '77';
+    const full = left + middle + right;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="112" viewBox="0 0 520 112">
+        <defs><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .pf{font-family:'GOST-R-50577-93','Inter',sans-serif;font-weight:600}.rf{font-family:'Inter',sans-serif;font-weight:600}</style></defs>
+        <rect width="520" height="112" rx="15" fill="#000" stroke="#000" stroke-width="5"/>
+        <rect x="5" y="5" width="385" height="102" rx="10" fill="#fff"/>
+        <text x="200" y="82" text-anchor="middle" class="pf" font-size="76" letter-spacing="5" fill="#000">${left}${middle}${right}</text>
+        <rect x="395" y="5" width="120" height="102" rx="10" fill="#fff"/>
+        <text x="455" y="75" text-anchor="middle" class="pf" font-size="64" fill="#000">${region}</text>
+        <text x="475" y="100" text-anchor="end" class="rf" font-size="20" fill="#000">RUS</text>
+        <rect x="485" y="82" width="35" height="20" rx="2" fill="url(#f)"/>
+        <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="33%" stop-color="#FFF"/><stop offset="33%" stop-color="#0039A6"/><stop offset="66%" stop-color="#0039A6"/><stop offset="66%" stop-color="#D52B1E"/></linearGradient></defs>
+    </svg>`;
+    const blob = new Blob([svg], {type: 'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.download = full.toLowerCase() + '_' + region + '.svg';
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('SVG сохранён');
+}
+
+// ======================= Дождь =======================
+function makeItRain() {
+    if (rainInterval) {
+        clearInterval(rainInterval);
+        rainInterval = null;
+        showToast('☔ Дождь остановлен');
+        return;
+    }
+    showToast('☔ Дождь начался!');
+    const chars = 'АВЕКМНОРСТУХ';
+    const randPlate = () => {
+        const l1 = chars[Math.floor(Math.random()*chars.length)];
+        const l2 = chars[Math.floor(Math.random()*chars.length)];
+        const l3 = chars[Math.floor(Math.random()*chars.length)];
+        const d = String(Math.floor(Math.random()*900)+100);
+        const r = String(Math.floor(Math.random()*99)+1).padStart(2,'0');
+        return l1+d+l2+l3+' '+r;
+    };
+    rainInterval = setInterval(() => {
+        for (let i=0; i<3; i++) {
+            const el = document.createElement('div');
+            el.className = 'rain-item';
+            el.textContent = randPlate();
+            el.style.left = Math.random()*100 + 'vw';
+            el.style.fontSize = (12 + Math.random()*16) + 'px';
+            el.style.animationDuration = (4 + Math.random()*6) + 's';
+            el.style.opacity = 0.4 + Math.random()*0.5;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 10000);
+        }
+    }, 300);
+}
+
+// ======================= Cheat mode =======================
+function enableCheatMode() {
+    cheatMode = true;
+    populateSelects();
+    document.getElementById('digitsInput').maxLength = 3;
+    document.getElementById('digitsInput').pattern = '.*';
+    showToast('🧠 Cheat mode включён!');
+    setupCheatKeyboard();
+    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
+}
+
+// ======================= Toast =======================
+function showToast(msg) {
+    const old = document.querySelector('.toast-msg');
+    if (old) old.remove();
+    const div = document.createElement('div');
+    div.className = 'toast-msg';
+    div.textContent = msg;
+    const isLight = document.body.classList.contains('light-theme');
+    Object.assign(div.style, {
+        position: 'fixed', bottom: '100px', left: '50%', transform: 'translateX(-50%)',
+        background: isLight ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.85)',
+        color: isLight ? '#1a1b24' : '#fff',
+        padding: '10px 20px', borderRadius: '30px',
+        fontFamily: 'Inter, sans-serif', fontSize: '14px',
+        zIndex: '10001', backdropFilter: 'blur(10px)',
+        border: isLight ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.1)',
+        transition: 'opacity 0.4s', opacity: '0'
+    });
+    document.body.appendChild(div);
+    requestAnimationFrame(() => div.style.opacity = '1');
+    setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 500); }, 2500);
+}
+
+// ======================= Инициализация =======================
+document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
+    populateSelects();
+    restrictInputs();
+    setupCheatKeyboard();
+    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
+    updatePlate();
+    document.getElementById('digitsInput').addEventListener('input', updatePlate);
+    document.getElementById('regionInput').addEventListener('input', updatePlate);
+    document.querySelectorAll('.native-select').forEach(s => s.addEventListener('change', saveSettings));
+});
+
+window.enableCheatMode = enableCheatMode;
+window.disableCheatMode = disableCheatMode;
+window.makeItRain = makeItRain;
+window.toggleTheme = toggleTheme;
 </script>
 </body>
 </html>
