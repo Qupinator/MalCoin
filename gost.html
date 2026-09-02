@@ -671,6 +671,10 @@ function savePNG() {
     const plate = document.getElementById('plateElement');
     if (!plate) return;
 
+    // Сохраняем текущий box-shadow и убираем его
+    const originalShadow = plate.style.boxShadow;
+    plate.style.boxShadow = 'none';
+
     // Получаем номер и регион для имени файла
     const left = document.getElementById('letterLeft').textContent || 'O';
     const digits = document.getElementById('digitsDisplay').textContent || '000';
@@ -700,6 +704,7 @@ function savePNG() {
             if (cloned) {
                 cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
                 cloned.style.transform = 'scale(1)';
+                cloned.style.boxShadow = 'none'; // дополнительная страховка
             }
         }
     }).then(canvas => {
@@ -708,12 +713,14 @@ function savePNG() {
         link.href = canvas.toDataURL('image/png');
         link.click();
         plate.style.transform = originalTransform || '';
+        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)'; // восстанавливаем
         btn.innerHTML = originalText;
         btn.disabled = false;
     }).catch(err => {
         console.error('PNG export error:', err);
         alert('Ошибка сохранения PNG. Попробуйте ещё раз.');
         plate.style.transform = originalTransform || '';
+        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
         btn.innerHTML = originalText;
         btn.disabled = false;
     });
