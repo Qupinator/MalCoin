@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Номерной знак ГОСТ</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        @font-face {
+            font-family: 'GOST-R-50577-93';
+            src: url('https://cdn.jsdelivr.net/gh/stanlapru/rus-carplates-font@main/GOST-R-50577-93.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            background-color: #0f1016;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 30px;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .controls select,
+        .controls input[type="text"] {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 8px 6px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            height: 52px;
+            min-width: 52px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            flex: 0 0 auto;
+        }
+        .controls select {
+            padding-right: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px 8px;
+            cursor: pointer;
+            width: 58px;
+        }
+        .controls select:focus,
+        .controls input[type="text"]:focus {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+        .controls select option {
+            background: #1a1b24;
+            color: #fff;
+            font-size: 18px;
+        }
+        .controls select option:disabled {
+            color: #666;
+            background: #2a2b36;
+        }
+        .controls .digits-input {
+            width: 80px;
+            min-width: 80px;
+            font-size: 24px;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+        .controls .region-input {
+            width: 68px;
+            min-width: 68px;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        .controls .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .controls .btn-group button {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 0 20px;
+            height: 52px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+        .controls .btn-group button:active {
+            transform: scale(0.95);
+        }
+        .controls .btn-group .btn-update {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.12);
+            flex: 1;
+            min-width: 90px;
+        }
+        .controls .btn-group .btn-update:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        .controls .btn-group .btn-save {
+            background: #E4E4E4;
+            color: #1a1b24;
+            border-color: #E4E4E4;
+            flex: 1;
+            min-width: 90px;
+        }
+        .controls .btn-group .btn-save:hover {
+            background: #f0f0f0;
+        }
+        .controls .btn-group .btn-save:active {
+            background: #c8c8c8;
+        }
+        .controls .btn-group .btn-save i {
+            color: #1a1b24;
+        }
+        .plate-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 6px;
+        }
+        .plate {
+            font-family: 'GOST-R-50577-93', sans-serif;
+            width: 520px;
+            height: 112px;
+            background-color: #000;
+            border: 5px solid #000000;
+            box-sizing: border-box;
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            gap: 5px;
+            border-radius: 15px;
+            flex-shrink: 0;
+        }
+        .plate .main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 76px;
+            line-height: 1;
+            text-transform: uppercase;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #fff;
+        }
+        .plate .main-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            gap: 5px;
+        }
+        .plate .letters,
+        .plate .numbers {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 76px;
+            line-height: 1;
+            font-weight: 600;
+            margin-bottom: -28px;
+            letter-spacing: 5px;
+        }
+        .plate .region {
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            border-radius: 10px;
+            background: #fff;
+            gap: 5px;
+            font-family: 'GOST-R-50577-93', sans-serif;
+        }
+
+        .plate .region-code {
+            font-size: 64px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: -15px;
+        }
+
+        .plate .region-bottom {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: flex-end;
+            margin-bottom: -10px;
+        }
+
+        .plate .rus {
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: -3px;
+            letter-spacing: 2px;
+            font-family: sans-serif;
+        }
+        .plate .flag {
+            width: 35px;
+            height: 20px;
+            background: linear-gradient(to bottom, #FFFFFF 33%,#0039A6 33%,#0039A6 66%, #D52B1E 66%);
+            border: 2px solid #000;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        @media print {
+            body {background: white;}
+            .controls {display: none !important;}
+            .plate {
+                box-shadow: none !important;
+                margin: 0 auto !important;
+            }
+            .plate-wrapper {padding: 0;}
+            .app-container {
+                padding: 0;
+                background: transparent;
+            }
+        }
+        @media (max-width: 640px) {
+            .plate {
+                width: 100%;
+                max-width: 520px;
+                height: auto;
+                aspect-ratio: 520 / 112;
+                border-radius: 12px;
+                gap: 3px;
+            }
+            .plate .main {border-radius: 8px;}
+            .plate .main-text {gap: 2px;}
+            .plate .letters,
+            .plate .numbers {
+                font-size: 13vw;
+                margin-bottom: -4vw;
+                letter-spacing: 0.8vw;
+            }
+            .plate .region {
+                min-width: 18vw;
+                padding: 0 1.5vw;
+                border-radius: 8px;
+                gap: 0.5vw;
+            }
+            .plate .region-code {
+                font-size: 11vw;
+                margin-bottom: -2.5vw;
+            }
+            .plate .region-bottom {
+                gap: 0.6vw;
+                margin-bottom: -0.5vw;
+            }
+            .plate .rus {
+                font-size: 3.2vw;
+                letter-spacing: 0.3vw;
+            }
+            .plate .flag {
+                width: 5.5vw;
+                height: 3.2vw;
+                border-width: 1.5px;
+            }
+            .controls select,
+            .controls input[type="text"] {
+                height: 46px;
+                min-width: 44px;
+                font-size: 17px;
+                border-radius: 14px;
+            }
+            .controls select {
+                width: 50px;
+                min-width: 50px;
+            }
+            .controls .digits-input {
+                width: 68px;
+                min-width: 68px;
+                font-size: 20px;
+                letter-spacing: 3px;
+            }
+            .controls .region-input {
+                width: 58px;
+                min-width: 58px;
+                font-size: 19px;
+            }
+            .controls .btn-group button {
+                height: 46px;
+                font-size: 13px;
+                padding: 0 14px;
+                border-radius: 14px;
+            }
+            .controls .btn-group .btn-update,
+            .controls .btn-group .btn-save {
+                min-width: 70px;
+                flex: 1;
+            }
+            .controls-row {
+                gap: 6px;
+            }
+            .controls {
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+        }
+        @media (max-width: 400px) {
+            .controls select,
+            .controls input[type="text"] {
+                height: 40px;
+                min-width: 36px;
+                font-size: 14px;
+                border-radius: 12px;
+            }
+            .controls select {
+                width: 42px;
+                min-width: 42px;
+                padding-right: 16px;
+                background-size: 10px 6px;
+                background-position: right 6px center;
+            }
+            .controls .digits-input {
+                width: 56px;
+                min-width: 56px;
+                font-size: 17px;
+                letter-spacing: 2px;
+            }
+            .controls .region-input {
+                width: 48px;
+                min-width: 48px;
+                font-size: 16px;
+            }
+            .controls .btn-group button {
+                height: 40px;
+                font-size: 12px;
+                padding: 0 10px;
+                border-radius: 12px;
+            }
+            .controls .btn-group .btn-update,
+            .controls .btn-group .btn-save {
+                min-width: 56px;
+                flex: 1;
+            }
+            .controls-row {gap: 4px;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="controls">
+            <div class="controls-row">
+                <select id="letter1"></select>
+                <input type="text" id="digitsInput" class="digits-input" value="976" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="000">
+                <select id="letter2"></select>
+                <select id="letter3"></select>
+            </div>
+
+            <div class="controls-row">
+                <!-- Регион -->
+                <input type="text" id="regionInput" class="region-input" value="77" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="Рег">
+
+                <div class="btn-group">
+                    <button class="btn-update" onclick="updatePlate()">
+                        <i class="fas fa-rotate-right"></i> Обновить
+                    </button>
+                    <button class="btn-save" onclick="savePNG()">
+                        <i class="fas fa-download"></i> PNG
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="plate-wrapper">
+            <div class="plate" id="plateElement">
+                <div class="main">
+                    <div class="main-text" id="mainText">
+                        <span class="letters" id="letterLeft">М</span>
+                        <span class="numbers" id="digitsDisplay">976</span>
+                        <span class="letters" id="letterRight">ММ</span>
+                    </div>
+                </div>
+                <div class="region">
+                    <div class="region-code" id="regionCode">77</div>
+                    <div class="region-bottom">
+                        <span class="rus">RUS</span>
+                        <div class="flag"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const ALLOWED_LETTERS = ['А', 'В', 'Е', 'К', 'М', 'Н', 'О', 'Р', 'С', 'Т', 'У', 'Х'];
+        function populateSelects() {
+            const ids = ['letter1', 'letter2'];
+            ids.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '';
+                ALLOWED_LETTERS.forEach(ch => {
+                    const opt = document.createElement('option');
+                    opt.value = ch;
+                    opt.textContent = ch;
+                    sel.appendChild(opt);
+                });
+            });
+            document.getElementById('letter1').value = 'М';
+            document.getElementById('letter2').value = 'М';
+            updateLetter3Options();
+        }
+        function updateLetter3Options() {
+            const letter1 = document.getElementById('letter1').value;
+            const letter2 = document.getElementById('letter2').value;
+            const letter3Select = document.getElementById('letter3');
+            const currentValue = letter3Select.value;
+            let options = ALLOWED_LETTERS.map(ch => ({ value: ch, label: ch, disabled: false }));
+            if (letter1 === 'М' && letter2 === 'А') {
+                if (!options.some(opt => opt.value === 'Л')) {
+                    options.push({ value: 'Л', label: 'Л', disabled: false });
+                }
+            }
+            if (letter1 === 'Х' && letter2 === 'У') {
+                if (!options.some(opt => opt.value === 'Й')) {
+                    options.push({ value: 'Й', label: 'Й', disabled: true });
+                }
+            }
+            letter3Select.innerHTML = '';
+            options.forEach(opt => {
+                const optionEl = document.createElement('option');
+                optionEl.value = opt.value;
+                optionEl.textContent = opt.label;
+                if (opt.disabled) {
+                    optionEl.disabled = true;
+                }
+                letter3Select.appendChild(optionEl);
+            });
+            if (Array.from(letter3Select.options).some(opt => opt.value === currentValue && !opt.disabled)) {
+                letter3Select.value = currentValue;
+            } else {
+                for (let opt of letter3Select.options) {
+                    if (!opt.disabled) {
+                        letter3Select.value = opt.value;
+                        break;
+                    }
+                }
+            }
+            updatePlate();
+        }
+        function restrictInputs() {
+            const digits = document.getElementById('digitsInput');
+            if (digits) {
+                digits.addEventListener('input', function() {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 3);
+                });
+                digits.addEventListener('blur', function() {
+                    if (this.value === '') this.value = '0';
+                    this.value = this.value.padStart(3, '0');
+                    updatePlate();
+                });
+            }
+            const region = document.getElementById('regionInput');
+            if (region) {
+                region.addEventListener('input', function() {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 3);
+                });
+                region.addEventListener('blur', function() {
+                    if (this.value === '') this.value = '77';
+                    updatePlate();
+                });
+            }
+            document.getElementById('letter1').addEventListener('change', function() {
+                updateLetter3Options();
+            });
+            document.getElementById('letter2').addEventListener('change', function() {
+                updateLetter3Options();
+            });
+            document.getElementById('letter3').addEventListener('change', updatePlate);
+        }
+        function updatePlate() {
+            const l1 = document.getElementById('letter1').value || 'А';
+            const l2 = document.getElementById('letter2').value || 'А';
+            const l3 = document.getElementById('letter3').value || 'А';
+            let digitsRaw = document.getElementById('digitsInput').value.replace(/\D/g, '');
+            if (digitsRaw === '') digitsRaw = '0';
+            const digits = digitsRaw.padStart(3, '0');
+            const region = document.getElementById('regionInput').value.replace(/\D/g, '') || '77';
+            const leftLetters = l1;
+            const rightLetters = l2 + l3;
+            document.getElementById('letterLeft').textContent = leftLetters;
+            document.getElementById('digitsDisplay').textContent = digits;
+            document.getElementById('letterRight').textContent = rightLetters;
+            document.getElementById('regionCode').textContent = region;
+        }
+        function savePNG() {
+            const plate = document.getElementById('plateElement');
+            if (!plate) return;
+            const left = document.getElementById('letterLeft').textContent || 'O';
+            const digits = document.getElementById('digitsDisplay').textContent || '000';
+            const right = document.getElementById('letterRight').textContent || 'OO';
+            const region = document.getElementById('regionCode').textContent || '00';
+            const plateNumber = (left + digits + right).toLowerCase();
+            const fileName = `${plateNumber}_${region}.png`;
+            const btn = document.querySelector('.btn-save');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+            btn.disabled = true;
+            html2canvas(plate, {
+                width: 520,
+                height: 112,
+                scale: 1,
+                useCORS: true,
+                backgroundColor: null,
+                logging: false,
+                allowTaint: true,
+                onclone: function(doc) {
+                    const cloned = doc.getElementById('plateElement');
+                    if (cloned) {
+                        cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
+                    }
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error('PNG export error:', err);
+                alert('Ошибка сохранения PNG. Попробуйте ещё раз.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            populateSelects();
+            restrictInputs();
+            document.getElementById('digitsInput').addEventListener('input', updatePlate);
+            document.getElementById('regionInput').addEventListener('input', updatePlate);
+        });
+    </script>
+
+</body>
+</html>
