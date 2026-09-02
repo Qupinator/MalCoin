@@ -62,7 +62,6 @@
         body.light-theme .controls .btn-group .btn-save:hover{background:#333}
         body.light-theme .controls .btn-group .btn-save i{color:#fff}
 
-        /* ===== КАСТОМНЫЙ СЕЛЕКТ ===== */
         .cs-wrapper{position:relative;flex:1 1 0;min-width:52px;max-width:120px}
         @media (min-width:521px){.cs-wrapper{max-width:140px}.cs-trigger{padding:0 10px 0 18px;font-size:22px}}
         .cs-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 8px 0 14px;height:52px;color:#fff;font-size:20px;font-weight:600;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .4s,color .4s;font-family:'Inter',sans-serif;letter-spacing:.5px;user-select:none;gap:4px}
@@ -666,13 +665,19 @@ function saveSVG() {
     showToast('SVG сохранён');
 }
 
-// ======================= Сохранение PNG =======================
+// ======================= Сохранение PNG (исправленная версия) =======================
 function savePNG() {
     const plate = document.getElementById('plateElement');
     if (!plate) return;
 
-    // Сохраняем текущий box-shadow и убираем его
+    // Сохраняем оригинальные стили
     const originalShadow = plate.style.boxShadow;
+    const originalTransform = plate.style.transform;
+    const originalTransition = plate.style.transition;
+
+    // Принудительно убираем тень, масштаб и переходы
+    plate.style.transition = 'none';
+    plate.style.transform = 'scale(1)';
     plate.style.boxShadow = 'none';
 
     // Получаем номер и регион для имени файла
@@ -688,9 +693,6 @@ function savePNG() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
     btn.disabled = true;
 
-    const originalTransform = plate.style.transform;
-    plate.style.transform = 'scale(1)';
-
     html2canvas(plate, {
         width: 520,
         height: 112,
@@ -703,8 +705,13 @@ function savePNG() {
             const cloned = doc.getElementById('plateElement');
             if (cloned) {
                 cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
+                cloned.style.transition = 'none';
                 cloned.style.transform = 'scale(1)';
-                cloned.style.boxShadow = 'none'; // дополнительная страховка
+                cloned.style.boxShadow = 'none';
+                cloned.style.background = '#000'; // гарантируем чёрный фон
+                // Убеждаемся, что border-radius работает
+                cloned.style.borderRadius = '15px';
+                cloned.style.overflow = 'hidden';
             }
         }
     }).then(canvas => {
@@ -712,13 +719,16 @@ function savePNG() {
         link.download = fileName;
         link.href = canvas.toDataURL('image/png');
         link.click();
+        // Восстанавливаем стили
+        plate.style.transition = originalTransition || '';
         plate.style.transform = originalTransform || '';
-        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)'; // восстанавливаем
+        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
         btn.innerHTML = originalText;
         btn.disabled = false;
     }).catch(err => {
         console.error('PNG export error:', err);
         alert('Ошибка сохранения PNG. Попробуйте ещё раз.');
+        plate.style.transition = originalTransition || '';
         plate.style.transform = originalTransform || '';
         plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
         btn.innerHTML = originalText;
