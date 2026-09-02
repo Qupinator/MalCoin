@@ -43,6 +43,15 @@
         .plate .region-bottom{width:100%;display:flex;align-items:center;gap:5px;justify-content:flex-end;margin-bottom:-10px}
         .plate .rus{font-weight:600;font-size:20px;margin-bottom:-3px;letter-spacing:2px;font-family:sans-serif}
         .plate .flag{width:35px;height:20px;background:linear-gradient(to bottom,#FFFFFF 33%,#0039A6 33%,#0039A6 66%,#D52B1E 66%);border:2px solid #000;box-sizing:border-box;flex-shrink:0}
+        .d-wrap{max-width:520px;margin:16px auto 0;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;text-align:center}
+        .d-short{cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,0.6);transition:color .2s;padding:4px 0}
+        .d-short:hover{color:rgba(255,255,255,0.85)}
+        .d-short i{font-size:14px}
+        .d-full{max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .35s ease,margin .3s ease;opacity:0;margin-top:0;text-align:left;font-size:12px;line-height:1.7;color:rgba(255,255,255,0.45);padding:0 4px}
+        .d-full.open{max-height:700px;opacity:1;margin-top:12px}
+        .d-full strong{color:rgba(255,255,255,0.6)}
+        .d-toggle{background:0 0;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;padding:4px 14px;border-radius:30px;background:rgba(255,255,255,0.04);transition:background .2s,color .2s;margin-top:8px;letter-spacing:.3px}
+        .d-toggle:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7)}
         @media (max-width:640px){.plate{transform:scale(.65)}}
         @media print{body{background:#fff}.controls{display:none!important}.plate{box-shadow:none!important;margin:0 auto!important;transform:scale(1)!important}.plate-wrapper{padding:0}.app-container{padding:0;background:transparent}}
     </style>
@@ -82,13 +91,21 @@
             </div>
         </div>
     </div>
-    <span class="disclaimer">
-    <strong>Внимание!</strong> Данный генератор номерных знаков создан исключительно в демонстрационных и ознакомительных целях. Сгенерированное изображение не является официальным регистрационным документом, не подтверждает право собственности на транспортное средство и не может использоваться для идентификации автомобиля на дорогах общего пользования.
-    <br><br>
-    В соответствии с законодательством Российской Федерации (ст. 12.2 КоАП РФ, ст. 326 УК РФ) использование поддельных, видоизменённых или нечитаемых государственных регистрационных знаков влечёт за собой административную или уголовную ответственность. Все создаваемые номера предназначены исключительно для личного использования в некоммерческих целях (например, для макетов, дизайн-проектов, монтажа видео или игр).
-    <br><br>
-    Администрация ресурса не несёт ответственности за любое ненадлежащее использование сгенерированных номерных знаков. Пожалуйста, используйте инструмент ответственно и не нарушайте закон.
-</span>
+    <div class="d-wrap">
+      <div class="d-short" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('i').classList.toggle('fa-chevron-down');this.querySelector('i').classList.toggle('fa-chevron-up');this.nextElementSibling.nextElementSibling.textContent=this.nextElementSibling.classList.contains('open')?'Свернуть':'Развернуть'">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>⚠️ При скачивании номера вы принимаете полную ответственность за его использование.</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="d-full">
+        <strong>Официальное предупреждение:</strong> Данный генератор номерных знаков создан исключительно в демонстрационных и ознакомительных целях. Сгенерированное изображение не является официальным регистрационным документом, не подтверждает право собственности на транспортное средство и не может использоваться для идентификации автомобиля на дорогах общего пользования.
+        <br><br>
+        В соответствии с законодательством Российской Федерации (ст. 12.2 КоАП РФ, ст. 326 УК РФ) использование поддельных, видоизменённых или нечитаемых государственных регистрационных знаков влечёт за собой административную или уголовную ответственность. Все создаваемые номера предназначены исключительно для личного использования в некоммерческих целях (например, для макетов, дизайн-проектов, монтажа видео или игр).
+        <br><br>
+        Администрация ресурса не несёт ответственности за любое ненадлежащее использование сгенерированных номерных знаков. Пожалуйста, используйте инструмент ответственно и не нарушайте закон.
+      </div>
+      <button class="d-toggle" onclick="const p=this.previousElementSibling;p.classList.toggle('open');this.textContent=p.classList.contains('open')?'Свернуть':'Развернуть';const icon=this.parentNode.querySelector('.d-short i:last-child');icon.classList.toggle('fa-chevron-down');icon.classList.toggle('fa-chevron-up')">Развернуть</button>
+    </div>
 </div>
 <script>
 const ALLOWED_LETTERS=['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
