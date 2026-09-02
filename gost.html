@@ -224,19 +224,12 @@ function positionDropdown(selectId) {
     if (!trigger || !dropdown) return;
     const triggerRect = trigger.getBoundingClientRect();
     const scrollY = window.scrollY || window.pageYOffset;
-    const scrollX = window.scrollX || window.pageXOffset;
 
-    // Ширина дропдауна: максимум 320px, минимум 200px
-    let width = 320;
-    // Если экран уже, подстраиваемся
-    if (window.innerWidth < 400) {
-        width = Math.min(320, window.innerWidth - 30);
-    }
+    let width = Math.min(320, Math.max(200, window.innerWidth - 30));
+    if (width > 320) width = 320;
     if (width < 200) width = 200;
 
-    // Центрируем дропдаун под триггером
     let left = triggerRect.left + (triggerRect.width - width) / 2;
-    // Проверяем, чтобы не выходил за экран
     const maxLeft = window.innerWidth - width - 10;
     if (left < 10) left = 10;
     if (left > maxLeft) left = maxLeft;
@@ -671,6 +664,59 @@ function saveSVG() {
     a.click();
     URL.revokeObjectURL(url);
     showToast('SVG сохранён');
+}
+
+// ======================= Сохранение PNG =======================
+function savePNG() {
+    const plate = document.getElementById('plateElement');
+    if (!plate) return;
+
+    // Получаем номер и регион для имени файла
+    const left = document.getElementById('letterLeft').textContent || 'O';
+    const digits = document.getElementById('digitsDisplay').textContent || '000';
+    const right = document.getElementById('letterRight').textContent || 'OO';
+    const region = document.getElementById('regionCode').textContent || '00';
+    const plateNumber = (left + digits + right).toLowerCase();
+    const fileName = `${plateNumber}_${region}.png`;
+
+    const btn = document.querySelector('.btn-save');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+    btn.disabled = true;
+
+    const originalTransform = plate.style.transform;
+    plate.style.transform = 'scale(1)';
+
+    html2canvas(plate, {
+        width: 520,
+        height: 112,
+        scale: 1,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        allowTaint: true,
+        onclone: function(doc) {
+            const cloned = doc.getElementById('plateElement');
+            if (cloned) {
+                cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
+                cloned.style.transform = 'scale(1)';
+            }
+        }
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        plate.style.transform = originalTransform || '';
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }).catch(err => {
+        console.error('PNG export error:', err);
+        alert('Ошибка сохранения PNG. Попробуйте ещё раз.');
+        plate.style.transform = originalTransform || '';
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 }
 
 // ======================= Дождь =======================
