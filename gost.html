@@ -88,7 +88,7 @@
         .native-select{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;opacity:0}
 
         .plate-wrapper{display:flex;justify-content:center;margin-block:6px;position:relative}
-        .plate{font-family:'GOST-R-50577-93',sans-serif;width:520px;height:112px;background:#000;border:5px solid #000;box-sizing:border-box;display:flex;align-items:stretch;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,0.6);gap:5px;border-radius:15px;flex-shrink:0;transform-origin:center center;transition:transform .2s,box-shadow .4s;overflow:hidden;cursor:pointer;position:relative}
+        .plate{font-family:'GOST-R-50577-93',sans-serif;width:520px;height:112px;background:#000;border:5px solid #000;box-sizing:border-box;display:flex;align-items:stretch;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,0.6);gap:5px;border-radius:15px;flex-shrink:0;transform-origin:center center;transition:transform .2s,box-shadow .4s;overflow:hidden;cursor:pointer;position:relative;background-clip:padding-box}
         .plate .main{flex-grow:1;display:flex;justify-content:center;align-items:center;font-weight:600;font-size:76px;line-height:1;text-transform:uppercase;overflow:hidden;border-radius:10px;background:#fff}
         .plate .main-text{display:flex;align-items:center;justify-content:center;height:100%;width:100%;gap:5px}
         .plate .letters,.plate .numbers{display:inline-flex;align-items:center;justify-content:center;height:100%;font-size:76px;line-height:1;font-weight:600;margin-bottom:-28px;letter-spacing:5px}
@@ -665,7 +665,7 @@ function saveSVG() {
     showToast('SVG сохранён');
 }
 
-// ======================= Сохранение PNG (исправленная версия) =======================
+// ======================= Сохранение PNG (исправленная версия с устранением белых углов) =======================
 function savePNG() {
     const plate = document.getElementById('plateElement');
     if (!plate) return;
@@ -679,6 +679,8 @@ function savePNG() {
     plate.style.transition = 'none';
     plate.style.transform = 'scale(1)';
     plate.style.boxShadow = 'none';
+    plate.style.background = '#000';
+    plate.style.backgroundColor = '#000';
 
     // Получаем номер и регион для имени файла
     const left = document.getElementById('letterLeft').textContent || 'O';
@@ -704,14 +706,36 @@ function savePNG() {
         onclone: function(doc) {
             const cloned = doc.getElementById('plateElement');
             if (cloned) {
+                // Жёстко устанавливаем все стили для устранения артефактов
                 cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
                 cloned.style.transition = 'none';
                 cloned.style.transform = 'scale(1)';
                 cloned.style.boxShadow = 'none';
-                cloned.style.background = '#000'; // гарантируем чёрный фон
-                // Убеждаемся, что border-radius работает
+                cloned.style.background = '#000';
+                cloned.style.backgroundColor = '#000';
+                cloned.style.backgroundImage = 'none';
+                cloned.style.backgroundClip = 'padding-box';
                 cloned.style.borderRadius = '15px';
                 cloned.style.overflow = 'hidden';
+                cloned.style.border = '5px solid #000';
+                cloned.style.boxSizing = 'border-box';
+                // Убираем фон у родительских элементов в клоне
+                const wrapper = cloned.closest('.plate-wrapper');
+                if (wrapper) {
+                    wrapper.style.background = 'transparent';
+                    wrapper.style.backgroundColor = 'transparent';
+                }
+                const container = wrapper?.closest('.app-container');
+                if (container) {
+                    container.style.background = 'transparent';
+                    container.style.backgroundColor = 'transparent';
+                }
+                // Также убираем фон у body в клоне (на всякий случай)
+                const body = doc.body;
+                if (body) {
+                    body.style.background = 'transparent';
+                    body.style.backgroundColor = 'transparent';
+                }
             }
         }
     }).then(canvas => {
@@ -723,6 +747,8 @@ function savePNG() {
         plate.style.transition = originalTransition || '';
         plate.style.transform = originalTransform || '';
         plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
+        plate.style.background = '';
+        plate.style.backgroundColor = '';
         btn.innerHTML = originalText;
         btn.disabled = false;
     }).catch(err => {
@@ -731,6 +757,8 @@ function savePNG() {
         plate.style.transition = originalTransition || '';
         plate.style.transform = originalTransform || '';
         plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
+        plate.style.background = '';
+        plate.style.backgroundColor = '';
         btn.innerHTML = originalText;
         btn.disabled = false;
     });
