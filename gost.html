@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -10,11 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <link rel="shortcut icon" href="logo.png" type="image/x-icon">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         @font-face{font-family:'GOST-R-50577-93';src:url('https://cdn.jsdelivr.net/gh/stanlapru/rus-carplates-font@main/GOST-R-50577-93.ttf') format('truetype');font-weight:normal;font-style:normal}
-        body{background-color:#0f1016;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px;padding-top:30px;transition:background-color .4s,color .4s}
+        body{background-color:#0f1016;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px;padding-top:30px;transition:background-color .4s,color .4s;font-family:sans-serif}
         body.light-theme{background-color:#f0f2f5;color:#1a1b24}
         body.light-theme .controls select,body.light-theme .controls input[type="text"]{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1b24}
         body.light-theme .controls select option{background:#fff;color:#1a1b24}
@@ -40,22 +39,87 @@
         body.light-theme .cs-option.selected{background:rgba(0,0,0,0.1);color:#1a1b24}
         body.light-theme .cs-option:disabled{color:#999;background:#f0f0f0}
         body.light-theme .controls input[type="text"]:focus{border-color:#1a1b24;box-shadow:0 0 0 4px rgba(26,27,36,0.2),0 0 0 8px rgba(26,27,36,0.05)}
+        body.light-theme .settings-btn{color:#1a1b24}
+        body.light-theme .settings-popup{background:#fff;border-color:rgba(0,0,0,0.1)}
+        body.light-theme .settings-popup .setting-item{color:#1a1b24}
+        body.light-theme .settings-popup .setting-label{color:#555}
+        body.light-theme .settings-popup .info-btn{color:#999}
+        body.light-theme .settings-popup .info-btn:hover{color:#1a1b24}
+        body.light-theme .settings-popup .toggle-btn-group .toggle-btn{background:#f0f2f5;color:#555;border-color:#ddd}
+        body.light-theme .settings-popup .toggle-btn-group .toggle-btn.active{background:#1a1b24;color:#fff;border-color:#1a1b24}
+        body.light-theme .settings-popup .toggle-btn-group .toggle-btn:hover:not(.active){background:#e0e0e0}
+        body.light-theme .settings-popup .mode-select{background:#f0f2f5;border-color:#ddd;color:#1a1b24}
+        body.light-theme .settings-popup .mode-select option{background:#fff}
+        body.light-theme .settings-popup .shadow-color-select{background:#f0f2f5;border-color:#ddd;color:#1a1b24}
+        body.light-theme .settings-popup .shadow-color-select option{background:#fff}
+        body.light-theme .settings-popup .theme-buttons {background:rgb(221,221,221)}
+        body.light-theme .settings-popup .theme-buttons .theme-btn{background:#00000000;color:#555}
+        body.light-theme .settings-popup .theme-buttons .theme-btn.active{background:#1a1b24;color:#fff}
+        body.light-theme .settings-popup .theme-buttons .theme-btn:hover:not(.active){background:#e0e0e0}
 
         .app-container{width:100%;max-width:640px;margin:0 auto}
         .controls{display:flex;flex-direction:column;max-width:520px;gap:18px;margin-bottom:24px;margin-inline:auto;position:relative}
-        .controls-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
-        .controls input[type="text"]{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 6px;color:#fff;font-size:20px;font-weight:600;text-align:center;height:52px;outline:none;transition:border-color .2s,box-shadow .2s,background .4s,color .4s,border-color .4s;font-family:'Inter',sans-serif;letter-spacing:.5px;flex:1 1 0;min-width:52px}
+        
+        /* ===== ЖЁСТКОЕ РАВНОЕ ВЫРАВНИВАНИЕ 4 ЭЛЕМЕНТОВ ===== */
+        .controls-row{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            width:100%;
+            flex-wrap:nowrap;
+        }
+
+        /* Все 4 элемента принудительно одинаковой ширины */
+        .controls-row > .cs-wrapper,
+        .controls-row > .digits-input{
+            flex:1 1 0% !important;
+            min-width:0 !important;
+            width:0 !important;          /* критично важно */
+            max-width:none !important;
+        }
+
+        .controls .digits-input{
+            flex:1 1 0% !important;
+            min-width:0 !important;
+            width:0 !important;
+            font-size:22px;
+            letter-spacing:2px;          /* уменьшил letter-spacing */
+            text-align:center;
+            padding-left:4px;
+            padding-right:4px;
+        }
+        /* ================================================= */
+
+        .controls input[type="text"]{
+            background:rgba(255,255,255,0.06);
+            backdrop-filter:blur(10px);
+            -webkit-backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px;
+            padding:8px 6px;
+            color:#fff;
+            font-size:20px;
+            font-weight:600;
+            text-align:center;
+            height:52px;
+            outline:none;
+            transition:border-color .2s,box-shadow .2s,background .4s,color .4s,border-color .4s;
+            font-family:'Inter',sans-serif;
+            letter-spacing:.5px;
+            flex:1 1 0;
+            min-width:0;
+        }
         .controls input[type="text"]:focus{border-color:#E4E4E4;box-shadow:0 0 0 4px rgba(228,228,228,0.25),0 0 0 8px rgba(228,228,228,0.06);outline:none}
-        .controls .digits-input{width:90px;min-width:80px;font-size:24px;letter-spacing:4px;text-align:center;flex:0 0 auto}
         .controls .region-input{width:76px;min-width:68px;font-size:22px;letter-spacing:1px;flex:0 0 auto}
-        .controls .btn-group{display:flex;align-items:center;justify-content:center;gap:10px;flex:1 1 0}
-        .controls .btn-group button{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 20px;height:52px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif;letter-spacing:.2px;white-space:nowrap;flex:1 1 0;min-width:90px}
+        .controls .btn-group{display:flex;align-items:center;justify-content:center;gap:8px;flex:1 1 0}
+        .controls .btn-group button{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 16px;height:52px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Inter',sans-serif;letter-spacing:.2px;white-space:nowrap;flex:1 1 0;min-width:52px}
         .controls .btn-group button:active{transform:scale(.95)}
-        .controls .btn-group .btn-update{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.12)}
+        .controls .btn-group .btn-update{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.12);font-size:20px;padding:0 12px}
         .controls .btn-group .btn-update:hover{background:rgba(255,255,255,0.16)}
         body.light-theme .controls .btn-group .btn-update{background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.1)}
         body.light-theme .controls .btn-group .btn-update:hover{background:rgba(0,0,0,0.1)}
-        .controls .btn-group .btn-save{background:#E4E4E4;color:#1a1b24;border-color:#E4E4E4}
+        .controls .btn-group .btn-save{background:#E4E4E4;color:#1a1b24;border-color:#E4E4E4;min-width:100px}
         .controls .btn-group .btn-save:hover{background:#f0f0f0}
         .controls .btn-group .btn-save:active{background:#c8c8c8}
         .controls .btn-group .btn-save i{color:#1a1b24}
@@ -63,13 +127,79 @@
         body.light-theme .controls .btn-group .btn-save:hover{background:#333}
         body.light-theme .controls .btn-group .btn-save i{color:#fff}
 
-        .cs-wrapper{position:relative;flex:1 1 0;min-width:52px;max-width:120px}
-        @media (min-width:521px){.cs-wrapper{max-width:140px}.cs-trigger{padding:0 10px 0 18px;font-size:22px}}
-        .cs-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0 8px 0 14px;height:52px;color:#fff;font-size:20px;font-weight:600;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .4s,color .4s;font-family:'Inter',sans-serif;letter-spacing:.5px;user-select:none;gap:4px}
+        .settings-btn{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;width:52px;height:52px;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .1s;flex-shrink:0;padding:0}
+        .settings-btn:hover{background:rgba(255,255,255,0.12)}
+        .settings-btn:active{transform:scale(.95)}
+        .settings-btn .fa-gear{transition:transform .5s}
+        .settings-btn.open .fa-gear{transform:rotate(60deg)}
+
+        .settings-popup{position:absolute;top:calc(100% + 12px);right:0;z-index:60;background:#1a1b24;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px;min-width:280px;max-width:360px;display:none;box-shadow:0 16px 48px rgba(0,0,0,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);max-height:80vh;overflow-y:auto}
+        .settings-popup.open{display:block;animation:slideDown .25s ease}
+        @keyframes slideDown{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:translateY(0)}}
+        .settings-popup::-webkit-scrollbar{width:4px}
+        .settings-popup::-webkit-scrollbar-track{background:transparent}
+        .settings-popup::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:4px}
+        .settings-popup .setting-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);color:#e0e0f0;font-size:14px;font-weight:500;gap:12px}
+        .settings-popup .setting-item:last-child{border-bottom:none;padding-bottom:0}
+        .settings-popup .setting-item:first-child{padding-top:0}
+        .settings-popup .setting-label{display:flex;align-items:center;gap:6px;flex:1;color:#a0a0b3}
+        .settings-popup .setting-label .info-btn{background:none;border:none;color:#666;cursor:pointer;font-size:13px;padding:0 4px;transition:color .2s}
+        .settings-popup .setting-label .info-btn:hover{color:#E4E4E4}
+        .settings-popup .setting-control{display:flex;align-items:center;gap:10px}
+        .settings-popup .theme-buttons{display:flex;gap:6px;border-radius:12px;padding:3px;background:rgba(255,255,255,0.05)}
+        .settings-popup .theme-buttons .theme-btn{background:transparent;border:none;padding:5px 10px;color:#a0a0b3;font-size:14px;cursor:pointer;transition:background .2s,color .2s,font-family:'Inter',sans-serif;font-weight:500;border-radius:8px;display:flex;align-items:center;gap:4px}
+        .settings-popup .theme-buttons .theme-btn.active{background:#E4E4E4;color:#1a1b24;border-color:#E4E4E4}
+        .settings-popup .theme-buttons .theme-btn:hover:not(.active){background:rgba(255,255,255,0.05)}
+        body.light-theme .settings-popup .theme-buttons .theme-btn.active{background:#1a1b24;color:#fff;border-color:#1a1b24}
+        body.light-theme .settings-popup .theme-buttons .theme-btn:hover:not(.active){background:rgba(0,0,0,0.05)}
+
+        .settings-popup .setting-toggle{cursor:pointer;display:flex;align-items:center}
+        .settings-popup .setting-toggle .toggle-track{width:40px;height:22px;background:#444;border-radius:12px;transition:background .3s;position:relative;flex-shrink:0}
+        .settings-popup .setting-toggle .toggle-thumb{width:18px;height:18px;background:#E4E4E4;border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .3s}
+        .settings-popup .setting-toggle.active .toggle-track{background:#E4E4E4}
+        .settings-popup .setting-toggle.active .toggle-thumb{transform:translateX(18px);background:#1a1b24}
+        body.light-theme .settings-popup .setting-toggle .toggle-track{background:#ddd}
+        body.light-theme .settings-popup .setting-toggle.active .toggle-track{background:#1a1b24}
+        body.light-theme .settings-popup .setting-toggle .toggle-thumb{background:#fff}
+        body.light-theme .settings-popup .setting-toggle.active .toggle-thumb{background:#fff}
+
+        .settings-popup .mode-select{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:4px 8px;color:#fff;font-size:13px;font-weight:500;outline:none;cursor:pointer;font-family:'Inter',sans-serif;min-height:30px}
+        .settings-popup .mode-select option{background:#1a1b24;color:#fff}
+        .settings-popup .shadow-color-select{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:4px 8px;color:#fff;font-size:13px;font-weight:500;outline:none;cursor:pointer;font-family:'Inter',sans-serif}
+        .settings-popup .shadow-color-select option{background:#1a1b24;color:#fff}
+        .settings-popup .shadow-color-select:disabled{opacity:0.5;cursor:not-allowed}
+        .settings-popup .color-picker-wrap{display:flex;align-items:center;gap:8px;margin-top:4px}
+        .settings-popup .color-picker-wrap input[type="color"]{width:32px;height:32px;border:none;padding:0;background:transparent;cursor:pointer;border-radius:6px}
+        .settings-popup .color-picker-wrap input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+        .settings-popup .color-picker-wrap input[type="color"]::-webkit-color-swatch{border:1px solid rgba(255,255,255,0.2);border-radius:6px}
+
+        .cs-wrapper{position:relative;flex:1 1 0;min-width:0}
+        .cs-trigger{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            width:100%;
+            background:rgba(255,255,255,0.06);
+            backdrop-filter:blur(10px);
+            -webkit-backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px;
+            padding:0 6px 0 8px;          /* чуть меньше padding */
+            height:52px;
+            color:#fff;
+            font-size:18px;                /* чуть меньше шрифт */
+            font-weight:600;
+            cursor:pointer;
+            transition:border-color .2s,box-shadow .2s,background .4s,color .4s;
+            font-family:'Inter',sans-serif;
+            letter-spacing:.5px;
+            user-select:none;
+            gap:2px;
+        }
         .cs-trigger:hover{background:rgba(255,255,255,0.1)}
         .cs-trigger:focus-visible{outline:2px solid rgba(255,255,255,0.3)}
         .cs-trigger .cs-value{flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .cs-trigger .cs-arrow{display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .3s cubic-bezier(.4,0,.2,1);color:rgba(255,255,255,0.4);flex-shrink:0;width:20px}
+        .cs-trigger .cs-arrow{display:flex;align-items:center;justify-content:center;font-size:13px;transition:transform .3s cubic-bezier(.4,0,.2,1);color:rgba(255,255,255,0.4);flex-shrink:0;width:18px}
         .cs-trigger .cs-arrow.open{transform:rotate(180deg)}
         body.light-theme .cs-trigger .cs-arrow{color:rgba(0,0,0,0.3)}
 
@@ -90,9 +220,11 @@
 
         .plate-wrapper{display:flex;justify-content:center;margin-block:6px;position:relative}
         .plate{font-family:'GOST-R-50577-93',sans-serif;width:520px;height:112px;background:#000;border:5px solid #000;box-sizing:border-box;display:flex;align-items:stretch;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,0.6);gap:5px;border-radius:15px;flex-shrink:0;transform-origin:center center;transition:transform .2s,box-shadow .4s;overflow:hidden;cursor:pointer;position:relative;background-clip:padding-box}
-        .plate .main{flex-grow:1;display:flex;justify-content:center;align-items:center;font-weight:600;font-size:76px;line-height:1;text-transform:uppercase;overflow:hidden;border-radius:10px;background:#fff}
+        .plate .main{flex-grow:1;display:flex;justify-content:center;align-items:center;font-weight:600;font-size:76px;line-height:1;text-transform:uppercase;overflow:hidden;border-radius:10px;background:#fff;position:relative}
         .plate .main-text{display:flex;align-items:center;justify-content:center;height:100%;width:100%;gap:5px}
-        .plate .letters,.plate .numbers{display:inline-flex;align-items:center;justify-content:center;height:100%;font-size:76px;line-height:1;font-weight:600;margin-bottom:-28px;letter-spacing:5px}
+        .plate .letters,.plate .numbers{display:inline-flex;align-items:center;justify-content:center;height:100%;font-size:76px;line-height:1;font-weight:600;margin-bottom:-28px;letter-spacing:5px;min-width:0}
+        .plate .letters.empty,.plate .numbers.empty{visibility:hidden}
+        .plate .free-text{display:flex;align-items:center;justify-content:center;height:100%;font-size:76px;line-height:1;font-weight:600;margin-bottom:-28px;letter-spacing:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
         .plate .region{min-width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 10px;border-radius:10px;background:#fff;gap:5px;font-family:'GOST-R-50577-93',sans-serif}
         .plate .region-code{font-size:64px;line-height:1;display:flex;align-items:center;justify-content:center;margin-bottom:-15px}
         .plate .region-bottom{width:100%;display:flex;align-items:center;gap:5px;justify-content:flex-end;margin-bottom:-10px}
@@ -105,7 +237,7 @@
         .rain-item{position:fixed;pointer-events:none;z-index:9999;font-family:'GOST-R-50577-93',sans-serif;color:#fff;font-size:12px;background:rgba(0,0,0,0.7);padding:2px 4px;border-radius:2px;border:1px solid #666;white-space:nowrap;opacity:0.8;animation:rainFall linear forwards}
         @keyframes rainFall{0%{transform:translateY(-20px) rotate(0deg);opacity:0.8}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
 
-        .d-wrap{max-width:520px;margin:16px auto 0;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;text-align:center;transition:color .4s}
+        .d-wrap{max-width:520px;margin:16px auto;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.5;text-align:center;transition:color .4s}
         .d-short{cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,0.6);transition:color .2s;padding:4px 0}
         .d-short:hover{color:rgba(255,255,255,0.85)}
         .d-short i{font-size:14px}
@@ -115,6 +247,13 @@
         .d-toggle{background:0 0;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;padding:4px 14px;border-radius:30px;background:rgba(255,255,255,0.04);transition:background .2s,color .2s;margin-top:8px;letter-spacing:.3px}
         .d-toggle:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7)}
 
+        .hidden{display:none!important}
+        .free-input-wrap{display:none;flex:1 1 0;min-width:0}
+        .free-input-wrap.active{display:block}
+        .free-input-wrap input{width:100%;background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 14px;color:#fff;font-size:22px;font-weight:600;text-align:center;height:52px;outline:none;transition:border-color .2s,box-shadow .2s;font-family:'Inter',sans-serif;letter-spacing:2px}
+        .free-input-wrap input:focus{border-color:#E4E4E4;box-shadow:0 0 0 4px rgba(228,228,228,0.25)}
+        body.light-theme .free-input-wrap input{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#1a1b24}
+        body.light-theme .free-input-wrap input:focus{border-color:#1a1b24;box-shadow:0 0 0 4px rgba(26,27,36,0.2)}
         @media (max-width:640px){.plate{transform:scale(.65)}}
         @media print{body{background:#fff}.controls{display:none!important}.plate{box-shadow:none!important;margin:0 auto!important;transform:scale(1)!important}.plate-wrapper{padding:0}.app-container{padding:0;background:transparent}}
     </style>
@@ -122,7 +261,7 @@
 <body>
 <div class="app-container">
     <div class="controls">
-        <div class="controls-row">
+        <div class="controls-row" id="inputRow">
             <div class="cs-wrapper" id="cs-wrapper-1">
                 <button class="cs-trigger" id="cs-trigger-1" aria-expanded="false">
                     <span class="cs-value" id="cs-value-1">М</span>
@@ -148,12 +287,86 @@
                 <div class="cs-dropdown" id="cs-dropdown-3"></div>
                 <select id="letter3" class="native-select"></select>
             </div>
+            <div class="free-input-wrap" id="freeInputWrap">
+                <input type="text" id="freeInput" maxlength="6" placeholder="А123ВС" value="АБВГДЕ">
+            </div>
         </div>
         <div class="controls-row">
             <input type="text" id="regionInput" class="region-input" value="77" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="Рег">
             <div class="btn-group">
-                <button class="btn-update" id="updateBtn" onclick="updatePlate()"><i class="fas fa-rotate-right"></i> Обновить</button>
-                <button class="btn-save" onclick="savePNG()"><i class="fas fa-download"></i> PNG</button>
+                <button class="btn-update" id="updateBtn" onclick="updatePlate()"><i class="fas fa-arrows-rotate"></i></button>
+                <button class="btn-save" onclick="savePNG()"><i class="fas fa-download"></i> <span class="save-label">PNG</span></button>
+                <button class="settings-btn" id="settingsToggle" aria-expanded="false"><i class="fas fa-gear"></i></button>
+            </div>
+        </div>
+        <!-- Popup настроек -->
+        <div class="settings-popup" id="settingsPopup">
+            <div class="setting-item">
+                <span class="setting-label">
+                    Тема
+                    <button class="info-btn" data-info="Переключить тёмную/светлую тему интерфейса"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <span class="theme-buttons" id="themeButtons">
+                    <button class="theme-btn active" data-theme="dark"><i class="fas fa-moon"></i></button>
+                    <button class="theme-btn" data-theme="light"><i class="fas fa-sun"></i></button>
+                </span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">
+                    Тень номера
+                    <button class="info-btn" data-info="Включить/выключить декоративную тень вокруг номера (для просмотра)"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <span class="setting-toggle active" id="shadowToggle">
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </span>
+            </div>
+            <div class="setting-item" id="shadowColorSetting" style="display:none;">
+                <span class="setting-label">
+                    Цвет тени
+                    <button class="info-btn" data-info="Выберите цвет тени (доступно в чит-моде и свободном режиме)"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <span class="setting-control">
+                    <select class="shadow-color-select" id="shadowColorSelect">
+                        <option value="default">Обычный</option>
+                        <option value="red">Красный</option>
+                        <option value="blue">Синий</option>
+                        <option value="green">Зелёный</option>
+                        <option value="gold">Золотой</option>
+                        <option value="custom">Свой</option>
+                    </select>
+                    <span class="color-picker-wrap" id="customColorWrap" style="display:none;">
+                        <input type="color" id="customShadowColor" value="#ff0000">
+                    </span>
+                </span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">
+                    Режим
+                    <button class="info-btn" data-info="Обычный – выбор букв и цифр по отдельности; Чит-мод – доступны все буквы RU/EN; Свободный – единое поле ввода до 6 или 9 символов"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <select class="mode-select" id="modeSelect">
+                    <option value="normal">Обычный</option>
+                    <option value="cheat">Чит-мод</option>
+                    <option value="free">Свободный</option>
+                </select>
+            </div>
+            <div class="setting-item" id="freeLimitSetting" style="display:none;">
+                <span class="setting-label">
+                    Лимит символов
+                    <button class="info-btn" data-info="Увеличение лимита до 9 символов может нарушить отображение текста на номере"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <span class="setting-toggle" id="freeLimitToggle">
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">
+                    Дождь из номеров
+                    <button class="info-btn" data-info="Запустить/остановить анимацию падающих номеров"><i class="fas fa-circle-info"></i></button>
+                </span>
+                <span class="setting-toggle" id="rainToggle">
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </span>
             </div>
         </div>
     </div>
@@ -164,6 +377,7 @@
                     <span class="letters" id="letterLeft">М</span>
                     <span class="numbers" id="digitsDisplay">976</span>
                     <span class="letters" id="letterRight">ММ</span>
+                    <span class="free-text" id="freeText" style="display:none;">АБВГДЕ</span>
                 </div>
             </div>
             <div class="region">
@@ -176,9 +390,9 @@
         </div>
     </div>
     <div class="d-wrap">
-      <div class="d-short" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('i').classList.toggle('fa-chevron-down');this.querySelector('i').classList.toggle('fa-chevron-up');this.nextElementSibling.nextElementSibling.textContent=this.nextElementSibling.classList.contains('open')?'Свернуть':'Развернуть'">
+      <div class="d-short" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('i').classList.toggle('fa-chevron-down');this.querySelector('i').classList.toggle('fa-chevron-up');this.nextElementSibling.nextElementSibling.textContent=this.nextElementSibling.classList.contains('open')?'Свернуть':'Показать предупреждение'">
         <i class="fas fa-exclamation-triangle"></i>
-        <span>⚠️ При скачивании номера вы принимаете полную ответственность за его использование.</span>
+        <span>При скачивании номера вы принимаете полную ответственность за его использование.</span>
         <i class="fas fa-chevron-down"></i>
       </div>
       <div class="d-full">
@@ -188,7 +402,7 @@
         <br><br>
         Администрация ресурса не несёт ответственности за любое ненадлежащее использование сгенерированных номерных знаков. Пожалуйста, используйте инструмент ответственно и не нарушайте закон.
       </div>
-      <button class="d-toggle" onclick="const p=this.previousElementSibling;p.classList.toggle('open');this.textContent=p.classList.contains('open')?'Свернуть':'Развернуть';const icon=this.parentNode.querySelector('.d-short i:last-child');icon.classList.toggle('fa-chevron-down');icon.classList.toggle('fa-chevron-up')">Развернуть</button>
+      <button class="d-toggle" onclick="const p=this.previousElementSibling;p.classList.toggle('open');this.textContent=p.classList.contains('open')?'Свернуть':'Показать предупреждение';const icon=this.parentNode.querySelector('.d-short i:last-child');icon.classList.toggle('fa-chevron-down');icon.classList.toggle('fa-chevron-up')">Показать предупреждение</button>
     </div>
 </div>
 <script>
@@ -197,19 +411,175 @@ let cheatMode = false;
 let rainInterval = null;
 let theme = 'dark';
 let showShadow = true;
+let currentMode = 'normal';
+let shadowColor = 'default';
+let customShadowColor = '#ff0000';
+let freeLimit = 6;
 
 // ======================= Константы =======================
 const ALLOWED_LETTERS_RU = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'];
 const ALLOWED_LETTERS_EN = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 const GOST_LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
 
-// ======================= Кастомный селект =======================
-const csData = {
-    'letter1': { wrapper: 'cs-wrapper-1', trigger: 'cs-trigger-1', value: 'cs-value-1', arrow: 'cs-arrow-1', dropdown: 'cs-dropdown-1' },
-    'letter2': { wrapper: 'cs-wrapper-2', trigger: 'cs-trigger-2', value: 'cs-value-2', arrow: 'cs-arrow-2', dropdown: 'cs-dropdown-2' },
-    'letter3': { wrapper: 'cs-wrapper-3', trigger: 'cs-trigger-3', value: 'cs-value-3', arrow: 'cs-arrow-3', dropdown: 'cs-dropdown-3' }
+// ======================= DOM-элементы =======================
+const csWrappers = {
+    letter1: { wrapper: 'cs-wrapper-1', trigger: 'cs-trigger-1', value: 'cs-value-1', arrow: 'cs-arrow-1', dropdown: 'cs-dropdown-1' },
+    letter2: { wrapper: 'cs-wrapper-2', trigger: 'cs-trigger-2', value: 'cs-value-2', arrow: 'cs-arrow-2', dropdown: 'cs-dropdown-2' },
+    letter3: { wrapper: 'cs-wrapper-3', trigger: 'cs-trigger-3', value: 'cs-value-3', arrow: 'cs-arrow-3', dropdown: 'cs-dropdown-3' }
 };
 
+// ================== Инициализация настроек ===================
+function initSettings() {
+    const themeButtons = document.getElementById('themeButtons');
+    themeButtons.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            themeButtons.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const t = this.dataset.theme;
+            applyTheme(t);
+            localStorage.setItem('plateTheme', t);
+        });
+    });
+    const savedTheme = localStorage.getItem('plateTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        themeButtons.querySelectorAll('.theme-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.theme === savedTheme);
+        });
+    } else {
+        applyTheme('dark');
+        themeButtons.querySelector('[data-theme="dark"]').classList.add('active');
+    }
+
+    // Тень
+    const shadowToggle = document.getElementById('shadowToggle');
+    shadowToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        showShadow = this.classList.contains('active');
+        updatePlate();
+        showToast(showShadow ? 'Тень включена' : 'Тень выключена');
+    });
+    shadowToggle.classList.add('active');
+
+    // Дождь
+    const rainToggle = document.getElementById('rainToggle');
+    rainToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        makeItRain();
+    });
+
+    // Режим
+    const modeSelect = document.getElementById('modeSelect');
+    modeSelect.addEventListener('change', function() {
+        setMode(this.value);
+    });
+
+    // Лимит символов
+    const freeLimitToggle = document.getElementById('freeLimitToggle');
+    freeLimitToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        freeLimit = this.classList.contains('active') ? 9 : 6;
+        const freeInput = document.getElementById('freeInput');
+        if (freeInput) {
+            freeInput.maxLength = freeLimit;
+            freeInput.value = freeInput.value.slice(0, freeLimit);
+            updatePlate();
+        }
+        showToast('Лимит: ' + freeLimit + ' символов');
+    });
+    freeLimitToggle.classList.remove('active');
+
+    // Цвет тени
+    const shadowColorSelect = document.getElementById('shadowColorSelect');
+    const customColorWrap = document.getElementById('customColorWrap');
+    const customColorInput = document.getElementById('customShadowColor');
+    shadowColorSelect.addEventListener('change', function() {
+        shadowColor = this.value;
+        if (shadowColor === 'custom') {
+            customColorWrap.style.display = 'flex';
+            customShadowColor = customColorInput.value;
+        } else {
+            customColorWrap.style.display = 'none';
+        }
+        updatePlate();
+    });
+    customColorInput.addEventListener('input', function() {
+        customShadowColor = this.value;
+        updatePlate();
+    });
+
+    // Инфо
+    document.querySelectorAll('.info-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const info = this.dataset.info || 'Нет информации';
+            showToast('ℹ️ ' + info);
+        });
+    });
+
+    // Попап
+    const settingsToggle = document.getElementById('settingsToggle');
+    const settingsPopup = document.getElementById('settingsPopup');
+    settingsToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('open');
+        settingsPopup.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.settings-btn') && !e.target.closest('.settings-popup')) {
+            settingsToggle.classList.remove('open');
+            settingsPopup.classList.remove('open');
+        }
+    });
+
+    updateToggleState('shadowToggle', showShadow);
+    updateToggleState('rainToggle', !!rainInterval);
+    setMode(currentMode);
+}
+
+function updateToggleState(id, state) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (state) el.classList.add('active');
+    else el.classList.remove('active');
+}
+
+// ======================= Режимы =======================
+function setMode(mode) {
+    currentMode = mode;
+    const freeWrap = document.getElementById('freeInputWrap');
+    const inputRow = document.getElementById('inputRow');
+    const selectors = inputRow.querySelectorAll('.cs-wrapper, .digits-input');
+    const freeLimitSetting = document.getElementById('freeLimitSetting');
+    const shadowColorSetting = document.getElementById('shadowColorSetting');
+
+    if (mode === 'free') {
+        selectors.forEach(el => el.classList.add('hidden'));
+        freeWrap.classList.add('active');
+        document.getElementById('freeInput').focus();
+        freeLimitSetting.style.display = 'flex';
+        shadowColorSetting.style.display = 'flex';
+        cheatMode = false;
+        populateSelects();
+    } else {
+        selectors.forEach(el => el.classList.remove('hidden'));
+        freeWrap.classList.remove('active');
+        freeLimitSetting.style.display = 'none';
+        if (mode === 'cheat') {
+            cheatMode = true;
+            populateSelects();
+            shadowColorSetting.style.display = 'flex';
+        } else {
+            cheatMode = false;
+            populateSelects();
+            shadowColorSetting.style.display = 'none';
+        }
+    }
+    updatePlate();
+    showToast('Режим: ' + (mode === 'normal' ? 'Обычный' : mode === 'cheat' ? 'Чит-мод' : 'Свободный'));
+}
+
+// ======================= Кастомный селект =======================
 function getLettersList(selectId) {
     const sel = document.getElementById(selectId);
     if (!sel) return [];
@@ -217,7 +587,7 @@ function getLettersList(selectId) {
 }
 
 function positionDropdown(selectId) {
-    const data = csData[selectId];
+    const data = csWrappers[selectId];
     if (!data) return;
     const trigger = document.getElementById(data.trigger);
     const dropdown = document.getElementById(data.dropdown);
@@ -241,7 +611,7 @@ function positionDropdown(selectId) {
 
 function renderCustomSelect(selectId) {
     const sel = document.getElementById(selectId);
-    const data = csData[selectId];
+    const data = csWrappers[selectId];
     if (!sel || !data) return;
     const trigger = document.getElementById(data.trigger);
     const valueEl = document.getElementById(data.value);
@@ -309,101 +679,112 @@ window.addEventListener('resize', function() {
 
 // ======================= Базовые функции =======================
 function getPlateNumber() {
-    const l1 = document.getElementById('letter1').value || 'А';
-    const l2 = document.getElementById('letter2').value || 'А';
-    const l3 = document.getElementById('letter3').value || 'А';
-    let raw = document.getElementById('digitsInput').value.replace(/\D/g,'');
-    if (raw === '') raw = '0';
-    const digits = raw.padStart(3,'0');
-    return { left: l1, middle: digits, right: l2 + l3, full: l1 + digits + l2 + l3 };
+    if (currentMode === 'free') {
+        const input = document.getElementById('freeInput');
+        let val = input.value.trim().toUpperCase();
+        if (val === '') {
+            return { left: '', middle: '', right: '', full: '', freeText: '' };
+        }
+        return { left: '', middle: '', right: '', full: val, freeText: val };
+    } else {
+        const l1 = document.getElementById('letter1').value || 'А';
+        const l2 = document.getElementById('letter2').value || 'А';
+        const l3 = document.getElementById('letter3').value || 'А';
+        let raw = document.getElementById('digitsInput').value.replace(/\D/g,'');
+        if (raw === '') raw = '0';
+        const digits = raw.padStart(3,'0');
+        return { left: l1, middle: digits, right: l2 + l3, full: l1 + digits + l2 + l3, freeText: '' };
+    }
 }
 
 function updatePlate() {
-    const { left, middle, right } = getPlateNumber();
+    const plateData = getPlateNumber();
     const region = document.getElementById('regionInput').value.replace(/\D/g,'') || '77';
-    document.getElementById('letterLeft').textContent = left;
-    document.getElementById('digitsDisplay').textContent = middle;
-    document.getElementById('letterRight').textContent = right;
     document.getElementById('regionCode').textContent = region;
 
+    const letterLeft = document.getElementById('letterLeft');
+    const digitsDisplay = document.getElementById('digitsDisplay');
+    const letterRight = document.getElementById('letterRight');
+    const freeText = document.getElementById('freeText');
+
+    if (currentMode === 'free') {
+        letterLeft.style.display = 'none';
+        digitsDisplay.style.display = 'none';
+        letterRight.style.display = 'none';
+        freeText.style.display = 'flex';
+        freeText.textContent = plateData.freeText || '';
+    } else {
+        letterLeft.style.display = 'flex';
+        digitsDisplay.style.display = 'flex';
+        letterRight.style.display = 'flex';
+        freeText.style.display = 'none';
+        letterLeft.textContent = plateData.left;
+        digitsDisplay.textContent = plateData.middle;
+        letterRight.textContent = plateData.right;
+    }
+
+    // Пасхалка КУП
     const rusLabel = document.getElementById('rusLabel');
-    if (left === 'К' && right[0] === 'У' && right[1] === 'П') {
+    if (plateData.left === 'К' && plateData.right && plateData.right[0] === 'У' && plateData.right[1] === 'П') {
         rusLabel.textContent = 'QPN';
-        rusLabel.style.color = '#FFD700';
     } else {
         rusLabel.textContent = 'RUS';
-        rusLabel.style.color = '';
     }
 
     // Тень
     const plate = document.getElementById('plateElement');
-    const l1=left, l2=right[0], l3=right[1];
-    const digits = middle;
+    const l1=plateData.left, l2=plateData.right?.[0]||'', l3=plateData.right?.[1]||'';
+    const digits = plateData.middle;
     const reg = region;
-    const sameLetters = (l1 === l2 && l2 === l3);
-    const sameDigits = (digits[0] === digits[1] && digits[1] === digits[2]);
+    const sameLetters = (l1 && l2 && l3 && l1 === l2 && l2 === l3);
+    const sameDigits = (digits.length === 3 && digits[0] === digits[1] && digits[1] === digits[2]);
     const sameRegion = (reg.length === 2 && reg[0] === reg[1]) || (reg.length === 3 && reg[0] === reg[1] && reg[1] === reg[2]);
 
     let shadow = '0 10px 30px rgba(0,0,0,0.6)';
     if (showShadow) {
+        let rarityColor = null;
         if (sameLetters && sameDigits && sameRegion) {
-            shadow = '0 0 50px #FFD700, 0 0 30px #FFD700';
+            rarityColor = '#FFD700';
         } else if (sameLetters && sameDigits) {
-            shadow = '0 0 50px #ff3333, 0 0 30px #ff3333';
+            rarityColor = '#ff3333';
         } else if (sameLetters || sameDigits) {
-            shadow = '0 0 40px #00ff44, 0 0 20px #00ff44';
+            rarityColor = '#00ff44';
+        } else if (sameDigits && sameRegion) {
+            rarityColor = '#ff3333';
+        }
+        if (rarityColor) {
+            shadow = `0 0 50px ${rarityColor}, 0 0 30px ${rarityColor}`;
+        } else {
+            if (currentMode === 'cheat' || currentMode === 'free') {
+                let customColor = null;
+                if (shadowColor === 'custom') customColor = customShadowColor;
+                else if (shadowColor === 'red') customColor = '#ff0000';
+                else if (shadowColor === 'blue') customColor = '#0066ff';
+                else if (shadowColor === 'green') customColor = '#00cc44';
+                else if (shadowColor === 'gold') customColor = '#FFD700';
+                if (customColor) {
+                    shadow = `0 0 50px ${customColor}, 0 0 30px ${customColor}`;
+                }
+            }
         }
     }
     plate.style.boxShadow = shadow;
 
-    saveSettings();
-    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
-}
-
-// ======================= Двойной клик по кнопке "Обновить" — переключение тени =======================
-document.getElementById('updateBtn').addEventListener('dblclick', function() {
-    showShadow = !showShadow;
-    updatePlate();
-    showToast(showShadow ? '✨ Тень включена' : '🚫 Тень выключена');
-});
-
-// ======================= Сохранение / загрузка =======================
-function saveSettings() {
-    const settings = {
-        letter1: document.getElementById('letter1').value,
-        letter2: document.getElementById('letter2').value,
-        letter3: document.getElementById('letter3').value,
-        digits: document.getElementById('digitsInput').value,
-        region: document.getElementById('regionInput').value,
-        theme: theme,
-        showShadow: showShadow
-    };
-    try { localStorage.setItem('plateSettings', JSON.stringify(settings)); } catch(e) {}
-}
-
-function loadSettings() {
-    try {
-        const data = JSON.parse(localStorage.getItem('plateSettings'));
-        if (data) {
-            if (data.letter1) document.getElementById('letter1').value = data.letter1;
-            if (data.letter2) document.getElementById('letter2').value = data.letter2;
-            if (data.letter3) document.getElementById('letter3').value = data.letter3;
-            if (data.digits) document.getElementById('digitsInput').value = data.digits;
-            if (data.region) document.getElementById('regionInput').value = data.region;
-            if (data.theme) { theme = data.theme; applyTheme(theme); }
-            if (data.showShadow !== undefined) showShadow = data.showShadow;
-        }
-    } catch(e) {}
+    if (currentMode !== 'free') {
+        ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
+    }
 }
 
 // ======================= Тема =======================
-function toggleTheme() {
-    theme = (theme === 'dark') ? 'light' : 'dark';
-    applyTheme(theme);
-    saveSettings();
-    showToast('Тема: ' + (theme === 'dark' ? '🌙 Тёмная' : '☀️ Светлая'));
+function applyTheme(t) {
+    theme = t;
+    document.body.classList.toggle('light-theme', t === 'light');
+    const buttons = document.getElementById('themeButtons');
+    buttons.querySelectorAll('.theme-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.theme === t);
+    });
+    localStorage.setItem('plateTheme', t);
 }
-function applyTheme(t) { document.body.classList.toggle('light-theme', t === 'light'); }
 
 // ======================= Заполнение выпадающих списков =======================
 function populateSelects() {
@@ -488,11 +869,22 @@ function restrictInputs() {
             }
         });
     }
-    document.getElementById('letter1').addEventListener('change', function() { updateLetter3Options(); saveSettings(); });
-    document.getElementById('letter2').addEventListener('change', function() { updateLetter3Options(); saveSettings(); });
-    document.getElementById('letter3').addEventListener('change', function() { updatePlate(); saveSettings(); });
-    document.getElementById('digitsInput').addEventListener('input', function() { updatePlate(); saveSettings(); });
-    document.getElementById('regionInput').addEventListener('input', function() { updatePlate(); saveSettings(); });
+    const freeInput = document.getElementById('freeInput');
+    if (freeInput) {
+        freeInput.addEventListener('input', function() {
+            let val = this.value.toUpperCase().replace(/[^А-ЯA-Z0-9]/g, '').slice(0, freeLimit);
+            this.value = val;
+            updatePlate();
+        });
+        freeInput.addEventListener('blur', function() {
+            updatePlate();
+        });
+    }
+    document.getElementById('letter1').addEventListener('change', function() { updateLetter3Options(); });
+    document.getElementById('letter2').addEventListener('change', function() { updateLetter3Options(); });
+    document.getElementById('letter3').addEventListener('change', function() { updatePlate(); });
+    document.getElementById('digitsInput').addEventListener('input', function() { updatePlate(); });
+    document.getElementById('regionInput').addEventListener('input', function() { updatePlate(); });
 }
 
 // ======================= Чит-мод: ввод с клавиатуры =======================
@@ -546,17 +938,6 @@ function setupCheatKeyboard() {
     });
 }
 
-// ======================= Отключение чит-мода =======================
-function disableCheatMode() {
-    cheatMode = false;
-    populateSelects();
-    document.getElementById('digitsInput').maxLength = 3;
-    document.getElementById('digitsInput').pattern = '[0-9]*';
-    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
-    updatePlate();
-    showToast('🧠 Cheat mode выключен');
-}
-
 // ======================= Горячие клавиши =======================
 document.addEventListener('keydown', function(e) {
     const activeTag = document.activeElement?.tagName;
@@ -564,8 +945,6 @@ document.addEventListener('keydown', function(e) {
         if (!e.ctrlKey && !e.altKey) return;
     }
     if (e.ctrlKey && e.altKey && (e.key === 'R' || e.key === 'r')) { e.preventDefault(); generateRandomPlate(); }
-    else if (e.ctrlKey && e.altKey && (e.key === 'T' || e.key === 't')) { e.preventDefault(); toggleTheme(); }
-    else if (e.ctrlKey && e.altKey && (e.key === 'S' || e.key === 's')) { e.preventDefault(); saveSVG(); }
     else if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); copyPlateNumber(); }
     else if (e.ctrlKey && e.shiftKey && (e.key === 'V' || e.key === 'v')) { e.preventDefault(); pasteFromClipboard(); }
 });
@@ -575,12 +954,19 @@ function generateRandomPlate() {
     const letters = cheatMode ? [...ALLOWED_LETTERS_RU, ...ALLOWED_LETTERS_EN] : GOST_LETTERS;
     const randLetter = () => letters[Math.floor(Math.random() * letters.length)];
     const randDigit = () => Math.floor(Math.random() * 10).toString();
-    document.getElementById('letter1').value = randLetter();
-    document.getElementById('letter2').value = randLetter();
-    document.getElementById('letter3').value = randLetter();
-    document.getElementById('digitsInput').value = randDigit() + randDigit() + randDigit();
+    if (currentMode === 'free') {
+        const l = randLetter();
+        const d = randDigit()+randDigit()+randDigit();
+        const r = randLetter()+randLetter();
+        document.getElementById('freeInput').value = l+d+r;
+    } else {
+        document.getElementById('letter1').value = randLetter();
+        document.getElementById('letter2').value = randLetter();
+        document.getElementById('letter3').value = randLetter();
+        document.getElementById('digitsInput').value = randDigit() + randDigit() + randDigit();
+    }
     document.getElementById('regionInput').value = String(Math.floor(Math.random() * 99) + 1).padStart(2,'0');
-    updateLetter3Options();
+    if (currentMode !== 'free') updateLetter3Options();
     updatePlate();
     const plate = document.getElementById('plateElement');
     plate.style.transition = 'box-shadow 0.2s';
@@ -590,9 +976,11 @@ function generateRandomPlate() {
 
 // ======================= Копирование номера =======================
 function copyPlateNumber() {
-    const { left, middle, right } = getPlateNumber();
+    const plateData = getPlateNumber();
     const region = document.getElementById('regionCode').textContent || '77';
-    const text = left + middle + right + ' ' + region;
+    const full = plateData.freeText || plateData.full;
+    if (full === '') { showToast('Номер пуст'); return; }
+    const text = full + ' ' + region;
     if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => showToast('Скопировано: ' + text)).catch(() => {});
     } else {
@@ -625,12 +1013,16 @@ async function pasteFromClipboard() {
         const match = text.trim().match(/^([А-ЯA-Z])(\d{3})([А-ЯA-Z]{2})\s+(\d{2,3})$/i);
         if (match) {
             const [, l1, digits, rightLetters, region] = match;
-            document.getElementById('letter1').value = l1.toUpperCase();
-            document.getElementById('digitsInput').value = digits;
-            document.getElementById('letter2').value = rightLetters[0].toUpperCase();
-            document.getElementById('letter3').value = rightLetters[1].toUpperCase();
+            if (currentMode === 'free') {
+                document.getElementById('freeInput').value = l1 + digits + rightLetters;
+            } else {
+                document.getElementById('letter1').value = l1.toUpperCase();
+                document.getElementById('digitsInput').value = digits;
+                document.getElementById('letter2').value = rightLetters[0].toUpperCase();
+                document.getElementById('letter3').value = rightLetters[1].toUpperCase();
+                updateLetter3Options();
+            }
             document.getElementById('regionInput').value = region;
-            updateLetter3Options();
             updatePlate();
             showToast('Вставлено: ' + text);
         } else {
@@ -639,130 +1031,60 @@ async function pasteFromClipboard() {
     } catch (err) { showToast('Ошибка чтения буфера'); console.error(err); }
 }
 
-// ======================= Экспорт SVG =======================
-function saveSVG() {
-    const { left, middle, right } = getPlateNumber();
-    const region = document.getElementById('regionCode').textContent || '77';
-    const full = left + middle + right;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="112" viewBox="0 0 520 112">
-        <defs><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        .pf{font-family:'GOST-R-50577-93','Inter',sans-serif;font-weight:600}.rf{font-family:'Inter',sans-serif;font-weight:600}</style></defs>
-        <rect width="520" height="112" rx="15" fill="#000" stroke="#000" stroke-width="5"/>
-        <rect x="5" y="5" width="385" height="102" rx="10" fill="#fff"/>
-        <text x="200" y="82" text-anchor="middle" class="pf" font-size="76" letter-spacing="5" fill="#000">${left}${middle}${right}</text>
-        <rect x="395" y="5" width="120" height="102" rx="10" fill="#fff"/>
-        <text x="455" y="75" text-anchor="middle" class="pf" font-size="64" fill="#000">${region}</text>
-        <text x="475" y="100" text-anchor="end" class="rf" font-size="20" fill="#000">RUS</text>
-        <rect x="485" y="82" width="35" height="20" rx="2" fill="url(#f)"/>
-        <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="33%" stop-color="#FFF"/><stop offset="33%" stop-color="#0039A6"/><stop offset="66%" stop-color="#0039A6"/><stop offset="66%" stop-color="#D52B1E"/></linearGradient></defs>
-    </svg>`;
-    const blob = new Blob([svg], {type: 'image/svg+xml'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.download = full.toLowerCase() + '_' + region + '.svg';
-    a.href = url;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('SVG сохранён');
-}
-
-// ======================= Сохранение PNG (исправленная версия с устранением белых углов) =======================
+// ======================= Сохранение PNG =======================
 function savePNG() {
     const plate = document.getElementById('plateElement');
     if (!plate) return;
 
-    // Сохраняем оригинальные стили
+    const plateData = getPlateNumber();
+    const region = document.getElementById('regionCode').textContent || '77';
+    const full = (plateData.freeText || plateData.full || 'unknown').toLowerCase();
+    const fileName = `${full}_${region}.png`;
+
+    const btn = document.querySelector('.btn-save');
+    const originalBtnHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
+    btn.disabled = true;
+
     const originalShadow = plate.style.boxShadow;
     const originalTransform = plate.style.transform;
     const originalTransition = plate.style.transition;
 
-    // Принудительно убираем тень, масштаб и переходы
-    plate.style.transition = 'none';
-    plate.style.transform = 'scale(1)';
     plate.style.boxShadow = 'none';
-    plate.style.background = '#000';
-    plate.style.backgroundColor = '#000';
+    plate.style.transform = 'none';
+    plate.style.transition = 'none';
 
-    // Получаем номер и регион для имени файла
-    const left = document.getElementById('letterLeft').textContent || 'O';
-    const digits = document.getElementById('digitsDisplay').textContent || '000';
-    const right = document.getElementById('letterRight').textContent || 'OO';
-    const region = document.getElementById('regionCode').textContent || '00';
-    const plateNumber = (left + digits + right).toLowerCase();
-    const fileName = `${plateNumber}_${region}.png`;
+    setTimeout(() => {
+        html2canvas(plate, {
+            width: 520,
+            height: 112,
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+            logging: false,
+            allowTaint: true
+        }).then(canvas => {
+            plate.style.boxShadow = originalShadow;
+            plate.style.transform = originalTransform;
+            plate.style.transition = originalTransition;
 
-    const btn = document.querySelector('.btn-save');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
-    btn.disabled = true;
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
 
-    html2canvas(plate, {
-        width: 520,
-        height: 112,
-        scale: 1,
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-        allowTaint: true,
-        onclone: function(doc) {
-            const cloned = doc.getElementById('plateElement');
-            if (cloned) {
-                // Жёстко устанавливаем все стили для устранения артефактов
-                cloned.style.fontFamily = "'GOST-R-50577-93', sans-serif";
-                cloned.style.transition = 'none';
-                cloned.style.transform = 'scale(1)';
-                cloned.style.boxShadow = 'none';
-                cloned.style.background = '#000';
-                cloned.style.backgroundColor = '#000';
-                cloned.style.backgroundImage = 'none';
-                cloned.style.backgroundClip = 'padding-box';
-                cloned.style.borderRadius = '15px';
-                cloned.style.overflow = 'hidden';
-                cloned.style.border = '5px solid #000';
-                cloned.style.boxSizing = 'border-box';
-                // Убираем фон у родительских элементов в клоне
-                const wrapper = cloned.closest('.plate-wrapper');
-                if (wrapper) {
-                    wrapper.style.background = 'transparent';
-                    wrapper.style.backgroundColor = 'transparent';
-                }
-                const container = wrapper?.closest('.app-container');
-                if (container) {
-                    container.style.background = 'transparent';
-                    container.style.backgroundColor = 'transparent';
-                }
-                // Также убираем фон у body в клоне (на всякий случай)
-                const body = doc.body;
-                if (body) {
-                    body.style.background = 'transparent';
-                    body.style.backgroundColor = 'transparent';
-                }
-            }
-        }
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = fileName;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        // Восстанавливаем стили
-        plate.style.transition = originalTransition || '';
-        plate.style.transform = originalTransform || '';
-        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
-        plate.style.background = '';
-        plate.style.backgroundColor = '';
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }).catch(err => {
-        console.error('PNG export error:', err);
-        alert('Ошибка сохранения PNG. Попробуйте ещё раз.');
-        plate.style.transition = originalTransition || '';
-        plate.style.transform = originalTransform || '';
-        plate.style.boxShadow = originalShadow || '0 10px 30px rgba(0,0,0,0.6)';
-        plate.style.background = '';
-        plate.style.backgroundColor = '';
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    });
+            btn.innerHTML = originalBtnHtml;
+            btn.disabled = false;
+        }).catch(err => {
+            console.error(err);
+            plate.style.boxShadow = originalShadow;
+            plate.style.transform = originalTransform;
+            plate.style.transition = originalTransition;
+            alert('Ошибка сохранения PNG');
+            btn.innerHTML = originalBtnHtml;
+            btn.disabled = false;
+        });
+    }, 40);
 }
 
 // ======================= Дождь =======================
@@ -770,9 +1092,11 @@ function makeItRain() {
     if (rainInterval) {
         clearInterval(rainInterval);
         rainInterval = null;
+        updateToggleState('rainToggle', false);
         showToast('☔ Дождь остановлен');
         return;
     }
+    updateToggleState('rainToggle', true);
     showToast('☔ Дождь начался!');
     const chars = 'АВЕКМНОРСТУХ';
     const randPlate = () => {
@@ -796,17 +1120,6 @@ function makeItRain() {
             setTimeout(() => el.remove(), 10000);
         }
     }, 300);
-}
-
-// ======================= Cheat mode =======================
-function enableCheatMode() {
-    cheatMode = true;
-    populateSelects();
-    document.getElementById('digitsInput').maxLength = 3;
-    document.getElementById('digitsInput').pattern = '.*';
-    showToast('🧠 Cheat mode включён!');
-    setupCheatKeyboard();
-    ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
 }
 
 // ======================= Toast =======================
@@ -834,21 +1147,23 @@ function showToast(msg) {
 
 // ======================= Инициализация =======================
 document.addEventListener('DOMContentLoaded', function() {
-    loadSettings();
     populateSelects();
     restrictInputs();
     setupCheatKeyboard();
+    initSettings();
     ['letter1','letter2','letter3'].forEach(id => renderCustomSelect(id));
     updatePlate();
     document.getElementById('digitsInput').addEventListener('input', updatePlate);
     document.getElementById('regionInput').addEventListener('input', updatePlate);
-    document.querySelectorAll('.native-select').forEach(s => s.addEventListener('change', saveSettings));
 });
 
-window.enableCheatMode = enableCheatMode;
-window.disableCheatMode = disableCheatMode;
+// Экспорт
+window.enableCheatMode = () => { setMode('cheat'); document.getElementById('modeSelect').value = 'cheat'; };
+window.disableCheatMode = () => { setMode('normal'); document.getElementById('modeSelect').value = 'normal'; };
 window.makeItRain = makeItRain;
-window.toggleTheme = toggleTheme;
+window.toggleTheme = (t) => { applyTheme(t); };
+window.setMode = setMode;
+window.savePNG = savePNG;
 </script>
 </body>
-</html>
+</html>                         
