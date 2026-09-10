@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -301,7 +301,7 @@
         <div class="controls-row">
             <input type="text" id="regionInput" class="region-input" value="77" maxlength="3" inputmode="numeric" pattern="[0-9]*" placeholder="Рег">
             <div class="btn-group">
-                <button class="btn-update" id="updateBtn" onclick="updatePlate()"><i class="fas fa-arrows-rotate"></i></button>
+                <button class="btn-update" id="updateBtn" onclick="generateRandomPlate()"><i class="fas fa-arrows-rotate"></i></button>
                 <button class="btn-save" onclick="savePNG()"><i class="fas fa-download"></i> <span class="save-label">PNG</span></button>
                 <button class="settings-btn" id="settingsToggle" aria-expanded="false"><i class="fas fa-gear"></i></button>
             </div>
@@ -422,6 +422,22 @@ let currentMode = 'normal';
 let shadowColor = 'default';
 let customShadowColor = '#ff0000';
 let freeLimit = 6;
+
+// ======================= Список регионов РФ =======================
+const RU_REGIONS = [
+    '01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20',
+    '21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40',
+    '41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60',
+    '61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79','80',
+    '81','82','83','84','85','86','87','89','90','91','92','93','95','96','97','98','99',
+    '101','102','103','105','106','107','108','109','110','111','112','113','114','115','116','117','118',
+    '119','121','122','123','124','125','126','127','128','129','130','131','132','133','134','135','136',
+    '137','138','139','140','141','142','143','144','145','146','147','148','149','150','151','152','153',
+    '154','155','156','157','158','159','160','161','162','163','164','165','166','167','168','169','170',
+    '171','172','173','174','175','176','177','178','179','182','183','186','187','189','190','192','193',
+    '196','197','198','199','222','224','250','252','277','299','323','550','702','716','725','750','754',
+    '761','763','774','777','778','790','797','799','977'
+];
 
 // ======================= Константы =======================
 const ALLOWED_LETTERS_RU = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'];
@@ -961,6 +977,8 @@ function generateRandomPlate() {
     const letters = cheatMode ? [...ALLOWED_LETTERS_RU, ...ALLOWED_LETTERS_EN] : GOST_LETTERS;
     const randLetter = () => letters[Math.floor(Math.random() * letters.length)];
     const randDigit = () => Math.floor(Math.random() * 10).toString();
+    const randRegion = () => RU_REGIONS[Math.floor(Math.random() * RU_REGIONS.length)];
+
     if (currentMode === 'free') {
         const l = randLetter();
         const d = randDigit()+randDigit()+randDigit();
@@ -972,7 +990,7 @@ function generateRandomPlate() {
         document.getElementById('letter3').value = randLetter();
         document.getElementById('digitsInput').value = randDigit() + randDigit() + randDigit();
     }
-    document.getElementById('regionInput').value = String(Math.floor(Math.random() * 999) + 1).padStart(2,'0');
+    document.getElementById('regionInput').value = randRegion();
     if (currentMode !== 'free') updateLetter3Options();
     updatePlate();
     const plate = document.getElementById('plateElement');
@@ -1111,7 +1129,7 @@ function makeItRain() {
         const l2 = chars[Math.floor(Math.random()*chars.length)];
         const l3 = chars[Math.floor(Math.random()*chars.length)];
         const d = String(Math.floor(Math.random()*900)+100);
-        const r = String(Math.floor(Math.random()*99)+1).padStart(2,'0');
+        const r = RU_REGIONS[Math.floor(Math.random() * RU_REGIONS.length)];
         return l1+d+l2+l3+' '+r;
     };
     rainInterval = setInterval(() => {
@@ -1173,4 +1191,4 @@ window.setMode = setMode;
 window.savePNG = savePNG;
 </script>
 </body>
-</html>                         
+</html>
