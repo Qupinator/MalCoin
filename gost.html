@@ -972,12 +972,12 @@ function generateRandomPlate() {
         document.getElementById('letter3').value = randLetter();
         document.getElementById('digitsInput').value = randDigit() + randDigit() + randDigit();
     }
-    document.getElementById('regionInput').value = String(Math.floor(Math.random() * 99) + 1).padStart(2,'0');
+    document.getElementById('regionInput').value = String(Math.floor(Math.random() * 999) + 1).padStart(2,'0');
     if (currentMode !== 'free') updateLetter3Options();
     updatePlate();
     const plate = document.getElementById('plateElement');
     plate.style.transition = 'box-shadow 0.2s';
-    plate.style.boxShadow = '0 0 30px rgba(255,255,255,0.5)';
+    plate.style.boxShadow = '0 0 30px rgba(255,255,255,0.3)';
     setTimeout(() => updatePlate(), 300);
 }
 
