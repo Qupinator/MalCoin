@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>403 — Доступ запрещён</title>
+<meta name="author" content="403 — Доступ запрещён">
+<meta name="keywords" content="ошибка 403, доступ запрещён, 403 forbidden, ошибка доступа, страница 403, vpn блокировка, отключить vpn, доступ заблокирован, ошибка доступа к сайту, 403 ошибка vpn, соединение заблокировано, err_tunnel_connection_failed, запрет доступа, блокировка по ip, скрытый ip, доступ к ресурсу запрещён, ошибка сервера 403, http 403, страница недоступна, доступ ограничен, необходимо отключить vpn, проблема с vpn, vpn блокирует соединение, обновить страницу, ошибка авторизации, нет доступа, сервер отклонил запрос, капча, защита от ботов, ограничение доступа, доступ только из рф, региональная блокировка">
+<meta name="description" content="Страница ошибки 403 — доступ к ресурсу запрещён. Вероятная причина — активный VPN. Отключите VPN-соединение и обновите страницу, чтобы продолжить работу.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="403 — Доступ запрещён">
+<meta property="og:description" content="Доступ к ресурсу запрещён. Попробуйте отключить VPN и обновить страницу.">
+<meta property="og:image" content="https://qupinator.github.io/MalCoin/403.png">
+<meta property="og:url" content="https://qupinator.github.io/MalCoin/403">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="403.png">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --primary: #ffffff;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+
+  /* Сетчатый фон (статичный) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: center center;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Светящееся пятно по центру */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Анимированные частицы */
+  .particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0;
+    animation: float 15s infinite linear;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(100vh) rotate(0deg);
+      opacity: 0;
+    }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% {
+      transform: translateY(-100px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Центральный контент */
+  .container {
+    position: relative;
+    z-index: 5;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .error-code {
+    font-size: clamp(140px, 26vw, 300px);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: 0.06em;
+    padding-left: 0.06em;
+    background: linear-gradient(180deg, #ffffff 0%, #4a4a4a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.12));
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    color: #ffffff;
+  }
+
+  .description {
+    font-size: clamp(14px, 1.4vw, 16px);
+    line-height: 1.6;
+    color: #9a9a9a;
+    max-width: 520px;
+  }
+
+  .description strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Нижняя панель */
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #555555;
+    z-index: 10;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .footer-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff4d4d;
+    box-shadow: 0 0 8px #ff4d4d;
+  }
+
+  @media (max-width: 640px) {
+    .footer {
+      padding: 16px 20px;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="particles" id="particles"></div>
+
+  <main class="container">
+    <div class="error-code">403</div>
+
+    <h1 class="title">Доступ запрещён</h1>
+
+    <p class="description">
+      Попробуйте <strong>отключить VPN</strong> и обновить страницу.
+    </p>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-item">
+      <span>ERR_TUNNEL_CONNECTION_FAILED</span>
+    </div>
+    <div class="footer-item">
+      <span class="footer-dot"></span>
+      <span>Доступ заблокирован · IP скрыт</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const container = document.getElementById('particles');
+      const count = 40;
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('span');
+        p.className = 'particle';
+
+        const size = Math.random() * 3 + 1; // 1–4px
+        const left = Math.random() * 100;   // %
+        const duration = Math.random() * 10 + 10; // 10–20s
+        const delay = Math.random() * 15;   // 0–15s
+        const opacityFactor = Math.random() * 0.5 + 0.3;
+
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = left + '%';
+        p.style.animationDuration = duration + 's';
+        p.style.animationDelay = delay + 's';
+        p.style.opacity = 0;
+        p.style.setProperty('--peak-opacity', opacityFactor);
+
+        container.appendChild(p);
+      }
+    })();
+  </script>
+
+</body>
+</html>
