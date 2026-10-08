@@ -140,7 +140,7 @@
         .settings-btn .fa-gear{transition:transform .5s}
         .settings-btn.open .fa-gear{transform:rotate(60deg)}
 
-        .settings-popup{position:absolute;top:calc(100% + 12px);right:0;z-index:60;background:#1a1b24;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px;min-width:280px;max-width:400px;display:none;box-shadow:0 16px 48px rgba(0,0,0,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);max-height:80vh;overflow-y:auto}
+        .settings-popup{position:absolute;top:calc(100% + 12px);right:0;z-index:60;background:#1a1b24;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px;min-width:280px;width:100%;max-width:400px;display:none;box-shadow:0 16px 48px rgba(0,0,0,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);max-height:80vh;overflow-y:auto}
         .settings-popup.open{display:block;animation:slideDown .25s ease}
         @keyframes slideDown{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:translateY(0)}}
         .settings-popup::-webkit-scrollbar{width:4px}
@@ -330,7 +330,7 @@
             <div class="setting-item" id="shadowColorSetting" style="display:none;">
                 <span class="setting-label">
                     Цвет тени
-                    <button class="info-btn" data-info="Выберите цвет тени (доступно в чит-моде и свободном режиме)"><i class="fas fa-circle-info"></i></button>
+                    <button class="info-btn" data-info="Выберите цвет тени (доступно в Расширенном и свободном режиме)"><i class="fas fa-circle-info"></i></button>
                 </span>
                 <span class="setting-control">
                     <select class="shadow-color-select" id="shadowColorSelect">
@@ -599,7 +599,7 @@ function setMode(mode) {
         }
     }
     updatePlate();
-    showToast('Режим: ' + (mode === 'normal' ? 'Обычный' : mode === 'cheat' ? 'Чит-мод' : 'Свободный'));
+    showToast('Режим: ' + (mode === 'normal' ? 'Обычный' : mode === 'cheat' ? 'Расширенный' : 'Свободный'));
 }
 
 // ======================= Кастомный селект =======================
