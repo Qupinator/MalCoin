@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0d13">
 <title>CAR CASE — открытие кейсов с машинами</title>
-<!-- Подключение Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root{
@@ -17,10 +16,11 @@
     --muted:#7f8da6;
     --accent:#ffb020;
     --accent-2:#ff6a00;
-    --item-w:142px;
-    --item-h:172px;
+    --item-w:120px;
+    --item-h:120px;
     --gap:10px;
     --radius:14px;
+    --ctrl-h:52px;
   }
 
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -141,6 +141,22 @@
   }
 
   /* ============ OPEN VIEW ============ */
+  .sticky-open-area {
+    position: sticky;
+    top: 60px;
+    z-index: 40;
+    background: var(--bg);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  @media (max-width: 768px) {
+    .sticky-open-area {
+      top: 54px;
+    }
+  }
+
   .back-btn{
     display:inline-flex;align-items:center;gap:6px;
     padding:8px 14px;margin-bottom:14px;
@@ -164,7 +180,7 @@
     display:grid;
     grid-template-columns:1fr;
     gap:10px;
-    margin-bottom:20px;
+    margin-bottom:16px;
   }
   .roulettes-wrap.multi{
     grid-template-columns:repeat(2,1fr);
@@ -172,20 +188,33 @@
 
   .roulette{
     position:relative;
-    height:calc(var(--item-h) + 44px);
+    height:calc(var(--item-h) + 40px);
     border-radius:var(--radius);
     border:1px solid var(--border);
     background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
     overflow:hidden;
     box-shadow:inset 0 0 60px rgba(0,0,0,.75);
+    transition: all 0.3s;
+    box-shadow: 0 0 0 transparent;
   }
   .roulette.compact{
-    --item-w:100px;
-    --item-h:104px;
+    --item-w:80px;
+    --item-h:80px;
     --gap:8px;
     height:calc(var(--item-h) + 24px);
     border-radius:11px;
   }
+
+  /* Усиленный эффект для моментального открытия */
+  .roulettes-wrap.instant-mode .roulette {
+    border-color: var(--accent);
+    box-shadow: 
+      0 0 25px rgba(255, 176, 32, 0.8), 
+      0 0 10px rgba(255, 176, 32, 0.6), 
+      inset 0 0 60px rgba(0,0,0,.75);
+    transition: all 0.3s;
+  }
+
   .roulette::after{
     content:'';position:absolute;left:50%;top:0;bottom:0;width:120px;
     transform:translateX(-50%);
@@ -208,12 +237,12 @@
     border:1px solid var(--border);
     background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:6px;padding:10px 6px;
+    gap:4px;padding:6px;
     overflow:hidden;
     transition:transform .3s, box-shadow .3s;
   }
   .roulette.compact .item{
-    border-radius:8px;padding:6px 4px;gap:3px;
+    border-radius:8px;padding:4px;gap:2px;
   }
   .item::before{
     content:'';position:absolute;inset:0;
@@ -224,16 +253,15 @@
     content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
     background:var(--rc);box-shadow:0 0 12px var(--rc);
   }
-  .item .car-svg{width:90%;height:auto;position:relative;z-index:1}
-  .roulette.compact .item .car-svg{width:82%}
+  .item .car-svg{width:100%;height:auto;position:relative;z-index:1}
   .item-name{
     position:relative;z-index:1;
-    font-size:10.5px;line-height:1.15;text-align:center;
+    font-size:10px;line-height:1.1;text-align:center;
     color:#cbd6e6;font-weight:600;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
     overflow:hidden;
   }
-  .roulette.compact .item-name{font-size:8.5px}
+  .roulette.compact .item-name{font-size:8px}
   .item.winner{
     transform:scale(1.06);
     box-shadow:0 0 0 2px var(--rc), 0 0 34px var(--rc);
@@ -259,94 +287,258 @@
   .fade-r{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
   .roulettes-wrap.multi .fade{width:34px}
 
-  /* --- INSTANT PANEL --- */
-  .instant-panel{
-    height:calc(var(--item-h) + 44px);
-    border-radius:var(--radius);
-    border:1px dashed rgba(255,176,32,.35);
-    background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:10px;margin-bottom:20px;
-    color:var(--muted);font-size:13px;font-weight:600;text-align:center;
-    padding:0 20px;
+  /* --- CONTROLS PANEL --- */
+  .controls-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
   }
-  .instant-panel .ip-icon i {font-size:38px;color:var(--accent);line-height:1;}
-  .instant-panel .ip-text{color:var(--accent);font-size:16px;font-weight:800;letter-spacing:.5px}
+  .controls-mobile-top {
+    display: contents;
+  }
 
-  /* --- QTY / SWITCH --- */
-  .qty-row{
-    display:flex;align-items:center;justify-content:space-between;
-    gap:12px;margin-bottom:12px;
+  .qty-group {
+    display: flex;
+    align-items: center;
+    order: 1;
   }
-  .qty-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-  .qty-btns{display:flex;gap:6px}
-  .qty-btn{
-    width:38px;height:38px;border-radius:9px;
-    border:1px solid var(--border);background:var(--panel);
-    color:var(--muted);font-size:14px;font-weight:800;
-    cursor:pointer;font-family:inherit;transition:.15s;
+  .qty-btns-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px 8px;
+    height: var(--ctrl-h);
   }
-  .qty-btn.active{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#160f00;border-color:transparent;
+  .qty-text {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
-  .qty-btn:active:not(:disabled){transform:scale(.94)}
-  .qty-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--panel-2);border-color:transparent}
-  
+  .qty-btns {
+    display: flex;
+    gap: 2px;
+  }
+  .qty-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qty-btn:hover:not(:disabled) { color: var(--text); }
+  .qty-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #160f00;
+  }
+  .qty-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
   .qty-btn.active:disabled {
     background: linear-gradient(135deg, #4a1a1a, #2a0a0a);
     color: #ff6b6b;
-    border: 1px solid #ff6b6b;
-    opacity: 0.9;
     box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.2);
-    cursor: not-allowed;
   }
 
-  .switch-row{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 14px;border-radius:11px;
-    background:var(--panel);border:1px solid var(--border);
-    margin-bottom:16px;font-size:13.5px;font-weight:600;
-    cursor:pointer;
-  }
-  .switch-row span:first-child { display:flex; align-items:center; gap:8px; }
-  .switch-row i { color:var(--accent); }
-  .switch-row input{display:none}
-  .switch{
-    width:44px;height:24px;border-radius:12px;
-    background:#2a3648;position:relative;transition:.2s;flex:none;
-  }
-  .switch::after{
-    content:'';position:absolute;top:3px;left:3px;
-    width:18px;height:18px;border-radius:50%;
-    background:#8fa1ba;transition:.2s;
-  }
-  .switch-row input:checked + .switch{background:var(--accent)}
-  .switch-row input:checked + .switch::after{left:23px;background:#160f00}
-  .switch-row input:disabled + .switch{opacity:.45}
-
-  /* --- BUTTONS --- */
-  .btn{
-    display:block;width:100%;
-    padding:15px 20px;border-radius:12px;border:none;
-    font-size:15px;font-weight:800;letter-spacing:.5px;
-    cursor:pointer;transition:.18s;font-family:inherit;
-  }
-  .btn.primary{
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#160f00;
-    box-shadow:0 10px 26px -10px rgba(255,150,0,.85);
-  }
-  .btn.primary:hover:not(:disabled){filter:brightness(1.1)}
-  .btn.primary:active:not(:disabled){transform:scale(.98)}
-  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(0.6)}
   .btn.ghost{
-    background:var(--panel);color:var(--text);
+    background: linear-gradient(135deg, #fff, #bbb);
+    color: #160f00;
     border:1px solid var(--border);
+    width:100%;
+    padding:15px 20px;
+    border-radius:12px;
+    border:none;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.5px;
+    cursor:pointer;
+    transition:.18s;
+    font-family:inherit;
   }
   .btn.ghost:hover{border-color:#3a4a60}
 
+  .btn.primary {
+    order: 2;
+    min-width: 250px;
+    height: var(--ctrl-h);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #160f00;
+    box-shadow: 0 10px 26px -10px rgba(255,150,0,.85);
+    cursor: pointer;
+    transition: 0.18s;
+    font-family: inherit;
+  }
+  .btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
+  .btn.primary:active:not(:disabled) { transform: scale(.98); }
+  .btn.primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; filter: grayscale(0.6); }
+
+  .fast-open-toggle {
+    order: 3;
+    display: block;
+    height: var(--ctrl-h);
+    width: var(--ctrl-h);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .fast-open-toggle input { display: none; }
+  .toggle-box {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
+  .toggle-box i {
+    font-size: 20px;
+    color: var(--muted);
+    transition: 0.2s;
+  }
+  .fast-open-toggle input:checked + .toggle-box {
+    background: rgba(255, 176, 32, 0.1);
+    border-color: var(--accent);
+  }
+  .fast-open-toggle input:checked + .toggle-box i {
+    color: var(--accent);
+    filter: drop-shadow(0 0 8px rgba(255, 176, 32, 0.6));
+  }
+  .fast-open-toggle input:disabled + .toggle-box {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    .controls-panel {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .controls-mobile-top {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .qty-group { order: unset; }
+    .btn.primary {width: 100%; flex: none; }
+    .fast-open-toggle { order: unset; }
+  }
+
+  /* --- POSSIBLE DROPS --- */
+  .possible-drops-section h3 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .possible-drops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .drop-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .drop-item::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--rc) 0%, transparent 70%);
+    opacity: 0.1;
+  }
+  .drop-item .car-svg {
+    width: 80%;
+    height: auto;
+    color: var(--rc);
+    position: relative;
+    z-index: 1;
+  }
+  .drop-name {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    color: #cbd6e6;
+    position: relative;
+    z-index: 1;
+  }
+  .drop-rarity {
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--rc);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+  }
+
   /* ============ GARAGE ============ */
+  .garage-top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .garage-top-nav .back-btn {
+    margin-bottom: 0;
+  }
+  .garage-top-nav .sell-all-garage-btn {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 13px;
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 8px 20px -8px rgba(239, 68, 68, 0.6);
+    color: #fff;
+    border-radius: 9px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: .18s;
+  }
+  .garage-top-nav .sell-all-garage-btn:hover { filter: brightness(1.1); }
+  .garage-top-nav .sell-all-garage-btn:active { transform: scale(.96); }
+
   .garage-header{
     display:flex;align-items:center;justify-content:space-between;
     margin-bottom:16px;
@@ -357,19 +549,6 @@
     padding:5px 12px;border-radius:8px;
     background:var(--panel);border:1px solid var(--border);
   }
-  
-  .sell-all-garage-btn {
-    padding: 12px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #f87171, #ef4444);
-    color: #fff;
-    box-shadow: 0 8px 20px -8px rgba(239, 68, 68, 0.6);
-    transition: .18s;
-  }
-  .sell-all-garage-btn:hover { filter: brightness(1.1); }
-  .sell-all-garage-btn:active { transform: scale(.98); }
 
   .garage-grid{
     display:grid;
@@ -484,48 +663,121 @@
   }
   .ms-row b{font-size:14px;font-weight:800;color:var(--text)}
   .ms-row.highlight b{color:var(--accent)}
+  
   .multi-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-    gap:10px;margin-bottom:18px;
-    max-height:46vh;overflow-y:auto;
-    padding:2px;position:relative;
-  }
-  .multi-card{
+    gap:8px;
+    max-height:50vh;
+    overflow-y:auto;
+    padding:2px;
+    margin-bottom:18px;
     position:relative;
-    border-radius:10px;border:1px solid var(--border);
-    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
-    padding:10px 8px 8px;
-    display:flex;flex-direction:column;align-items:center;gap:5px;
-    overflow:hidden;
-    animation:cardIn .35s cubic-bezier(.2,1.3,.5,1) both;
-    transition:opacity .3s, filter .3s;
   }
-  @keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
-  .multi-card::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 110%,var(--rc) 0%,transparent 70%);
-    opacity:.18;pointer-events:none;
+  @media (max-width: 640px) {
+    .multi-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  .multi-card .car-svg{width:80%;height:auto;position:relative;z-index:1}
-  .multi-name{font-size:10.5px;font-weight:700;text-align:center;line-height:1.2;position:relative;z-index:1}
-  .multi-rarity{
-    font-size:8.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
-    color:var(--rc);position:relative;z-index:1;
+
+  .multi-card {
+    position: relative;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 10px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    overflow: hidden;
   }
-  .multi-sell{
-    width:100%;margin-top:2px;padding:6px 4px;border-radius:7px;
-    border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);
-    background:color-mix(in srgb,var(--rc) 12%,transparent);
-    color:var(--rc);font-size:10px;font-weight:800;
-    cursor:pointer;font-family:inherit;transition:.15s;
-    position:relative;z-index:1;
+  .multi-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 110%, var(--rc) 0%, transparent 70%);
+    opacity: 0.15;
+    pointer-events: none;
   }
-  .multi-sell:hover:not(:disabled){filter:brightness(1.25)}
-  .multi-sell:active:not(:disabled){transform:scale(.96)}
-  .multi-sell:disabled{opacity:.45;cursor:default}
-  .multi-card.sold{opacity:.4;filter:grayscale(.7)}
-  .multi-card.sold .car-svg{filter:grayscale(1)}
+  .mc-car {
+    width: 75%;
+    max-width: 100px;
+    margin-bottom: 4px;
+    color: var(--rc);
+    position: relative;
+    z-index: 1;
+  }
+  .mc-name {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+  .mc-rarity {
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--rc);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+  }
+  .mc-actions {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 4px;
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .mc-btn {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .mc-btn.sell, .mc-btn.keep {
+    border: 1px solid var(--rc);
+    background: rgba(0,0,0,0.4);
+    color: var(--rc);
+  }
+  .mc-btn.keep:hover:not(:disabled) {
+    background: var(--panel-2);
+    color: var(--text);
+  }
+  .mc-btn.sell:hover:not(:disabled) {
+    background: var(--rc);
+    color: #000;
+  }
+  
+  .mc-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+  .mc-bottom-line {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: var(--rc);
+    box-shadow: 0 0 12px var(--rc);
+  }
+  
+  .multi-card.sold { opacity: 0.4; filter: grayscale(0.7); }
 
   /* ============ TOAST ============ */
   .toast{
@@ -543,7 +795,7 @@
 
   /* ============ MOBILE ============ */
   @media (max-width:640px){
-    :root{--item-w:94px;--item-h:118px;--gap:8px;--radius:12px}
+    :root{--item-w:80px;--item-h:80px;--gap:8px;--radius:12px;--ctrl-h:46px}
     main{padding:14px 10px 50px}
     .logo-text{font-size:14px}
     .logo i {font-size:18px;}
@@ -556,35 +808,31 @@
     .case-name{font-size:12.5px}
     .case-price{font-size:12px;padding:5px 12px}
     .case-tag{font-size:8px;padding:2px 6px;top:7px;right:7px}
-    .item-name{font-size:8.5px}
-    .roulette{height:calc(var(--item-h) + 34px)}
+    .item-name{font-size:8px}
+    .roulette{height:calc(var(--item-h) + 30px)}
     .roulette.compact{
-      --item-w:60px;
-      --item-h:66px;
+      --item-w:56px;
+      --item-h:56px;
       --gap:5px;
-      height:calc(var(--item-h) + 18px);
+      height:calc(var(--item-h) + 20px);
     }
     .roulette.compact .item-name{display:none}
-    .roulette.compact .item .car-svg{width:88%}
     .roulettes-wrap{gap:7px;margin-bottom:16px}
     .roulettes-wrap.multi .fade{width:20px}
     .fade{width:36px}
-    .btn{padding:14px;font-size:14px}
+    .qty-btn{width:30px;height:30px;font-size:12px}
+    .qty-text{font-size:10px}
     .open-title{font-size:16px}
     .modal-art{width:140px}
     .modal-name{font-size:17px}
-    .qty-btn{width:34px;height:34px;font-size:13px}
-    .switch-row{font-size:12.5px;padding:11px 12px}
     .garage-header h2{font-size:14px}
     .garage-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px}
-    .multi-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:8px;max-height:42vh}
+    .multi-grid{max-height:42vh}
     .multi-box{padding:20px 14px 16px}
-    .instant-panel{height:calc(var(--item-h) + 34px);margin-bottom:16px}
-    .instant-panel .ip-icon i{font-size:30px}
-    .instant-panel .ip-text{font-size:14px}
     .ms-row b{font-size:12.5px}
     .ms-row span{font-size:8px}
-    .sell-all-garage-btn{font-size:13px;padding:10px;}
+    .garage-top-nav .sell-all-garage-btn{font-size:12px;padding:6px 12px;}
+    .toggle-box i {font-size: 16px;}
   }
 </style>
 </head>
@@ -621,45 +869,52 @@
 
   <!-- ===== ОТКРЫТИЕ ===== -->
   <section id="openView" class="hidden">
-    <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Назад к кейсам</button>
+    
+    <div class="sticky-open-area">
+      <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Назад к кейсам</button>
 
-    <div class="open-title" id="openTitle">Кейс</div>
-    <div class="open-sub" id="openSub">Крутите и заберите автомобиль</div>
+      <div class="open-title" id="openTitle">Кейс</div>
+      <div class="open-sub" id="openSub">Крутите и заберите автомобиль</div>
 
-    <div class="roulettes-wrap" id="roulettesWrap"></div>
+      <div class="roulettes-wrap" id="roulettesWrap"></div>
 
-    <div class="instant-panel hidden" id="instantPanel">
-      <div class="ip-icon"><i class="fa-solid fa-bolt"></i></div>
-      <div class="ip-text">Моментальное открытие</div>
-      <div>Результат появится сразу после нажатия</div>
+      <div class="controls-panel">
+        <div class="controls-mobile-top">
+          <label class="fast-open-toggle" title="Моментальное открытие">
+            <input type="checkbox" id="instantToggle">
+            <div class="toggle-box">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+          </label>
+          
+          <div class="qty-group">
+            <div class="qty-btns-pill">
+              <span class="qty-text">кол-во</span>
+              <div class="qty-btns" id="qtyBtns"></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn primary" id="openBtn">Открыть</button>
+      </div>
     </div>
 
-    <div class="qty-row">
-      <span class="qty-label">Количество</span>
-      <div class="qty-btns" id="qtyBtns"></div>
+    <div class="possible-drops-section">
+      <h3>Возможный транспорт</h3>
+      <div class="possible-drops-grid" id="possibleDropsGrid"></div>
     </div>
 
-    <label class="switch-row">
-      <span><i class="fa-solid fa-bolt"></i> Моментальное открытие</span>
-      <input type="checkbox" id="instantToggle">
-      <span class="switch"></span>
-    </label>
-
-    <button class="btn primary" id="openBtn">Открыть</button>
   </section>
 
   <!-- ===== ГАРАЖ ===== -->
   <section id="garageView" class="hidden">
-    <button class="back-btn" id="garageBackBtn"><i class="fa-solid fa-arrow-left"></i> К кейсам</button>
+    <div class="garage-top-nav">
+      <button class="back-btn" id="garageBackBtn"><i class="fa-solid fa-arrow-left"></i> К кейсам</button>
+      <button class="sell-all-garage-btn hidden" id="sellAllGarageBtn"><i class="fa-solid fa-sack-dollar"></i> Продать всё</button>
+    </div>
     <div class="garage-header">
       <h2>Гараж</h2>
       <span class="garage-count" id="garageCount">0 авто</span>
     </div>
-    
-    <button class="btn sell-all-garage-btn hidden" id="sellAllGarageBtn">
-      <i class="fa-solid fa-sack-dollar"></i> Продать все авто
-    </button>
-    
     <div class="garage-grid" id="garageGrid"></div>
   </section>
 </main>
@@ -725,7 +980,7 @@ const CASES = [
 ];
 
 /* =========================================================
-   SVG МАШИНЫ (оставляем кастомный SVG для самих машин)
+   SVG МАШИНЫ
    ========================================================= */
 const CAR_SVG = `<svg class="car-svg" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
   <path d="M6 42 L6 33 C6 30 8 28 12 27.5 L32 24 L46 12 C48.5 9.5 51 8.5 54 8.5 L78 8.5 C82 8.5 85 9.8 87.5 12.5 L99 25 L108 27 C112 28 114 30 114 33 L114 42 Z" fill="currentColor"/>
@@ -764,13 +1019,14 @@ const modalName = $('modalName'), modalRarity = $('modalRarity'), modalValue = $
 const sellBtn = $('sellBtn'), keepBtn = $('keepBtn');
 const balanceValue = $('balanceValue'), soundBtn = $('soundBtn');
 const toastEl = $('toast');
-const qtyBtns = $('qtyBtns'), instantToggle = $('instantToggle'), instantPanel = $('instantPanel');
+const qtyBtns = $('qtyBtns'), instantToggle = $('instantToggle');
 const multiModal = $('multiModal'), multiGrid = $('multiGrid');
 const multiTotal = $('multiTotal'), multiSold = $('multiSold');
 const sellAllBtn = $('sellAllBtn'), keepAllBtn = $('keepAllBtn');
 const garageGrid = $('garageGrid'), garageCount = $('garageCount'), garageBadge = $('garageBadge');
 const garageBtn = $('garageBtn'), garageBackBtn = $('garageBackBtn');
 const sellAllGarageBtn = $('sellAllGarageBtn');
+const possibleDropsGrid = $('possibleDropsGrid');
 
 /* =========================================================
    УТИЛИТЫ
@@ -779,7 +1035,7 @@ const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
 
 let toastTimer;
 function toast(msg){
-  toastEl.innerHTML = msg; // используем innerHTML для отображения иконок
+  toastEl.innerHTML = msg;
   toastEl.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
@@ -924,6 +1180,7 @@ function selectCase(id){
 
   openTitle.textContent = currentCase.name;
   renderPreview();
+  renderPossibleDrops();
   updateOpenUI();
   showView('open');
 }
@@ -978,7 +1235,7 @@ function applyBottomUpPlacement(rows, n){
 }
 
 function renderPreview(){
-  if(!currentCase || instantMode) return;
+  if(!currentCase) return;
   const pool = buildPool(currentCase);
   const rows = renderRoulettes(1);
   const strip = rows[0].querySelector('.strip');
@@ -987,8 +1244,25 @@ function renderPreview(){
   strip.innerHTML = items.map(itemHTML).join('');
 }
 
+function renderPossibleDrops() {
+  if (!currentCase) return;
+  const pool = buildPool(currentCase);
+  // Сортировка: редкость по убыванию (легендарные первыми)
+  const sortedPool = [...pool].sort((a, b) => {
+    return RARITY[a.rarity].weight - RARITY[b.rarity].weight;
+  });
+  possibleDropsGrid.innerHTML = sortedPool.map(car => {
+    const r = RARITY[car.rarity];
+    return `<div class="drop-item" style="--rc:${r.color};color:${r.color}">
+      ${CAR_SVG}
+      <div class="drop-name">${car.name}</div>
+      <div class="drop-rarity">${r.label}</div>
+    </div>`;
+  }).join('');
+}
+
 /* =========================================================
-   UI ОТКРЫТИЯ (с проверкой доступности)
+   UI ОТКРЫТИЯ
    ========================================================= */
 function renderQtyButtons(){
   qtyBtns.innerHTML = [1,2,3,4,5].map(n =>
@@ -1018,15 +1292,12 @@ function updateOpenUI(){
   backBtn.disabled = spinning;
   instantToggle.disabled = spinning;
 
+  // Управление режимом моментального открытия
   if(instantMode){
-    roulettesWrap.classList.add('hidden');
-    instantPanel.classList.remove('hidden');
-    instantPanel.querySelector('.ip-text').textContent =
-      qty > 1 ? `Моментальное открытие ×${qty}` : 'Моментальное открытие';
-    openSub.textContent = 'Результат появится сразу после нажатия';
+    roulettesWrap.classList.add('instant-mode');
+    openSub.textContent = 'Режим моментального открытия';
   } else {
-    roulettesWrap.classList.remove('hidden');
-    instantPanel.classList.add('hidden');
+    roulettesWrap.classList.remove('instant-mode');
     openSub.textContent = qty > 1
       ? `Одновременное открытие ${qty} кейсов`
       : 'Крутите и заберите автомобиль';
@@ -1302,7 +1573,7 @@ sellAllGarageBtn.addEventListener('click', () => {
    МНОЖЕСТВЕННЫЙ РЕЗУЛЬТАТ
    ========================================================= */
 function showMultiResults(winners){
-  multiWinners = winners.map(w => ({ ...w, sold:false, uid: ++uidCounter }));
+  multiWinners = winners.map(w => ({ ...w, processed:false, action:null, uid: ++uidCounter }));
   renderMultiGrid();
   updateMultiSummary();
   updateMultiButtons();
@@ -1313,11 +1584,16 @@ function showMultiResults(winners){
 function renderMultiGrid(){
   multiGrid.innerHTML = multiWinners.map((w, i) => {
     const r = RARITY[w.rarity];
-    return `<div class="multi-card ${w.sold?'sold':''}" style="--rc:${r.color};color:${r.color};animation-delay:${i*70}ms">
-      ${CAR_SVG}
-      <div class="multi-name">${w.name}</div>
-      <div class="multi-rarity">${r.label}</div>
-      <button class="multi-sell" data-idx="${i}" ${w.sold?'disabled':''}>${w.sold?'Продано':'Продать '+fmt(r.value)}</button>
+    const isProcessed = w.processed;
+    return `<div class="multi-card ${isProcessed?'sold':''}" style="--rc:${r.color};color:${r.color}">
+      <div class="mc-car">${CAR_SVG}</div>
+      <div class="mc-name">${w.name}</div>
+      <div class="mc-rarity">${r.label}</div>
+      <div class="mc-actions">
+        ${!isProcessed ? `<button class="mc-btn keep" data-idx="${i}">В гараж</button>` : ''}
+        <button class="mc-btn sell" data-idx="${i}" ${isProcessed?'disabled':''}>${isProcessed ? (w.action==='sold'?'Продано':'В гараже') : fmt(r.value)}</button>
+      </div>
+      <div class="mc-bottom-line"></div>
     </div>`;
   }).join('');
 }
@@ -1327,69 +1603,111 @@ function updateMultiSummary(){
   for(const w of multiWinners){
     const v = RARITY[w.rarity].value;
     total += v;
-    if(w.sold) sold += v;
+    if(w.processed && w.action === 'sold') sold += v;
   }
   multiTotal.textContent = fmt(total);
   multiSold.textContent = fmt(sold);
 }
 
 function updateMultiButtons(){
-  const unsold = multiWinners.filter(w => !w.sold).length;
-  sellAllBtn.disabled = unsold === 0;
-  sellAllBtn.textContent = unsold === 0 ? 'Всё продано' : 'Продать всё';
-  keepAllBtn.textContent = unsold > 0 ? `Забрать в гараж (${unsold})` : 'Закрыть';
+  const unsold = multiWinners.filter(w => !w.processed);
+  let totalUnsold = 0;
+  unsold.forEach(w => { totalUnsold += RARITY[w.rarity].value; });
+  
+  sellAllBtn.disabled = unsold.length === 0;
+  sellAllBtn.textContent = unsold.length === 0 ? 'Всё продано' : `Продать всё за ${fmt(totalUnsold)}`;
+  keepAllBtn.textContent = unsold.length > 0 ? `Забрать всё в гараж (${unsold.length})` : 'Закрыть';
 }
 
 multiGrid.addEventListener('click', e => {
-  const btn = e.target.closest('.multi-sell');
+  const btn = e.target.closest('.mc-btn');
   if(!btn || btn.disabled) return;
   const idx = +btn.dataset.idx;
   const w = multiWinners[idx];
-  if(!w || w.sold) return;
+  if(!w || w.processed) return;
 
-  w.sold = true;
-  balance += RARITY[w.rarity].value;
-  updateBalance();
+  w.processed = true;
+
+  if(btn.classList.contains('sell')){
+    w.action = 'sold';
+    balance += RARITY[w.rarity].value;
+    updateBalance();
+    toast(`+${fmt(RARITY[w.rarity].value)}`);
+  } else {
+    w.action = 'kept';
+    addToGarage(w);
+    toast('Автомобиль в гараже <i class="fa-solid fa-flag-checkered"></i>');
+  }
 
   const card = btn.closest('.multi-card');
   card.classList.add('sold');
-  btn.disabled = true;
-  btn.textContent = 'Продано';
+  
+  const sellBtn = card.querySelector('.mc-btn.sell');
+  const keepBtn = card.querySelector('.mc-btn.keep');
+  
+  if(sellBtn) {
+     sellBtn.disabled = true;
+     sellBtn.textContent = w.action === 'sold' ? 'Продано' : 'В гараже';
+  }
+  if(keepBtn) keepBtn.remove();
 
   updateMultiSummary();
   updateMultiButtons();
   playTick();
+
+  // Автоматическое закрытие, если все карточки обработаны
+  if (multiWinners.every(w => w.processed)) {
+    setTimeout(closeMultiModal, 400);
+  }
 });
 
 sellAllBtn.addEventListener('click', () => {
   let total = 0;
-  multiWinners.forEach(w => {
-    if(!w.sold){ w.sold = true; total += RARITY[w.rarity].value; }
+  multiWinners.forEach((w, i) => {
+    if(!w.processed){
+      w.processed = true;
+      w.action = 'sold';
+      total += RARITY[w.rarity].value;
+    }
   });
   if(total){
     balance += total;
     updateBalance();
     toast(`+${fmt(total)}`);
   }
+  
   Array.from(multiGrid.children).forEach((card, i) => {
     const w = multiWinners[i];
-    if(w && w.sold){
+    if(w && w.processed){
       card.classList.add('sold');
-      const b = card.querySelector('.multi-sell');
-      if(b){ b.disabled = true; b.textContent = 'Продано'; }
+      const sellBtn = card.querySelector('.mc-btn.sell');
+      if(sellBtn) { sellBtn.disabled = true; sellBtn.textContent = w.action === 'sold' ? 'Продано' : 'В гараже'; }
+      const keepBtn = card.querySelector('.mc-btn.keep');
+      if(keepBtn) keepBtn.remove();
     }
   });
+  
   updateMultiSummary();
   updateMultiButtons();
+
+  // Автоматическое закрытие после продажи всего
+  setTimeout(closeMultiModal, 400);
 });
 
 keepAllBtn.addEventListener('click', () => {
   let kept = 0;
   multiWinners.forEach(w => {
-    if(!w.sold){ addToGarage(w); kept++; }
+    if(!w.processed){
+      w.processed = true;
+      w.action = 'kept';
+      addToGarage(w);
+      kept++;
+    }
   });
   if(kept) toast(`${kept} авто в гараже <i class="fa-solid fa-flag-checkered"></i>`);
-  closeMultiModal();
+  
+  // Автоматическое закрытие после забирания всего
+  setTimeout(closeMultiModal, 400);
 });
 
 function closeMultiModal(){
