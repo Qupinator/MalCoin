@@ -523,24 +523,29 @@
     .ms-row span{font-size:8px}
     .toggle-box i {font-size: 16px;}
 
-    /* Мобильная иерархия апгрейда */
+    /* Мобильная сетка апгрейда (Колесо сверху, слоты в ряд) */
     .upgrade-main-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 
+        "center center"
+        "slotFrom slotTo";
+      gap: 10px;
+      margin-bottom: 20px;
     }
     .upgrade-center-column {
-      order: -1;
+      grid-area: center;
       width: 100%;
       min-width: 0;
     }
-    .upgrade-slots-row {
-      display: flex;
-      gap: 10px;
-      width: 100%;
+    #slotFrom {
+      grid-area: slotFrom;
     }
+    #slotTo {
+      grid-area: slotTo;
+    }
+
     .upgrade-slot {
-      flex: 1;
       min-height: 120px;
       padding: 10px 6px;
     }
@@ -554,7 +559,7 @@
     .chance-val { font-size: 20px; }
 
     .upgrade-controls { max-width: 100%; }
-
+	.toast{bottom:95px};
     .upgrade-bottom { grid-template-columns: 1fr; }
   }
 </style>
@@ -682,12 +687,12 @@
     <h2>Апгрейд</h2>
     
     <div class="upgrade-main-layout">
-      <!-- Слот From (Слева) -->
+      <!-- Слот From -->
       <div class="upgrade-slot" id="slotFrom">
         <div class="upgrade-placeholder">Выберите авто<br>или введите сумму</div>
       </div>
       
-      <!-- Центр (Колесо + Кнопки) -->
+      <!-- Центр -->
       <div class="upgrade-center-column">
         <div class="upgrade-circle" id="upgradeCircle">
           <div class="arrow-wrap" id="arrowWrap">
@@ -711,7 +716,7 @@
         </div>
       </div>
 
-      <!-- Слот To (Справа) -->
+      <!-- Слот To -->
       <div class="upgrade-slot" id="slotTo">
         <div class="upgrade-placeholder">Выберите предмет,<br>который хотите<br>получить</div>
       </div>
