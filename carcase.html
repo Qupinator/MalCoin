@@ -50,11 +50,42 @@
     -webkit-backdrop-filter:blur(14px);
     border-bottom:1px solid var(--border);
   }
-  .logo{display:flex;align-items:center;gap:8px;min-width:0}
+  .logo{display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer;}
   .logo i{font-size:22px;color:var(--accent);flex:none;filter:drop-shadow(0 0 8px rgba(255,176,32,.5))}
   .logo-text{font-size:16px;font-weight:800;letter-spacing:1px;white-space:nowrap}
   .logo-text b{color:var(--accent)}
   .spacer{flex:1}
+
+  .nav-tabs { display: flex; gap: 6px; background: var(--panel); border-radius: 10px; padding: 4px; border: 1px solid var(--border); }
+  .nav-tab { padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+  .nav-tab.active { background: var(--panel-2); color: var(--text); }
+  .nav-tab i { font-size: 14px; }
+
+  /* Мобильное меню */
+  .mobile-nav { 
+    display: none; 
+    position: fixed; 
+    bottom: 16px; 
+    left: 16px; 
+    right: 16px; 
+    background: rgba(20, 27, 38, 0.95); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border); 
+    border-radius: 16px;
+    z-index: 100; 
+    padding: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+  .mobile-nav .nav-tab { flex: 1; justify-content: center; padding: 10px 4px; border-radius: 10px; font-size: 11px; flex-direction: column; gap: 4px;}
+  .mobile-nav .nav-tab i { font-size: 18px; }
+  
+  @media (max-width: 768px) {
+    .nav-tabs { display: none; }
+    .mobile-nav { display: flex; }
+    main { padding-bottom: 100px; }
+    .toast { bottom: 90px; }
+  }
 
   .icon-btn{
     width:38px;height:38px;flex:none;
@@ -68,18 +99,6 @@
   .icon-btn:active{transform:scale(.93)}
   .icon-btn.muted{opacity:.4}
   .icon-btn i{pointer-events:none;}
-
-  .garage-btn .badge{
-    position:absolute;top:-5px;right:-5px;
-    min-width:17px;height:17px;padding:0 4px;
-    border-radius:9px;
-    background:var(--accent);color:#160f00;
-    font-size:9px;font-weight:800;
-    display:grid;place-items:center;
-    border:2px solid var(--bg);
-    line-height:1;
-    pointer-events:none;
-  }
 
   .balance{
     display:flex;flex-direction:column;align-items:flex-end;
@@ -152,9 +171,7 @@
     margin-bottom: 20px;
   }
   @media (max-width: 768px) {
-    .sticky-open-area {
-      top: 54px;
-    }
+    .sticky-open-area { top: 54px; }
   }
 
   .back-btn{
@@ -175,628 +192,307 @@
   }
   .open-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px}
 
-  /* --- ROULETTES WRAP --- */
-  .roulettes-wrap{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-bottom:16px;
-  }
-  .roulettes-wrap.multi{
-    grid-template-columns:repeat(2,1fr);
-  }
-
+  /* --- ROULETTES --- */
+  .roulettes-wrap{ display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px; }
+  .roulettes-wrap.multi{ grid-template-columns:repeat(2,1fr); }
   .roulette{
-    position:relative;
-    height:calc(var(--item-h) + 40px);
-    border-radius:var(--radius);
-    border:1px solid var(--border);
-    background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
-    overflow:hidden;
-    box-shadow:inset 0 0 60px rgba(0,0,0,.75);
-    transition: all 0.3s;
-    box-shadow: 0 0 0 transparent;
+    position:relative; height:calc(var(--item-h) + 40px); border-radius:var(--radius);
+    border:1px solid var(--border); background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
+    overflow:hidden; box-shadow:inset 0 0 60px rgba(0,0,0,.75); transition: border-color 0.3s, box-shadow 0.3s;
   }
-  .roulette.compact{
-    --item-w:80px;
-    --item-h:80px;
-    --gap:8px;
-    height:calc(var(--item-h) + 24px);
-    border-radius:11px;
-  }
-
-  /* Усиленный эффект для моментального открытия */
-  .roulettes-wrap.instant-mode .roulette {
-    border-color: var(--accent);
-    box-shadow: 
-      0 0 25px rgba(255, 176, 32, 0.8), 
-      0 0 10px rgba(255, 176, 32, 0.6), 
-      inset 0 0 60px rgba(0,0,0,.75);
-    transition: all 0.3s;
-  }
-
-  .roulette::after{
-    content:'';position:absolute;left:50%;top:0;bottom:0;width:120px;
-    transform:translateX(-50%);
-    background:linear-gradient(90deg,transparent,rgba(255,176,32,.07),transparent);
-    pointer-events:none;z-index:2;
-  }
-  .strip{
-    position:absolute;left:0;top:0;height:100%;
-    display:flex;align-items:center;gap:var(--gap);
-    will-change:transform;
-    padding:0;
-    transition:none;
-  }
-
+  .roulette.compact{ --item-w:80px; --item-h:80px; --gap:8px; height:calc(var(--item-h) + 24px); border-radius:11px; }
+  .roulettes-wrap.instant-mode .roulette { border-color: var(--accent); box-shadow: 0 0 25px rgba(255, 176, 32, 0.8), 0 0 10px rgba(255, 176, 32, 0.6), inset 0 0 60px rgba(0,0,0,.75); }
+  .roulette::after{ content:''; position:absolute; left:50%; top:0; bottom:0; width:120px; transform:translateX(-50%); background:linear-gradient(90deg,transparent,rgba(255,176,32,.07),transparent); pointer-events:none; z-index:2; }
+  .strip{ position:absolute; left:0; top:0; height:100%; display:flex; align-items:center; gap:var(--gap); will-change:transform; padding:0; transition:none; }
   .item{
-    position:relative;
-    flex:0 0 var(--item-w);
-    height:var(--item-h);
-    border-radius:11px;
-    border:1px solid var(--border);
-    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:4px;padding:6px;
-    overflow:hidden;
-    transition:transform .3s, box-shadow .3s;
+    position:relative; flex:0 0 var(--item-w); height:var(--item-h); border-radius:11px;
+    border:1px solid var(--border); background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px; padding:6px; overflow:hidden; transition:transform .3s, box-shadow .3s;
   }
-  .roulette.compact .item{
-    border-radius:8px;padding:4px;gap:2px;
-  }
-  .item::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 105%, var(--rc) 0%, transparent 68%);
-    opacity:.22;pointer-events:none;
-  }
-  .item::after{
-    content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
-    background:var(--rc);box-shadow:0 0 12px var(--rc);
-  }
-  .item .car-svg{width:100%;height:auto;position:relative;z-index:1}
-  .item-name{
-    position:relative;z-index:1;
-    font-size:10px;line-height:1.1;text-align:center;
-    color:#cbd6e6;font-weight:600;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-  .roulette.compact .item-name{font-size:8px}
-  .item.winner{
-    transform:scale(1.06);
-    box-shadow:0 0 0 2px var(--rc), 0 0 34px var(--rc);
-    z-index:3;
-  }
+  .roulette.compact .item{ border-radius:8px; padding:4px; gap:2px; }
+  .item::before{ content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 105%, var(--rc) 0%, transparent 68%); opacity:.22; pointer-events:none; }
+  .item::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background:var(--rc); box-shadow:0 0 12px var(--rc); }
+  .item .car-svg{ width:100%; height:auto; position:relative; z-index:1; }
+  .item-name{ position:relative; z-index:1; font-size:10px; line-height:1.1; text-align:center; color:#cbd6e6; font-weight:600; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .roulette.compact .item-name{ font-size:8px; }
+  .item.winner{ transform:scale(1.06); box-shadow:0 0 0 2px var(--rc), 0 0 34px var(--rc); z-index:3; }
 
-  .pointer{
-    position:absolute;left:50%;top:0;bottom:0;width:2px;
-    transform:translateX(-50%);
-    background:linear-gradient(180deg,transparent,var(--accent) 12%,var(--accent) 88%,transparent);
-    box-shadow:0 0 14px rgba(255,176,32,.9);
-    z-index:6;pointer-events:none;
-  }
-  .pointer::before,.pointer::after{
-    content:'';position:absolute;left:50%;transform:translateX(-50%);
-    border-left:7px solid transparent;border-right:7px solid transparent;
-  }
-  .pointer::before{top:-1px;border-top:11px solid var(--accent)}
-  .pointer::after{bottom:-1px;border-bottom:11px solid var(--accent)}
-
-  .fade{position:absolute;top:0;bottom:0;width:70px;z-index:5;pointer-events:none}
-  .fade-l{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
-  .fade-r{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
-  .roulettes-wrap.multi .fade{width:34px}
+  .pointer{ position:absolute; left:50%; top:0; bottom:0; width:2px; transform:translateX(-50%); background:linear-gradient(180deg,transparent,var(--accent) 12%,var(--accent) 88%,transparent); box-shadow:0 0 14px rgba(255,176,32,.9); z-index:6; pointer-events:none; }
+  .pointer::before,.pointer::after{ content:''; position:absolute; left:50%; transform:translateX(-50%); border-left:7px solid transparent; border-right:7px solid transparent; }
+  .pointer::before{ top:-1px; border-top:11px solid var(--accent); }
+  .pointer::after{ bottom:-1px; border-bottom:11px solid var(--accent); }
+  .fade{ position:absolute; top:0; bottom:0; width:70px; z-index:5; pointer-events:none; }
+  .fade-l{ left:0; background:linear-gradient(90deg,var(--bg),transparent); }
+  .fade-r{ right:0; background:linear-gradient(270deg,var(--bg),transparent); }
+  .roulettes-wrap.multi .fade{ width:34px; }
 
   /* --- CONTROLS PANEL --- */
-  .controls-panel {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  .controls-mobile-top {
-    display: contents;
-  }
-
-  .qty-group {
-    display: flex;
-    align-items: center;
-    order: 1;
-  }
-  .qty-btns-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 4px 8px;
-    height: var(--ctrl-h);
-  }
-  .qty-text {
-    font-size: 11px;
-    color: var(--muted);
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .qty-btns {
-    display: flex;
-    gap: 2px;
-  }
-  .qty-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.15s;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .controls-panel { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; }
+  .controls-mobile-top { display: contents; }
+  .qty-group { display: flex; align-items: center; order: 1; }
+  .qty-btns-pill { display: flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 4px 8px; height: var(--ctrl-h); }
+  .qty-text { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+  .qty-btns { display: flex; gap: 2px; }
+  .qty-btn { width: 36px; height: 36px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.15s; font-family: inherit; display: flex; align-items: center; justify-content: center; }
   .qty-btn:hover:not(:disabled) { color: var(--text); }
-  .qty-btn.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #160f00;
-  }
-  .qty-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  .qty-btn.active:disabled {
-    background: linear-gradient(135deg, #4a1a1a, #2a0a0a);
-    color: #ff6b6b;
-    box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.2);
-  }
+  .qty-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #160f00; }
+  .qty-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .qty-btn.active:disabled { background: linear-gradient(135deg, #4a1a1a, #2a0a0a); color: #ff6b6b; box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.2); }
 
-  .btn.ghost{
-    background: linear-gradient(135deg, #fff, #bbb);
-    color: #160f00;
-    border:1px solid var(--border);
-    width:100%;
-    padding:15px 20px;
-    border-radius:12px;
-    border:none;
-    font-size:15px;
-    font-weight:800;
-    letter-spacing:.5px;
-    cursor:pointer;
-    transition:.18s;
-    font-family:inherit;
-  }
-  .btn.ghost:hover{border-color:#3a4a60}
-
-  .btn.primary {
-    order: 2;
-    min-width: 250px;
-    height: var(--ctrl-h);
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #160f00;
-    box-shadow: 0 10px 26px -10px rgba(255,150,0,.85);
-    cursor: pointer;
-    transition: 0.18s;
-    font-family: inherit;
-  }
+  .btn { font-family: inherit; border: none; cursor: pointer; transition: 0.18s; display: flex; align-items: center; justify-content: center; }
+  .btn.primary { order: 2; min-width: 250px; height: var(--ctrl-h); padding: 0 20px; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #160f00; box-shadow: 0 10px 26px -10px rgba(255,150,0,.85); }
   .btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
   .btn.primary:active:not(:disabled) { transform: scale(.98); }
   .btn.primary:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; filter: grayscale(0.6); }
+  .btn.ghost { background: linear-gradient(135deg, #fff, #bbb); color: #160f00; width:100%; padding:15px 20px; border-radius:12px; font-size:15px; font-weight:800; }
 
-  .fast-open-toggle {
-    order: 3;
-    display: block;
-    height: var(--ctrl-h);
-    width: var(--ctrl-h);
-    flex-shrink: 0;
-    cursor: pointer;
-  }
+  .fast-open-toggle { order: 3; display: block; height: var(--ctrl-h); width: var(--ctrl-h); flex-shrink: 0; cursor: pointer; }
   .fast-open-toggle input { display: none; }
-  .toggle-box {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-  }
-  .toggle-box i {
-    font-size: 20px;
-    color: var(--muted);
-    transition: 0.2s;
-  }
-  .fast-open-toggle input:checked + .toggle-box {
-    background: rgba(255, 176, 32, 0.1);
-    border-color: var(--accent);
-  }
-  .fast-open-toggle input:checked + .toggle-box i {
-    color: var(--accent);
-    filter: drop-shadow(0 0 8px rgba(255, 176, 32, 0.6));
-  }
-  .fast-open-toggle input:disabled + .toggle-box {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
+  .toggle-box { width: 100%; height: 100%; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .toggle-box i { font-size: 20px; color: var(--muted); transition: 0.2s; }
+  .fast-open-toggle input:checked + .toggle-box { background: rgba(255, 176, 32, 0.1); border-color: var(--accent); }
+  .fast-open-toggle input:checked + .toggle-box i { color: var(--accent); filter: drop-shadow(0 0 8px rgba(255, 176, 32, 0.6)); }
+  .fast-open-toggle input:disabled + .toggle-box { opacity: 0.4; cursor: not-allowed; }
 
   @media (max-width: 768px) {
-    .controls-panel {
-      flex-direction: column;
-      gap: 10px;
-    }
-    .controls-mobile-top {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
+    .controls-panel { flex-direction: column; gap: 10px; }
+    .controls-mobile-top { display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
     .qty-group { order: unset; }
-    .btn.primary {width: 100%; flex: none; }
+    .btn.primary { width: 100%; flex: none; }
     .fast-open-toggle { order: unset; }
   }
 
   /* --- POSSIBLE DROPS --- */
-  .possible-drops-section h3 {
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 12px;
-  }
-  .possible-drops-grid {
+  .possible-drops-section h3 { font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .possible-drops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .drop-item { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; overflow: hidden; }
+  .drop-item::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, var(--rc) 0%, transparent 70%); opacity: 0.1; }
+  .drop-item .car-svg { width: 80%; height: auto; color: var(--rc); position: relative; z-index: 1; }
+  .drop-name { font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2; color: #cbd6e6; position: relative; z-index: 1; }
+  .drop-rarity { font-size: 8px; font-weight: 800; text-transform: uppercase; color: var(--rc); letter-spacing: 0.5px; position: relative; z-index: 1; }
+
+  /* ============ PROFILE ============ */
+  .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat-card.editable { cursor: pointer; position: relative; overflow: hidden; }
+  .stat-card.editable::after { content: '\f304'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 12px; color: var(--muted); opacity: 0.5; transition: 0.2s; }
+  .stat-card.editable:hover { border-color: var(--accent); }
+  .stat-card.editable:hover::after { opacity: 1; color: var(--accent); }
+  .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .stat-value { font-size: 18px; font-weight: 800; color: var(--text); }
+  .stat-value.accent { color: var(--accent); }
+  .best-car-card { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 16px; }
+  .best-car-card .car-svg { width: 80px; flex-shrink: 0; }
+  .best-car-info h3 { margin: 0 0 4px; font-size: 15px; font-weight: 800; }
+  .best-car-info p { margin: 0; color: var(--accent); font-weight: 800; font-size: 14px; }
+
+  /* ============ UPGRADE ============ */
+  .upgrade-main-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 10px;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: stretch;
+    margin-bottom: 30px;
   }
-  .drop-item {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 8px;
+
+  /* Центральная колонка */
+  .upgrade-center-column {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    position: relative;
-    overflow: hidden;
-  }
-  .drop-item::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 0%, var(--rc) 0%, transparent 70%);
-    opacity: 0.1;
-  }
-  .drop-item .car-svg {
-    width: 80%;
-    height: auto;
-    color: var(--rc);
-    position: relative;
-    z-index: 1;
-  }
-  .drop-name {
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.2;
-    color: #cbd6e6;
-    position: relative;
-    z-index: 1;
-  }
-  .drop-rarity {
-    font-size: 8px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--rc);
-    letter-spacing: 0.5px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ============ GARAGE ============ */
-  .garage-top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .garage-top-nav .back-btn {
-    margin-bottom: 0;
-  }
-  .garage-top-nav .sell-all-garage-btn {
-    width: auto;
-    padding: 8px 16px;
-    font-size: 13px;
-    background: linear-gradient(135deg, #f87171, #ef4444);
-    box-shadow: 0 8px 20px -8px rgba(239, 68, 68, 0.6);
-    color: #fff;
-    border-radius: 9px;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: .18s;
-  }
-  .garage-top-nav .sell-all-garage-btn:hover { filter: brightness(1.1); }
-  .garage-top-nav .sell-all-garage-btn:active { transform: scale(.96); }
-
-  .garage-header{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:16px;
-  }
-  .garage-header h2{margin:0}
-  .garage-count{
-    font-size:12px;color:var(--muted);font-weight:700;
-    padding:5px 12px;border-radius:8px;
-    background:var(--panel);border:1px solid var(--border);
-  }
-
-  .garage-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:12px;
-  }
-  .garage-card{
-    position:relative;
-    border-radius:var(--radius);border:1px solid var(--border);
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    padding:14px 10px 10px;
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    overflow:hidden;
-  }
-  .garage-card::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(circle at 50% 0%,var(--rc) 0%,transparent 65%);
-    opacity:.16;pointer-events:none;
-  }
-  .garage-card .car-svg{width:85%;height:auto;color:var(--rc);position:relative;z-index:1}
-  .garage-name{font-size:12px;font-weight:700;text-align:center;line-height:1.2;position:relative;z-index:1}
-  .garage-rarity{
-    font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
-    color:var(--rc);position:relative;z-index:1;
-  }
-  .garage-sell{
-    width:100%;margin-top:4px;padding:8px;border-radius:8px;
-    border:1px solid rgba(255,176,32,.3);
-    background:rgba(255,176,32,.1);
-    color:var(--accent);font-size:11.5px;font-weight:800;
-    cursor:pointer;font-family:inherit;transition:.15s;
-    position:relative;z-index:1;
-  }
-  .garage-sell:hover{background:rgba(255,176,32,.18)}
-  .garage-sell:active{transform:scale(.97)}
-  .garage-empty{
-    grid-column:1/-1;text-align:center;
-    padding:50px 20px;color:var(--muted);font-size:14px;line-height:1.6;
-    border:1px dashed var(--border);border-radius:var(--radius);
-  }
-
-  /* ============ MODAL ============ */
-  .modal{
-    position:fixed;inset:0;z-index:100;
-    display:grid;place-items:center;
-    padding:20px;
-    background:rgba(5,7,11,.82);
-    backdrop-filter:blur(6px);
-    -webkit-backdrop-filter:blur(6px);
-    animation:fadeIn .22s ease;
-  }
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .modal-box{
-    width:100%;max-width:360px;
-    padding:26px 22px 22px;
-    border-radius:18px;
-    border:1px solid var(--border);
-    background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    text-align:center;
-    position:relative;
-    overflow:hidden;
-    animation:popIn .3s cubic-bezier(.2,1.3,.5,1);
-  }
-  @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-  .modal-box::before{
-    content:'';position:absolute;left:0;right:0;top:0;height:3px;
-    background:var(--rc,#ffb020);
-    box-shadow:0 0 26px var(--rc,#ffb020);
-  }
-  .modal-box::after{
-    content:'';position:absolute;left:50%;top:-90px;width:280px;height:200px;
-    transform:translateX(-50%);
-    background:radial-gradient(circle,var(--rc,#ffb020),transparent 70%);
-    opacity:.22;pointer-events:none;
-  }
-  .modal-title{
-    font-size:12px;letter-spacing:2.4px;text-transform:uppercase;
-    color:var(--muted);font-weight:800;margin-bottom:16px;position:relative;
-  }
-  .modal-art{width:170px;margin:0 auto 14px;position:relative;color:var(--rc,#ffb020)}
-  .modal-art svg{width:100%;height:auto;filter:drop-shadow(0 8px 18px rgba(0,0,0,.6))}
-  .modal-name{font-size:19px;font-weight:800;margin-bottom:6px;position:relative}
-  .modal-rarity{
-    display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.4px;
-    text-transform:uppercase;padding:4px 12px;border-radius:20px;
-    color:var(--rc,#ffb020);
-    background:color-mix(in srgb,var(--rc,#ffb020) 16%,transparent);
-    border:1px solid color-mix(in srgb,var(--rc,#ffb020) 42%,transparent);
-    margin-bottom:10px;position:relative;
-  }
-  .modal-value{
-    font-size:13px;color:var(--muted);margin-bottom:20px;position:relative;
-  }
-  .modal-value b{color:var(--accent);font-weight:800;font-size:15px}
-  .modal-actions{display:flex;flex-direction:column;gap:10px;position:relative}
-
-  /* --- MULTI RESULT --- */
-  .multi-box{max-width:540px}
-  .multi-summary{
-    display:flex;gap:8px;margin-bottom:14px;position:relative;
-  }
-  .ms-row{
-    flex:1;display:flex;flex-direction:column;gap:2px;
-    padding:9px 8px;border-radius:10px;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--border);
-    text-align:center;
-  }
-  .ms-row span{
-    font-size:9px;text-transform:uppercase;letter-spacing:1px;
-    color:var(--muted);font-weight:700;
-  }
-  .ms-row b{font-size:14px;font-weight:800;color:var(--text)}
-  .ms-row.highlight b{color:var(--accent)}
-  
-  .multi-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-    gap:8px;
-    max-height:50vh;
-    overflow-y:auto;
-    padding:2px;
-    margin-bottom:18px;
-    position:relative;
-  }
-  @media (max-width: 640px) {
-    .multi-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  .multi-card {
-    position: relative;
-    background: var(--panel-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 10px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    overflow: hidden;
-  }
-  .multi-card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 110%, var(--rc) 0%, transparent 70%);
-    opacity: 0.15;
-    pointer-events: none;
-  }
-  .mc-car {
-    width: 75%;
-    max-width: 100px;
-    margin-bottom: 4px;
-    color: var(--rc);
-    position: relative;
-    z-index: 1;
-  }
-  .mc-name {
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.2;
-    color: var(--text);
-    position: relative;
-    z-index: 1;
-  }
-  .mc-rarity {
-    font-size: 8px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--rc);
-    letter-spacing: 0.5px;
-    position: relative;
-    z-index: 1;
-  }
-  .mc-actions {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 4px;
-    margin-top: 6px;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .mc-btn {
-    width: 100%;
-    padding: 6px;
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-    transition: 0.15s;
-    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    text-align: center;
-    box-sizing: border-box;
+    gap: 16px;
+    min-width: 320px;
+  }
+
+  /* Колесо */
+  .upgrade-circle {
+    width: 160px; height: 160px; border-radius: 50%;
+    background: var(--panel);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden; border: 2px solid var(--border);
   }
   
-  .mc-btn.sell, .mc-btn.keep {
-    border: 1px solid var(--rc);
-    background: rgba(0,0,0,0.4);
-    color: var(--rc);
-  }
-  .mc-btn.keep:hover:not(:disabled) {
-    background: var(--panel-2);
-    color: var(--text);
-  }
-  .mc-btn.sell:hover:not(:disabled) {
-    background: var(--rc);
-    color: #000;
+  /* Тонкая полоска процента */
+  .upgrade-circle::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(var(--accent) 0%, var(--accent) var(--p, 0%), rgba(255,255,255,0.05) var(--p, 0%), rgba(255,255,255,0.05) 100%);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+    z-index: 0;
   }
   
-  .mc-btn:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-  
-  .mc-bottom-line {
+  .arrow-wrap {
     position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 3px;
-    background: var(--rc);
-    box-shadow: 0 0 12px var(--rc);
+    top: 0; left: 0; width: 100%; height: 100%;
+    transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 5;
   }
+  .arrow-head {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    margin-left: -6px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 12px solid var(--accent);
+    filter: drop-shadow(0 0 6px rgba(255,176,32,0.9));
+  }
+
+  .chance-val { font-size: 24px; font-weight: 800; color: var(--accent); z-index: 2; pointer-events: none; }
+  .chance-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; z-index: 2; pointer-events: none; }
+
+  /* Панель управления */
+  .upgrade-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 320px;
+  }
+  .upgrade-controls-top {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .upgrade-controls-top input {
+    flex: 1;
+    height: var(--ctrl-h);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    outline: none;
+    transition: 0.2s;
+    font-family: inherit;
+  }
+  .upgrade-controls-top input:focus { border-color: var(--accent); }
+  .upgrade-controls-top input::placeholder { color: var(--muted); font-weight: 600; }
   
-  .multi-card.sold { opacity: 0.4; filter: grayscale(0.7); }
+  .fast-open-toggle.upg-toggle { width: var(--ctrl-h); height: var(--ctrl-h); flex-shrink: 0; }
+
+  .btn-upgrade {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #160f00;
+    font-size: 15px; font-weight: 800; padding: 0 24px; border-radius: 12px;
+    box-shadow: 0 10px 26px -10px rgba(255,176,32,0.8);
+    height: var(--ctrl-h);
+    width: 100%;
+  }
+  .btn-upgrade:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; box-shadow: none; }
+
+  /* Слоты */
+  .upgrade-slot {
+    background: var(--panel); border: 2px dashed var(--border); border-radius: var(--radius);
+    padding: 20px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+    min-height: 200px;
+  }
+  .upgrade-slot:hover { border-color: var(--accent); background: var(--panel-2); }
+  .upgrade-slot.filled { border-style: solid; border-color: var(--rc); }
+  .upgrade-slot.filled::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 100%, var(--rc) 0%, transparent 70%); opacity: 0.15; pointer-events: none; }
+  .upgrade-slot .car-svg { width: 100px; margin-bottom: 10px; color: var(--rc); }
+  .upgrade-slot .u-name { font-weight: 800; font-size: 15px; margin-bottom: 4px; }
+  .upgrade-slot .u-price { font-size: 13px; color: var(--accent); font-weight: 700; }
+  .upgrade-placeholder { color: var(--muted); font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+  /* Нижняя часть */
+  .upgrade-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .upgrade-inventory, .upgrade-catalog {
+    background: var(--panel-2); border-radius: var(--radius); padding: 16px;
+    border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
+  }
+  .u-list-header { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--text); }
+  .u-list-header i { color: var(--accent); }
+  
+  .u-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+  
+  .u-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+    transition: 0.15s; position: relative; overflow: hidden;
+  }
+  .u-card:hover { border-color: var(--rc); transform: translateY(-2px); }
+  .u-card.selected { border-color: var(--rc); background: rgba(255,255,255,0.05); box-shadow: 0 0 10px var(--rc); }
+  .u-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 100%, var(--rc) 0%, transparent 70%); opacity: 0.1; pointer-events: none; }
+  .u-card .car-svg { width: 80%; height: auto; color: var(--rc); position: relative; z-index: 1; }
+  .u-card-price { font-size: 10px; font-weight: 800; color: var(--accent); position: relative; z-index: 1; }
+
+  /* ============ GARAGE ============ */
+  .garage-top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .garage-top-nav .back-btn { margin-bottom: 0; }
+  .garage-top-nav .sell-all-garage-btn { width: auto; padding: 8px 16px; font-size: 13px; background: linear-gradient(135deg, #f87171, #ef4444); box-shadow: 0 8px 20px -8px rgba(239, 68, 68, 0.6); color: #fff; border-radius: 9px; border: none; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; transition: .18s; }
+  .garage-top-nav .sell-all-garage-btn:hover { filter: brightness(1.1); }
+  .garage-top-nav .sell-all-garage-btn:active { transform: scale(.96); }
+  .garage-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .garage-header h2 { margin:0; }
+  .garage-count { font-size:12px; color:var(--muted); font-weight:700; padding:5px 12px; border-radius:8px; background:var(--panel); border:1px solid var(--border); }
+  .garage-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+  .garage-card { position:relative; border-radius:var(--radius); border:1px solid var(--border); background:linear-gradient(180deg,var(--panel-2),var(--panel)); padding:14px 10px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; overflow:hidden; }
+  .garage-card::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 0%,var(--rc) 0%,transparent 65%); opacity:.16; pointer-events:none; }
+  .garage-card .car-svg { width:85%; height:auto; color:var(--rc); position:relative; z-index:1; }
+  .garage-name { font-size:12px; font-weight:700; text-align:center; line-height:1.2; position:relative; z-index:1; }
+  .garage-rarity { font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--rc); position:relative; z-index:1; }
+  .garage-sell { width:100%; margin-top:4px; padding:8px; border-radius:8px; border:1px solid rgba(255,176,32,.3); background:rgba(255,176,32,.1); color:var(--accent); font-size:11.5px; font-weight:800; cursor:pointer; font-family:inherit; transition:.15s; position:relative; z-index:1; }
+  .garage-sell:hover { background:rgba(255,176,32,.18); }
+  .garage-sell:active { transform:scale(.97); }
+  .garage-empty { grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted); font-size:14px; line-height:1.6; border:1px dashed var(--border); border-radius:var(--radius); }
+
+  /* ============ MODAL ============ */
+  .modal{ position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:20px; background:rgba(5,7,11,.82); backdrop-filter:blur(6px); animation:fadeIn .22s ease; }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal-box{ width:100%; max-width:360px; padding:26px 22px 22px; border-radius:18px; border:1px solid var(--border); background:linear-gradient(180deg,var(--panel-2),var(--panel)); text-align:center; position:relative; overflow:hidden; animation:popIn .3s cubic-bezier(.2,1.3,.5,1); }
+  @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-box::before{ content:''; position:absolute; left:0; right:0; top:0; height:3px; background:var(--rc,#ffb020); box-shadow:0 0 26px var(--rc,#ffb020); }
+  .modal-box::after{ content:''; position:absolute; left:50%; top:-90px; width:280px; height:200px; transform:translateX(-50%); background:radial-gradient(circle,var(--rc,#ffb020),transparent 70%); opacity:.22; pointer-events:none; }
+  .modal-title{ font-size:12px; letter-spacing:2.4px; text-transform:uppercase; color:var(--muted); font-weight:800; margin-bottom:16px; position:relative; }
+  .modal-art{ width:170px; margin:0 auto 14px; position:relative; color:var(--rc,#ffb020); }
+  .modal-art svg{ width:100%; height:auto; filter:drop-shadow(0 8px 18px rgba(0,0,0,.6)); }
+  .modal-name{ font-size:19px; font-weight:800; margin-bottom:6px; position:relative; }
+  .modal-rarity{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; padding:4px 12px; border-radius:20px; color:var(--rc,#ffb020); background:color-mix(in srgb,var(--rc,#ffb020) 16%,transparent); border:1px solid color-mix(in srgb,var(--rc,#ffb020) 42%,transparent); margin-bottom:10px; position:relative; }
+  .modal-value{ font-size:13px; color:var(--muted); margin-bottom:20px; position:relative; }
+  .modal-value b{ color:var(--accent); font-weight:800; font-size:15px; }
+  .modal-actions{ display:flex; flex-direction:column; gap:10px; position:relative; }
+
+  /* --- MULTI RESULT --- */
+  .multi-box{ max-width:540px; }
+  .multi-summary{ display:flex; gap:8px; margin-bottom:14px; position:relative; }
+  .ms-row{ flex:1; display:flex; flex-direction:column; gap:2px; padding:9px 8px; border-radius:10px; background:rgba(255,255,255,.04); border:1px solid var(--border); text-align:center; }
+  .ms-row span{ font-size:9px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700; }
+  .ms-row b{ font-size:14px; font-weight:800; color:var(--text); }
+  .ms-row.highlight b{ color:var(--accent); }
+  .multi-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; max-height:50vh; overflow-y:auto; padding:2px; margin-bottom:18px; position:relative; }
+  .mc-car{ width: 75%; max-width: 100px; margin-bottom: 4px; color: var(--rc); position: relative; z-index: 1; }
+  .mc-name{ font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2; color: var(--text); position: relative; z-index: 1; }
+  .mc-rarity{ font-size: 8px; font-weight: 800; text-transform: uppercase; color: var(--rc); letter-spacing: 0.5px; position: relative; z-index: 1; }
+  .mc-actions{ display: flex; flex-direction: row; width: 100%; gap: 4px; margin-top: 6px; position: relative; z-index: 1; }
+  .mc-btn{ width: 100%; padding: 6px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer; font-family: inherit; transition: 0.15s; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center; box-sizing: border-box; border: 1px solid var(--rc); background: rgba(0,0,0,0.4); color: var(--rc); }
+  .mc-btn:hover:not(:disabled) { background: var(--rc); color: #000; }
+  .mc-btn:disabled{ opacity: 0.5; cursor: default; }
+  .mc-bottom-line{ position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--rc); box-shadow: 0 0 12px var(--rc); }
+  .multi-card{ position: relative; background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 10px 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; overflow: hidden; }
+  .multi-card::before{ content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 110%, var(--rc) 0%, transparent 70%); opacity: 0.15; pointer-events: none; }
+  .multi-card.sold{ opacity: 0.4; filter: grayscale(0.7); }
 
   /* ============ TOAST ============ */
-  .toast{
-    position:fixed;left:50%;bottom:26px;z-index:200;
-    transform:translate(-50%,20px);
-    padding:12px 22px;border-radius:11px;
-    background:#1e2836;border:1px solid #33445c;
-    color:var(--text);font-size:13.5px;font-weight:600;
-    box-shadow:0 12px 30px rgba(0,0,0,.55);
-    opacity:0;pointer-events:none;transition:.25s;
-    display:flex;align-items:center;gap:8px;
-  }
-  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast{ position:fixed; left:50%; bottom:26px; z-index:200; transform:translate(-50%,20px); padding:12px 22px; border-radius:11px; background:#1e2836; border:1px solid #33445c; color:var(--text); font-size:13.5px; font-weight:600; box-shadow:0 12px 30px rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:.25s; display:flex; align-items:center; gap:8px; }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
   .toast i { color: var(--accent); }
+
+  /* ============ CONFETTI ============ */
+  #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 150; }
 
   /* ============ MOBILE ============ */
   @media (max-width:640px){
     :root{--item-w:80px;--item-h:80px;--gap:8px;--radius:12px;--ctrl-h:46px}
-    main{padding:14px 10px 50px}
+    main{padding:14px 10px 100px}
     .logo-text{font-size:14px}
     .logo i {font-size:18px;}
     .balance{padding:4px 9px}
@@ -810,12 +506,7 @@
     .case-tag{font-size:8px;padding:2px 6px;top:7px;right:7px}
     .item-name{font-size:8px}
     .roulette{height:calc(var(--item-h) + 30px)}
-    .roulette.compact{
-      --item-w:56px;
-      --item-h:56px;
-      --gap:5px;
-      height:calc(var(--item-h) + 20px);
-    }
+    .roulette.compact{ --item-w:56px; --item-h:56px; --gap:5px; height:calc(var(--item-h) + 20px); }
     .roulette.compact .item-name{display:none}
     .roulettes-wrap{gap:7px;margin-bottom:16px}
     .roulettes-wrap.multi .fade{width:20px}
@@ -825,30 +516,64 @@
     .open-title{font-size:16px}
     .modal-art{width:140px}
     .modal-name{font-size:17px}
-    .garage-header h2{font-size:14px}
     .garage-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px}
     .multi-grid{max-height:42vh}
     .multi-box{padding:20px 14px 16px}
     .ms-row b{font-size:12.5px}
     .ms-row span{font-size:8px}
-    .garage-top-nav .sell-all-garage-btn{font-size:12px;padding:6px 12px;}
     .toggle-box i {font-size: 16px;}
+
+    /* Мобильная иерархия апгрейда */
+    .upgrade-main-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .upgrade-center-column {
+      order: -1;
+      width: 100%;
+      min-width: 0;
+    }
+    .upgrade-slots-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .upgrade-slot {
+      flex: 1;
+      min-height: 120px;
+      padding: 10px 6px;
+    }
+    .upgrade-slot .car-svg { width: 60px; }
+    .upgrade-slot .u-name { font-size: 11px; }
+    .upgrade-slot .u-price { font-size: 10px; }
+    .upgrade-placeholder { font-size: 10px; }
+
+    .upgrade-circle { width: 140px; height: 140px; }
+    .arrow-head { top: 5px; border-bottom: 10px solid var(--accent); border-left: 5px solid transparent; border-right: 5px solid transparent; margin-left: -5px; }
+    .chance-val { font-size: 20px; }
+
+    .upgrade-controls { max-width: 100%; }
+
+    .upgrade-bottom { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
+  <div class="logo" id="navLogo">
     <i class="fa-solid fa-car-side"></i>
     <span class="logo-text">CAR<b>CASE</b></span>
   </div>
   <div class="spacer"></div>
   
-  <button class="icon-btn garage-btn" id="garageBtn" title="Гараж" aria-label="Гараж">
-    <i class="fa-solid fa-warehouse"></i>
-    <span class="badge hidden" id="garageBadge">0</span>
-  </button>
+  <div class="nav-tabs" id="desktopNav">
+    <div class="nav-tab active" data-view="cases"><i class="fa-solid fa-box"></i> Кейсы</div>
+    <div class="nav-tab" data-view="upgrade"><i class="fa-solid fa-arrow-up-right-dots"></i> Апгрейд</div>
+    <div class="nav-tab" data-view="garage"><i class="fa-solid fa-warehouse"></i> Гараж</div>
+    <div class="nav-tab" data-view="profile"><i class="fa-solid fa-user"></i> Профиль</div>
+  </div>
   
   <button class="icon-btn" id="soundBtn" title="Звук" aria-label="Звук">
     <i class="fa-solid fa-volume-high"></i>
@@ -869,7 +594,6 @@
 
   <!-- ===== ОТКРЫТИЕ ===== -->
   <section id="openView" class="hidden">
-    
     <div class="sticky-open-area">
       <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Назад к кейсам</button>
 
@@ -902,7 +626,6 @@
       <h3>Возможный транспорт</h3>
       <div class="possible-drops-grid" id="possibleDropsGrid"></div>
     </div>
-
   </section>
 
   <!-- ===== ГАРАЖ ===== -->
@@ -917,7 +640,105 @@
     </div>
     <div class="garage-grid" id="garageGrid"></div>
   </section>
+
+  <!-- ===== ПРОФИЛЬ ===== -->
+  <section id="profileView" class="hidden">
+    <h2>Статистика игрока</h2>
+    <div class="profile-grid">
+      <div class="stat-card editable" id="profileBalCard" title="Нажмите, чтобы изменить баланс">
+        <div class="stat-label">Баланс</div>
+        <div class="stat-value accent" id="statBal">0 ₽</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Всего открыто</div>
+        <div class="stat-value" id="statOpened">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Потрачено</div>
+        <div class="stat-value" id="statSpent">0 ₽</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Заработано</div>
+        <div class="stat-value accent" id="statEarned">0 ₽</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Легендарок</div>
+        <div class="stat-value accent" id="statLegend">0</div>
+      </div>
+    </div>
+
+    <h2>Лучшая машина</h2>
+    <div class="best-car-card" id="bestCarCard">
+      <div class="car-svg">${CAR_SVG}</div>
+      <div class="best-car-info">
+        <h3 id="bestCarName">Нет машин</h3>
+        <p id="bestCarValue">0 ₽</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== АПГРЕЙД ===== -->
+  <section id="upgradeView" class="hidden">
+    <h2>Апгрейд</h2>
+    
+    <div class="upgrade-main-layout">
+      <!-- Слот From (Слева) -->
+      <div class="upgrade-slot" id="slotFrom">
+        <div class="upgrade-placeholder">Выберите авто<br>или введите сумму</div>
+      </div>
+      
+      <!-- Центр (Колесо + Кнопки) -->
+      <div class="upgrade-center-column">
+        <div class="upgrade-circle" id="upgradeCircle">
+          <div class="arrow-wrap" id="arrowWrap">
+            <div class="arrow-head"></div>
+          </div>
+          <div class="chance-val" id="upgradeChance">0.00%</div>
+          <div class="chance-label">Вероятность</div>
+        </div>
+
+        <div class="upgrade-controls">
+          <div class="upgrade-controls-top">
+            <input type="number" id="betAmount" placeholder="Сумма из баланса..." min="0">
+            <label class="fast-open-toggle upg-toggle" title="Моментальное открытие">
+              <input type="checkbox" id="instantUpgradeToggle">
+              <div class="toggle-box">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+            </label>
+          </div>
+          <button class="btn btn-upgrade" id="doUpgradeBtn" disabled>АПГРЕЙД</button>
+        </div>
+      </div>
+
+      <!-- Слот To (Справа) -->
+      <div class="upgrade-slot" id="slotTo">
+        <div class="upgrade-placeholder">Выберите предмет,<br>который хотите<br>получить</div>
+      </div>
+    </div>
+
+    <!-- Инвентарь и Каталог -->
+    <div class="upgrade-bottom">
+      <div class="upgrade-inventory">
+        <div class="u-list-header"><span><i class="fa-solid fa-wrench"></i> Мои предметы</span></div>
+        <div class="u-items-grid" id="upgradeInvGrid"></div>
+      </div>
+      
+      <div class="upgrade-catalog">
+        <div class="u-list-header"><span><i class="fa-solid fa-star"></i> Автомобили</span></div>
+        <div class="u-items-grid" id="upgradeCatalogGrid"></div>
+      </div>
+    </div>
+  </section>
 </main>
+
+<!-- Мобильное меню -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="nav-tab active" data-view="cases"><i class="fa-solid fa-box"></i> Кейсы</div>
+  <div class="nav-tab" data-view="upgrade"><i class="fa-solid fa-arrow-up-right-dots"></i> Апгрейд</div>
+  <div class="nav-tab" data-view="garage"><i class="fa-solid fa-warehouse"></i> Гараж</div>
+  <div class="nav-tab" data-view="profile"><i class="fa-solid fa-user"></i> Профиль</div>
+</div>
 
 <!-- ===== МОДАЛКА ВЫИГРЫША (одиночная) ===== -->
 <div class="modal hidden" id="modal">
@@ -950,6 +771,7 @@
   </div>
 </div>
 
+<canvas id="confetti-canvas"></canvas>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -979,9 +801,6 @@ const CASES = [
     color:'#ffc93c', mult:{ common:.8, rare:1.2, epic:2, legend:3 } }
 ];
 
-/* =========================================================
-   SVG МАШИНЫ
-   ========================================================= */
 const CAR_SVG = `<svg class="car-svg" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
   <path d="M6 42 L6 33 C6 30 8 28 12 27.5 L32 24 L46 12 C48.5 9.5 51 8.5 54 8.5 L78 8.5 C82 8.5 85 9.8 87.5 12.5 L99 25 L108 27 C112 28 114 30 114 33 L114 42 Z" fill="currentColor"/>
   <path d="M52 22 L62 13 L74 13 L74 22 Z M78 22 L78 13 L84 13 L92 22 Z" fill="rgba(255,255,255,.55)"/>
@@ -1006,11 +825,23 @@ let qty = 1;
 let uidCounter = 0;
 let multiWinners = [];
 
+let upgFrom = null;
+let upgTo = null;
+let isUpgrading = false;
+
+let stats = {
+  opened: 0,
+  spent: 0,
+  earned: 0,
+  legend: 0,
+  bestCar: null
+};
+
 /* =========================================================
    DOM
    ========================================================= */
 const $ = id => document.getElementById(id);
-const casesView = $('casesView'), openView = $('openView'), garageView = $('garageView');
+const casesView = $('casesView'), openView = $('openView'), garageView = $('garageView'), profileView = $('profileView'), upgradeView = $('upgradeView');
 const casesGrid = $('casesGrid');
 const roulettesWrap = $('roulettesWrap');
 const openBtn = $('openBtn'), openTitle = $('openTitle'), openSub = $('openSub'), backBtn = $('backBtn');
@@ -1023,10 +854,22 @@ const qtyBtns = $('qtyBtns'), instantToggle = $('instantToggle');
 const multiModal = $('multiModal'), multiGrid = $('multiGrid');
 const multiTotal = $('multiTotal'), multiSold = $('multiSold');
 const sellAllBtn = $('sellAllBtn'), keepAllBtn = $('keepAllBtn');
-const garageGrid = $('garageGrid'), garageCount = $('garageCount'), garageBadge = $('garageBadge');
-const garageBtn = $('garageBtn'), garageBackBtn = $('garageBackBtn');
+const garageGrid = $('garageGrid'), garageCount = $('garageCount');
 const sellAllGarageBtn = $('sellAllGarageBtn');
 const possibleDropsGrid = $('possibleDropsGrid');
+
+const slotFrom = $('slotFrom'), slotTo = $('slotTo');
+const upgradeCircle = $('upgradeCircle'), upgradeChance = $('upgradeChance'), doUpgradeBtn = $('doUpgradeBtn');
+const instantUpgradeToggle = $('instantUpgradeToggle');
+const upgradeInvGrid = $('upgradeInvGrid'), upgradeCatalogGrid = $('upgradeCatalogGrid');
+const arrowWrap = $('arrowWrap');
+const betAmountInput = $('betAmount');
+
+const statBal = $('statBal'), profileBalCard = $('profileBalCard');
+const statOpened = $('statOpened'), statSpent = $('statSpent'), statEarned = $('statEarned'), statLegend = $('statLegend');
+const bestCarName = $('bestCarName'), bestCarValue = $('bestCarValue'), bestCarCardSvg = $('bestCarCard').querySelector('.car-svg');
+
+const navTabs = document.querySelectorAll('.nav-tab');
 
 /* =========================================================
    УТИЛИТЫ
@@ -1039,6 +882,23 @@ function toast(msg){
   toastEl.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+}
+
+function saveState() {
+  const data = { balance, garage, stats, uidCounter };
+  localStorage.setItem('carCaseSave', JSON.stringify(data));
+}
+function loadState() {
+  const saved = localStorage.getItem('carCaseSave');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      balance = data.balance ?? 5000;
+      garage = data.garage ?? [];
+      stats = data.stats ?? stats;
+      uidCounter = data.uidCounter ?? 0;
+    } catch(e) {}
+  }
 }
 
 /* --- звук --- */
@@ -1065,6 +925,7 @@ function playTick(){
   osc.connect(gain).connect(actx.destination);
   osc.start(t); osc.stop(t + 0.04);
 }
+
 function playWin(){
   if(!soundOn || !actx) return;
   const t = actx.currentTime;
@@ -1079,6 +940,127 @@ function playWin(){
     o.connect(g).connect(actx.destination);
     o.start(s); o.stop(s + 0.45);
   });
+}
+
+function playLegendarySound(){
+  if(!soundOn || !actx) return;
+  const t = actx.currentTime;
+  const freqs = [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98, 2093.00];
+  freqs.forEach((f, i) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.value = f;
+    const s = t + i * 0.12;
+    g.gain.setValueAtTime(0.0001, s);
+    g.gain.exponentialRampToValueAtTime(0.1, s + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, s + 0.6);
+    o.connect(g).connect(actx.destination);
+    o.start(s); o.stop(s + 0.65);
+  });
+}
+
+function playLoseSound() {
+  if(!soundOn || !actx) return;
+  const t = actx.currentTime;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(200, t);
+  o.frequency.exponentialRampToValueAtTime(50, t + 0.5);
+  g.gain.setValueAtTime(0.1, t);
+  g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+  o.connect(g).connect(actx.destination);
+  o.start(t); o.stop(t + 0.5);
+}
+
+// Звук для кручения апгрейда
+let upgradeSoundInterval = null;
+function playUpgradeSpinSound() {
+  if (!soundOn || !actx) return;
+  let tickCount = 0;
+  const maxTicks = 45;
+  
+  const tick = () => {
+    if (tickCount > maxTicks || !isUpgrading) return;
+    const t = actx.currentTime;
+    const o = actx.createOscillator(), g = actx.createGain();
+    
+    o.type = 'square';
+    o.frequency.setValueAtTime(800 + Math.random() * 400, t);
+    g.gain.setValueAtTime(0.04, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    
+    o.connect(g).connect(actx.destination);
+    o.start(t); o.stop(t + 0.05);
+    
+    tickCount++;
+    const delay = 40 + (tickCount * tickCount * 0.8); 
+    upgradeSoundInterval = setTimeout(tick, delay);
+  };
+  
+  tick();
+}
+
+/* =========================================================
+   CONFETTI
+   ========================================================= */
+const canvas = $('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let confettiAnimationId = null;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function triggerConfetti(color) {
+  const count = window.innerWidth < 640 ? 40 : 80;
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 20,
+      vy: (Math.random() - 0.5) * 20 - 5,
+      size: Math.random() * 6 + 3,
+      color: color,
+      life: 1,
+      decay: Math.random() * 0.015 + 0.015,
+      gravity: 0.35
+    });
+  }
+  if (!confettiAnimationId) animateConfetti();
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let active = false;
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.vx *= 0.98;
+    p.vy *= 0.98;
+    p.life -= p.decay;
+    
+    if (p.life > 0) {
+      active = true;
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    } else {
+      particles.splice(i, 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+  if (active) {
+    confettiAnimationId = requestAnimationFrame(animateConfetti);
+  } else {
+    confettiAnimationId = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 }
 
 /* =========================================================
@@ -1133,18 +1115,328 @@ function pickWeighted(pool){
    НАВИГАЦИЯ
    ========================================================= */
 function showView(name){
-  casesView.classList.toggle('hidden', name !== 'cases');
-  openView.classList.toggle('hidden', name !== 'open');
-  garageView.classList.toggle('hidden', name !== 'garage');
-  if(name === 'garage') renderGarage();
+  casesView.classList.add('hidden');
+  openView.classList.add('hidden');
+  garageView.classList.add('hidden');
+  profileView.classList.add('hidden');
+  upgradeView.classList.add('hidden');
+
+  if(name === 'cases') casesView.classList.remove('hidden');
+  else if(name === 'open') openView.classList.remove('hidden');
+  else if(name === 'garage') { garageView.classList.remove('hidden'); renderGarage(); }
+  else if(name === 'profile') { profileView.classList.remove('hidden'); renderProfile(); }
+  else if(name === 'upgrade') { upgradeView.classList.remove('hidden'); initUpgrade(); }
+  
+  navTabs.forEach(t => {
+    t.classList.toggle('active', t.dataset.view === (name === 'open' ? 'cases' : name));
+  });
+
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-garageBtn.addEventListener('click', () => {
-  if(spinning) return;
-  showView('garage');
+navTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    if(spinning || isUpgrading) return;
+    showView(tab.dataset.view);
+  });
 });
-garageBackBtn.addEventListener('click', () => showView('cases'));
+$('navLogo').addEventListener('click', () => { if(!spinning && !isUpgrading) showView('cases'); });
+
+/* =========================================================
+   ПРОФИЛЬ
+   ========================================================= */
+function updateStatsOnOpen(price, car) {
+  stats.opened += 1;
+  stats.spent += price;
+  if(car.rarity === 'legend') stats.legend += 1;
+  
+  if (!stats.bestCar || RARITY[car.rarity].value > RARITY[stats.bestCar.rarity].value) {
+    stats.bestCar = car;
+  }
+  saveState();
+}
+
+function updateStatsOnSell(value) {
+  stats.earned += value;
+  saveState();
+}
+
+function renderProfile() {
+  statBal.textContent = fmt(balance);
+  statOpened.textContent = stats.opened;
+  statSpent.textContent = fmt(stats.spent);
+  statEarned.textContent = fmt(stats.earned);
+  statLegend.textContent = stats.legend;
+
+  if (stats.bestCar) {
+    const r = RARITY[stats.bestCar.rarity];
+    bestCarName.textContent = stats.bestCar.name;
+    bestCarName.style.color = r.color;
+    bestCarValue.textContent = fmt(r.value);
+    bestCarCardSvg.style.color = r.color;
+  } else {
+    bestCarName.textContent = "Пока нет машин";
+    bestCarName.style.color = "var(--text)";
+    bestCarValue.textContent = "0 ₽";
+    bestCarCardSvg.style.color = "var(--muted)";
+  }
+}
+
+// Редактирование баланса в профиле
+profileBalCard.addEventListener('click', () => {
+  const newBal = prompt('Введите ваш баланс:', balance);
+  if (newBal !== null && !isNaN(newBal) && newBal >= 0) {
+    balance = parseInt(newBal);
+    updateBalance();
+    renderProfile();
+    saveState();
+    toast('Баланс обновлён');
+  }
+});
+
+/* =========================================================
+   АПГРЕЙД
+   ========================================================= */
+function initUpgrade() {
+  upgFrom = null;
+  upgTo = null;
+  isUpgrading = false;
+  betAmountInput.value = '';
+  clearTimeout(upgradeSoundInterval);
+  arrowWrap.style.transition = 'none';
+  arrowWrap.style.transform = `rotate(0deg)`;
+  updateUpgradeUI();
+  renderUpgradeView();
+}
+
+function renderUpgradeView() {
+  upgradeInvGrid.innerHTML = garage.map(car => {
+    const r = RARITY[car.rarity];
+    return `<div class="u-card ${upgFrom?.uid === car.uid ? 'selected' : ''}" data-uid="${car.uid}" style="--rc:${r.color};color:${r.color}">
+      ${CAR_SVG}
+      <div class="u-card-price">${fmt(r.value)}</div>
+    </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:12px;text-align:center;grid-column:1/-1;">Гараж пуст</div>';
+
+  const allCarsMap = new Map();
+  CASES.forEach(cs => {
+    const pool = buildPool(cs);
+    pool.forEach(p => {
+      if(!allCarsMap.has(p.name)) {
+        allCarsMap.set(p.name, p);
+      }
+    });
+  });
+  const allCars = Array.from(allCarsMap.values()).sort((a,b) => RARITY[b.rarity].value - RARITY[a.rarity].value);
+
+  upgradeCatalogGrid.innerHTML = allCars.map(car => {
+    const r = RARITY[car.rarity];
+    const isSelected = upgTo?.name === car.name;
+    return `<div class="u-card ${isSelected ? 'selected' : ''}" data-name="${car.name}" style="--rc:${r.color};color:${r.color}">
+      ${CAR_SVG}
+      <div class="u-card-price">${fmt(r.value)}</div>
+    </div>`;
+  }).join('');
+
+  updateUpgradeUI();
+}
+
+function updateUpgradeUI() {
+  const betValue = parseInt(betAmountInput.value) || 0;
+  const carValue = upgFrom ? RARITY[upgFrom.rarity].value : 0;
+  const totalFromValue = carValue + betValue;
+
+  // Слот From
+  if (upgFrom || betValue > 0) {
+    slotFrom.className = 'upgrade-slot filled';
+    const rColor = upgFrom ? RARITY[upgFrom.rarity].color : 'var(--accent)';
+    slotFrom.style.setProperty('--rc', rColor);
+    
+    let innerHTML = '';
+    if (upgFrom) {
+      innerHTML += `${CAR_SVG}<div class="u-name">${upgFrom.name}</div>`;
+    } else {
+      innerHTML += `<div class="u-name" style="color:var(--accent)">Баланс</div>`;
+    }
+    if (betValue > 0 && upgFrom) {
+      innerHTML += `<div class="u-price" style="font-size:11px;color:var(--text)">+ ${fmt(betValue)}</div>`;
+    }
+    innerHTML += `<div class="u-price" style="margin-top:4px;font-size:14px;">Итого: ${fmt(totalFromValue)}</div>`;
+    
+    slotFrom.innerHTML = innerHTML;
+  } else {
+    slotFrom.className = 'upgrade-slot';
+    slotFrom.style.removeProperty('--rc');
+    slotFrom.innerHTML = `<div class="upgrade-placeholder">Выберите авто<br>или введите сумму</div>`;
+  }
+
+  // Слот To
+  if (upgTo) {
+    const r = RARITY[upgTo.rarity];
+    slotTo.className = 'upgrade-slot filled';
+    slotTo.style.setProperty('--rc', r.color);
+    slotTo.innerHTML = `
+      ${CAR_SVG}
+      <div class="u-name">${upgTo.name}</div>
+      <div class="u-price">${fmt(r.value)}</div>
+    `;
+  } else {
+    slotTo.className = 'upgrade-slot';
+    slotTo.style.removeProperty('--rc');
+    slotTo.innerHTML = `<div class="upgrade-placeholder">Выберите предмет,<br>который хотите<br>получить</div>`;
+  }
+
+  // Логика шанса
+  if (totalFromValue > 0 && upgTo && !isUpgrading) {
+    if (betValue > balance) {
+      upgradeChance.textContent = 'Ошибка';
+      upgradeCircle.style.setProperty('--p', '0%');
+      doUpgradeBtn.disabled = true;
+      doUpgradeBtn.textContent = 'Не хватает';
+      upgradeCircle.style.color = '#f87171';
+      return;
+    }
+
+    const valTo = RARITY[upgTo.rarity].value;
+    let chance = (totalFromValue / valTo) * 100;
+    if (chance > 100) chance = 100;
+    
+    upgradeChance.textContent = chance.toFixed(2) + '%';
+    upgradeCircle.style.setProperty('--p', chance + '%');
+    doUpgradeBtn.disabled = false;
+    doUpgradeBtn.textContent = 'АПГРЕЙД';
+    
+    if (chance >= 70) upgradeCircle.style.color = '#4ade80';
+    else if (chance >= 40) upgradeCircle.style.color = 'var(--accent)';
+    else upgradeCircle.style.color = '#f87171';
+  } else if (!isUpgrading) {
+    upgradeChance.textContent = '0.00%';
+    upgradeCircle.style.setProperty('--p', '0%');
+    doUpgradeBtn.disabled = true;
+    doUpgradeBtn.textContent = 'АПГРЕЙД';
+    upgradeCircle.style.color = 'var(--accent)';
+  }
+}
+
+// Ввод суммы
+betAmountInput.addEventListener('input', () => {
+  if (isUpgrading) return;
+  let val = parseInt(betAmountInput.value);
+  if (val < 0) betAmountInput.value = 0;
+  updateUpgradeUI();
+});
+
+upgradeInvGrid.addEventListener('click', (e) => {
+  if (isUpgrading) return;
+  const card = e.target.closest('.u-card');
+  if (!card) return;
+  const uid = +card.dataset.uid;
+  upgFrom = garage.find(c => c.uid === uid) || null;
+  renderUpgradeView();
+});
+
+upgradeCatalogGrid.addEventListener('click', (e) => {
+  if (isUpgrading) return;
+  const card = e.target.closest('.u-card');
+  if (!card) return;
+  const name = card.dataset.name;
+  for (const key in CARS) {
+    if (CARS[key].includes(name)) {
+      upgTo = { name, rarity: key };
+      break;
+    }
+  }
+  renderUpgradeView();
+});
+
+slotFrom.addEventListener('click', () => { 
+  if(!isUpgrading) { 
+    upgFrom = null; 
+    betAmountInput.value = ''; 
+    renderUpgradeView(); 
+  } 
+});
+slotTo.addEventListener('click', () => { if(!isUpgrading) { upgTo = null; renderUpgradeView(); } });
+
+doUpgradeBtn.addEventListener('click', () => {
+  if (!upgTo || isUpgrading) return;
+  
+  const betValue = parseInt(betAmountInput.value) || 0;
+  const carValue = upgFrom ? RARITY[upgFrom.rarity].value : 0;
+  const totalFromValue = carValue + betValue;
+
+  if (totalFromValue <= 0) return;
+  if (betValue > balance) { toast('Недостаточно средств на балансе'); return; }
+
+  const valTo = RARITY[upgTo.rarity].value;
+  let chance = (totalFromValue / valTo) * 100;
+  if (chance > 100) chance = 100;
+
+  isUpgrading = true;
+  doUpgradeBtn.disabled = true;
+  
+  // Вычитаем средства и убираем авто
+  if (betValue > 0) {
+    balance -= betValue;
+    updateBalance();
+  }
+  if (upgFrom) {
+    garage = garage.filter(c => c.uid !== upgFrom.uid);
+  }
+
+  const targetAngle = Math.random() * 360;
+  const winAngle = (chance / 100) * 360;
+  const isSuccess = targetAngle <= winAngle;
+
+  if (instantUpgradeToggle.checked) {
+    doUpgradeBtn.textContent = '...';
+    
+    setTimeout(() => {
+      arrowWrap.style.transition = 'none';
+      arrowWrap.style.transform = `rotate(${targetAngle}deg)`;
+      resolveUpgrade(isSuccess, valTo);
+    }, 300);
+  } else {
+    doUpgradeBtn.textContent = 'КРУТИМ...';
+    
+    const totalRotation = 360 * 5 + targetAngle;
+    arrowWrap.style.transition = 'transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    arrowWrap.style.transform = `rotate(${totalRotation}deg)`;
+
+    playUpgradeSpinSound();
+
+    setTimeout(() => {
+      resolveUpgrade(isSuccess, valTo);
+    }, 3600);
+  }
+});
+
+function resolveUpgrade(isSuccess, valTo) {
+  clearTimeout(upgradeSoundInterval);
+  
+  if (isSuccess) {
+    toast(`УСПЕХ! Вы получили ${upgTo.name}`);
+    playLegendarySound();
+    triggerConfetti(RARITY[upgTo.rarity].color);
+    
+    const newCar = { ...upgTo, uid: ++uidCounter };
+    garage.push(newCar);
+    
+    if (!stats.bestCar || valTo > RARITY[stats.bestCar.rarity].value) {
+      stats.bestCar = newCar;
+    }
+  } else {
+    toast(`Провал! Вы потеряли средства и авто.`);
+    playLoseSound();
+  }
+  
+  saveState();
+  updateGarageCount();
+  
+  setTimeout(() => {
+    initUpgrade();
+  }, 2000);
+}
 
 /* =========================================================
    РЕНДЕР КЕЙСОВ
@@ -1177,7 +1469,6 @@ function selectCase(id){
   if(!currentCase) return;
 
   initAudio();
-
   openTitle.textContent = currentCase.name;
   renderPreview();
   renderPossibleDrops();
@@ -1186,7 +1477,7 @@ function selectCase(id){
 }
 
 /* =========================================================
-   РУЛЕТКИ: раскладка
+   РУЛЕТКИ
    ========================================================= */
 function renderRoulettes(n){
   const compact = n >= 3;
@@ -1210,22 +1501,16 @@ function renderRoulettes(n){
 
 function applyBottomUpPlacement(rows, n){
   if(n <= 1) return;
-
   if(n === 2){
-    rows[0].style.gridRow = '2';
-    rows[0].style.gridColumn = '1';
-    rows[1].style.gridRow = '1';
-    rows[1].style.gridColumn = '1';
+    rows[0].style.gridRow = '2'; rows[0].style.gridColumn = '1';
+    rows[1].style.gridRow = '1'; rows[1].style.gridColumn = '1';
     return;
   }
-
   const R = Math.ceil(n / 2);
   const isOdd = n % 2 === 1;
-
   rows.forEach((row, i) => {
     if(isOdd && i === n - 1){
-      row.style.gridRow = '1';
-      row.style.gridColumn = '1 / span 2';
+      row.style.gridRow = '1'; row.style.gridColumn = '1 / span 2';
     } else {
       const pairIndex = Math.floor(i / 2);
       row.style.gridRow = String(R - pairIndex);
@@ -1247,10 +1532,7 @@ function renderPreview(){
 function renderPossibleDrops() {
   if (!currentCase) return;
   const pool = buildPool(currentCase);
-  // Сортировка: редкость по убыванию (легендарные первыми)
-  const sortedPool = [...pool].sort((a, b) => {
-    return RARITY[a.rarity].weight - RARITY[b.rarity].weight;
-  });
+  const sortedPool = [...pool].sort((a, b) => RARITY[a.rarity].weight - RARITY[b.rarity].weight);
   possibleDropsGrid.innerHTML = sortedPool.map(car => {
     const r = RARITY[car.rarity];
     return `<div class="drop-item" style="--rc:${r.color};color:${r.color}">
@@ -1292,7 +1574,6 @@ function updateOpenUI(){
   backBtn.disabled = spinning;
   instantToggle.disabled = spinning;
 
-  // Управление режимом моментального открытия
   if(instantMode){
     roulettesWrap.classList.add('instant-mode');
     openSub.textContent = 'Режим моментального открытия';
@@ -1336,6 +1617,8 @@ function openCase(){
   const pool = buildPool(currentCase);
   const winners = [];
   for(let i = 0; i < qty; i++) winners.push(pickWeighted(pool));
+
+  winners.forEach(w => updateStatsOnOpen(currentCase.price, w));
 
   if(instantMode){
     if(winners.length === 1) showResult(winners[0]);
@@ -1446,7 +1729,18 @@ function onSpinEnd(rowsData, winners){
     if(el) el.classList.add('winner');
   });
 
-  playWin();
+  const hasLegend = winners.some(w => w.rarity === 'legend');
+  if (hasLegend) {
+    playLegendarySound();
+    const legendCar = winners.find(w => w.rarity === 'legend');
+    triggerConfetti(RARITY[legendCar.rarity].color);
+  } else {
+    playWin();
+    const bestWin = winners.reduce((a,b) => RARITY[a.rarity].value > RARITY[b.rarity].value ? a : b);
+    if(bestWin.rarity === 'epic') {
+      triggerConfetti(RARITY[bestWin.rarity].color);
+    }
+  }
 
   setTimeout(() => {
     if(winners.length === 1) showResult(winners[0]);
@@ -1477,6 +1771,7 @@ function closeModal(){
 sellBtn.addEventListener('click', () => {
   if(lastWin){
     balance += RARITY[lastWin.rarity].value;
+    updateStatsOnSell(RARITY[lastWin.rarity].value);
     updateBalance();
     toast(`+${fmt(RARITY[lastWin.rarity].value)}`);
     lastWin = null;
@@ -1510,9 +1805,8 @@ modal.addEventListener('click', e => {
 function updateGarageCount(){
   const n = garage.length;
   garageCount.textContent = `${n} авто`;
-  garageBadge.textContent = n;
-  garageBadge.classList.toggle('hidden', n === 0);
   sellAllGarageBtn.classList.toggle('hidden', n === 0);
+  saveState();
 }
 
 function addToGarage(car){
@@ -1545,6 +1839,7 @@ garageGrid.addEventListener('click', e => {
   if(idx === -1) return;
   const car = garage[idx];
   balance += RARITY[car.rarity].value;
+  updateStatsOnSell(RARITY[car.rarity].value);
   updateBalance();
   garage.splice(idx, 1);
   renderGarage();
@@ -1561,6 +1856,7 @@ sellAllGarageBtn.addEventListener('click', () => {
   });
   
   balance += total;
+  updateStatsOnSell(total);
   updateBalance();
   garage = [];
   renderGarage();
@@ -1578,7 +1874,6 @@ function showMultiResults(winners){
   updateMultiSummary();
   updateMultiButtons();
   multiModal.classList.remove('hidden');
-  playWin();
 }
 
 function renderMultiGrid(){
@@ -1616,7 +1911,7 @@ function updateMultiButtons(){
   
   sellAllBtn.disabled = unsold.length === 0;
   sellAllBtn.textContent = unsold.length === 0 ? 'Всё продано' : `Продать всё за ${fmt(totalUnsold)}`;
-  keepAllBtn.textContent = unsold.length > 0 ? `Забрать всё в гараж (${unsold.length})` : 'Закрыть';
+  keepAllBtn.textContent = unsold.length > 0 ? `Забрать в гараж (${unsold.length})` : 'Закрыть';
 }
 
 multiGrid.addEventListener('click', e => {
@@ -1631,6 +1926,7 @@ multiGrid.addEventListener('click', e => {
   if(btn.classList.contains('sell')){
     w.action = 'sold';
     balance += RARITY[w.rarity].value;
+    updateStatsOnSell(RARITY[w.rarity].value);
     updateBalance();
     toast(`+${fmt(RARITY[w.rarity].value)}`);
   } else {
@@ -1655,7 +1951,6 @@ multiGrid.addEventListener('click', e => {
   updateMultiButtons();
   playTick();
 
-  // Автоматическое закрытие, если все карточки обработаны
   if (multiWinners.every(w => w.processed)) {
     setTimeout(closeMultiModal, 400);
   }
@@ -1672,6 +1967,7 @@ sellAllBtn.addEventListener('click', () => {
   });
   if(total){
     balance += total;
+    updateStatsOnSell(total);
     updateBalance();
     toast(`+${fmt(total)}`);
   }
@@ -1689,8 +1985,6 @@ sellAllBtn.addEventListener('click', () => {
   
   updateMultiSummary();
   updateMultiButtons();
-
-  // Автоматическое закрытие после продажи всего
   setTimeout(closeMultiModal, 400);
 });
 
@@ -1705,8 +1999,6 @@ keepAllBtn.addEventListener('click', () => {
     }
   });
   if(kept) toast(`${kept} авто в гараже <i class="fa-solid fa-flag-checkered"></i>`);
-  
-  // Автоматическое закрытие после забирания всего
   setTimeout(closeMultiModal, 400);
 });
 
@@ -1733,6 +2025,8 @@ backBtn.addEventListener('click', () => {
   showView('cases');
 });
 
+$('garageBackBtn').addEventListener('click', () => showView('cases'));
+
 soundBtn.addEventListener('click', () => {
   soundOn = !soundOn;
   soundBtn.innerHTML = soundOn 
@@ -1745,6 +2039,7 @@ soundBtn.addEventListener('click', () => {
 /* =========================================================
    ИНИЦИАЛИЗАЦИЯ
    ========================================================= */
+loadState();
 renderCases();
 renderQtyButtons();
 updateBalance();
