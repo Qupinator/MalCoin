@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0d13">
+<title>CAR CASE — открытие кейсов с машинами</title>
+<!-- Подключение Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{
+    --bg:#0a0d13;
+    --panel:#141b26;
+    --panel-2:#1a2330;
+    --border:#243040;
+    --text:#e8eef8;
+    --muted:#7f8da6;
+    --accent:#ffb020;
+    --accent-2:#ff6a00;
+    --item-w:142px;
+    --item-h:172px;
+    --gap:10px;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1100px 600px at 50% -15%, #16273a 0%, transparent 65%),
+      radial-gradient(800px 500px at 100% 100%, #1a1230 0%, transparent 60%),
+      var(--bg);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    user-select:none;
+  }
+
+  /* ============ HEADER ============ */
+  header{
+    position:sticky;top:0;z-index:60;
+    display:flex;align-items:center;gap:8px;
+    padding:10px 14px;
+    padding-top:calc(10px + env(safe-area-inset-top));
+    background:rgba(10,13,19,.82);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .logo{display:flex;align-items:center;gap:8px;min-width:0}
+  .logo i{font-size:22px;color:var(--accent);flex:none;filter:drop-shadow(0 0 8px rgba(255,176,32,.5))}
+  .logo-text{font-size:16px;font-weight:800;letter-spacing:1px;white-space:nowrap}
+  .logo-text b{color:var(--accent)}
+  .spacer{flex:1}
+
+  .icon-btn{
+    width:38px;height:38px;flex:none;
+    display:grid;place-items:center;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--text);font-size:16px;cursor:pointer;
+    transition:.18s;position:relative;
+  }
+  .icon-btn:active{transform:scale(.93)}
+  .icon-btn.muted{opacity:.4}
+  .icon-btn i{pointer-events:none;}
+
+  .garage-btn .badge{
+    position:absolute;top:-5px;right:-5px;
+    min-width:17px;height:17px;padding:0 4px;
+    border-radius:9px;
+    background:var(--accent);color:#160f00;
+    font-size:9px;font-weight:800;
+    display:grid;place-items:center;
+    border:2px solid var(--bg);
+    line-height:1;
+    pointer-events:none;
+  }
+
+  .balance{
+    display:flex;flex-direction:column;align-items:flex-end;
+    padding:5px 12px;border-radius:10px;
+    background:linear-gradient(180deg,#1c2836,#151d28);
+    border:1px solid var(--border);
+    line-height:1.1;flex:none;
+  }
+  .bal-label{font-size:9px;letter-spacing:.9px;text-transform:uppercase;color:var(--muted)}
+  .bal-value{font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap}
+
+  /* ============ LAYOUT ============ */
+  main{max-width:1100px;margin:0 auto;padding:18px 14px 60px}
+  .hidden{display:none !important}
+
+  h2{
+    font-size:15px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--muted);font-weight:700;margin:0 0 16px;
+  }
+
+  /* ============ CASES GRID ============ */
+  .cases-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px;
+  }
+  .case-card{
+    position:relative;overflow:hidden;
+    padding:20px 16px 18px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    cursor:pointer;
+    transition:transform .2s,border-color .2s,box-shadow .2s;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .case-card:hover{transform:translateY(-4px);border-color:rgba(255,176,32,.5);box-shadow:0 14px 34px -14px rgba(255,176,32,.45)}
+  .case-card:active{transform:scale(.98)}
+  .case-card::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 0%, var(--cc) 0%, transparent 62%);
+    opacity:.16;pointer-events:none;
+  }
+  .case-art{position:relative;width:100%;color:var(--cc);transition:.25s}
+  .case-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+  .case-card:hover .case-art{transform:scale(1.06) translateY(-2px)}
+  .case-name{font-size:15px;font-weight:700;text-align:center}
+  .case-price{
+    font-size:14px;font-weight:800;color:var(--accent);
+    padding:6px 16px;border-radius:8px;
+    background:rgba(255,176,32,.1);
+    border:1px solid rgba(255,176,32,.28);
+  }
+  .case-tag{
+    position:absolute;top:10px;right:10px;
+    font-size:9px;font-weight:800;letter-spacing:1.2px;
+    padding:3px 8px;border-radius:6px;
+    background:var(--cc);color:#0a0d13;
+  }
+
+  /* ============ OPEN VIEW ============ */
+  .back-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;margin-bottom:14px;
+    border-radius:9px;border:1px solid var(--border);
+    background:var(--panel);color:var(--muted);
+    font-size:13px;font-weight:600;cursor:pointer;transition:.18s;
+    font-family:inherit;
+  }
+  .back-btn:hover{color:var(--text);border-color:#3a4a60}
+  .back-btn:active{transform:scale(.96)}
+  .back-btn:disabled{opacity:.4;pointer-events:none}
+
+  .open-title{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    font-size:18px;font-weight:800;margin-bottom:4px;text-align:center;
+  }
+  .open-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px}
+
+  /* --- ROULETTES WRAP --- */
+  .roulettes-wrap{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .roulettes-wrap.multi{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .roulette{
+    position:relative;
+    height:calc(var(--item-h) + 44px);
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
+    overflow:hidden;
+    box-shadow:inset 0 0 60px rgba(0,0,0,.75);
+  }
+  .roulette.compact{
+    --item-w:100px;
+    --item-h:104px;
+    --gap:8px;
+    height:calc(var(--item-h) + 24px);
+    border-radius:11px;
+  }
+  .roulette::after{
+    content:'';position:absolute;left:50%;top:0;bottom:0;width:120px;
+    transform:translateX(-50%);
+    background:linear-gradient(90deg,transparent,rgba(255,176,32,.07),transparent);
+    pointer-events:none;z-index:2;
+  }
+  .strip{
+    position:absolute;left:0;top:0;height:100%;
+    display:flex;align-items:center;gap:var(--gap);
+    will-change:transform;
+    padding:0;
+    transition:none;
+  }
+
+  .item{
+    position:relative;
+    flex:0 0 var(--item-w);
+    height:var(--item-h);
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;padding:10px 6px;
+    overflow:hidden;
+    transition:transform .3s, box-shadow .3s;
+  }
+  .roulette.compact .item{
+    border-radius:8px;padding:6px 4px;gap:3px;
+  }
+  .item::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 105%, var(--rc) 0%, transparent 68%);
+    opacity:.22;pointer-events:none;
+  }
+  .item::after{
+    content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:var(--rc);box-shadow:0 0 12px var(--rc);
+  }
+  .item .car-svg{width:90%;height:auto;position:relative;z-index:1}
+  .roulette.compact .item .car-svg{width:82%}
+  .item-name{
+    position:relative;z-index:1;
+    font-size:10.5px;line-height:1.15;text-align:center;
+    color:#cbd6e6;font-weight:600;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .roulette.compact .item-name{font-size:8.5px}
+  .item.winner{
+    transform:scale(1.06);
+    box-shadow:0 0 0 2px var(--rc), 0 0 34px var(--rc);
+    z-index:3;
+  }
+
+  .pointer{
+    position:absolute;left:50%;top:0;bottom:0;width:2px;
+    transform:translateX(-50%);
+    background:linear-gradient(180deg,transparent,var(--accent) 12%,var(--accent) 88%,transparent);
+    box-shadow:0 0 14px rgba(255,176,32,.9);
+    z-index:6;pointer-events:none;
+  }
+  .pointer::before,.pointer::after{
+    content:'';position:absolute;left:50%;transform:translateX(-50%);
+    border-left:7px solid transparent;border-right:7px solid transparent;
+  }
+  .pointer::before{top:-1px;border-top:11px solid var(--accent)}
+  .pointer::after{bottom:-1px;border-bottom:11px solid var(--accent)}
+
+  .fade{position:absolute;top:0;bottom:0;width:70px;z-index:5;pointer-events:none}
+  .fade-l{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+  .fade-r{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+  .roulettes-wrap.multi .fade{width:34px}
+
+  /* --- INSTANT PANEL --- */
+  .instant-panel{
+    height:calc(var(--item-h) + 44px);
+    border-radius:var(--radius);
+    border:1px dashed rgba(255,176,32,.35);
+    background:linear-gradient(180deg,#0d131c,#131b27 50%,#0d131c);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;margin-bottom:20px;
+    color:var(--muted);font-size:13px;font-weight:600;text-align:center;
+    padding:0 20px;
+  }
+  .instant-panel .ip-icon i {font-size:38px;color:var(--accent);line-height:1;}
+  .instant-panel .ip-text{color:var(--accent);font-size:16px;font-weight:800;letter-spacing:.5px}
+
+  /* --- QTY / SWITCH --- */
+  .qty-row{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:12px;
+  }
+  .qty-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .qty-btns{display:flex;gap:6px}
+  .qty-btn{
+    width:38px;height:38px;border-radius:9px;
+    border:1px solid var(--border);background:var(--panel);
+    color:var(--muted);font-size:14px;font-weight:800;
+    cursor:pointer;font-family:inherit;transition:.15s;
+  }
+  .qty-btn.active{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#160f00;border-color:transparent;
+  }
+  .qty-btn:active:not(:disabled){transform:scale(.94)}
+  .qty-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--panel-2);border-color:transparent}
+  
+  .qty-btn.active:disabled {
+    background: linear-gradient(135deg, #4a1a1a, #2a0a0a);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+    opacity: 0.9;
+    box-shadow: inset 0 0 10px rgba(255, 107, 107, 0.2);
+    cursor: not-allowed;
+  }
+
+  .switch-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 14px;border-radius:11px;
+    background:var(--panel);border:1px solid var(--border);
+    margin-bottom:16px;font-size:13.5px;font-weight:600;
+    cursor:pointer;
+  }
+  .switch-row span:first-child { display:flex; align-items:center; gap:8px; }
+  .switch-row i { color:var(--accent); }
+  .switch-row input{display:none}
+  .switch{
+    width:44px;height:24px;border-radius:12px;
+    background:#2a3648;position:relative;transition:.2s;flex:none;
+  }
+  .switch::after{
+    content:'';position:absolute;top:3px;left:3px;
+    width:18px;height:18px;border-radius:50%;
+    background:#8fa1ba;transition:.2s;
+  }
+  .switch-row input:checked + .switch{background:var(--accent)}
+  .switch-row input:checked + .switch::after{left:23px;background:#160f00}
+  .switch-row input:disabled + .switch{opacity:.45}
+
+  /* --- BUTTONS --- */
+  .btn{
+    display:block;width:100%;
+    padding:15px 20px;border-radius:12px;border:none;
+    font-size:15px;font-weight:800;letter-spacing:.5px;
+    cursor:pointer;transition:.18s;font-family:inherit;
+  }
+  .btn.primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#160f00;
+    box-shadow:0 10px 26px -10px rgba(255,150,0,.85);
+  }
+  .btn.primary:hover:not(:disabled){filter:brightness(1.1)}
+  .btn.primary:active:not(:disabled){transform:scale(.98)}
+  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:grayscale(0.6)}
+  .btn.ghost{
+    background:var(--panel);color:var(--text);
+    border:1px solid var(--border);
+  }
+  .btn.ghost:hover{border-color:#3a4a60}
+
+  /* ============ GARAGE ============ */
+  .garage-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .garage-header h2{margin:0}
+  .garage-count{
+    font-size:12px;color:var(--muted);font-weight:700;
+    padding:5px 12px;border-radius:8px;
+    background:var(--panel);border:1px solid var(--border);
+  }
+  
+  .sell-all-garage-btn {
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    color: #fff;
+    box-shadow: 0 8px 20px -8px rgba(239, 68, 68, 0.6);
+    transition: .18s;
+  }
+  .sell-all-garage-btn:hover { filter: brightness(1.1); }
+  .sell-all-garage-btn:active { transform: scale(.98); }
+
+  .garage-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:12px;
+  }
+  .garage-card{
+    position:relative;
+    border-radius:var(--radius);border:1px solid var(--border);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    padding:14px 10px 10px;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    overflow:hidden;
+  }
+  .garage-card::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 0%,var(--rc) 0%,transparent 65%);
+    opacity:.16;pointer-events:none;
+  }
+  .garage-card .car-svg{width:85%;height:auto;color:var(--rc);position:relative;z-index:1}
+  .garage-name{font-size:12px;font-weight:700;text-align:center;line-height:1.2;position:relative;z-index:1}
+  .garage-rarity{
+    font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:var(--rc);position:relative;z-index:1;
+  }
+  .garage-sell{
+    width:100%;margin-top:4px;padding:8px;border-radius:8px;
+    border:1px solid rgba(255,176,32,.3);
+    background:rgba(255,176,32,.1);
+    color:var(--accent);font-size:11.5px;font-weight:800;
+    cursor:pointer;font-family:inherit;transition:.15s;
+    position:relative;z-index:1;
+  }
+  .garage-sell:hover{background:rgba(255,176,32,.18)}
+  .garage-sell:active{transform:scale(.97)}
+  .garage-empty{
+    grid-column:1/-1;text-align:center;
+    padding:50px 20px;color:var(--muted);font-size:14px;line-height:1.6;
+    border:1px dashed var(--border);border-radius:var(--radius);
+  }
+
+  /* ============ MODAL ============ */
+  .modal{
+    position:fixed;inset:0;z-index:100;
+    display:grid;place-items:center;
+    padding:20px;
+    background:rgba(5,7,11,.82);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    animation:fadeIn .22s ease;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal-box{
+    width:100%;max-width:360px;
+    padding:26px 22px 22px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    animation:popIn .3s cubic-bezier(.2,1.3,.5,1);
+  }
+  @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-box::before{
+    content:'';position:absolute;left:0;right:0;top:0;height:3px;
+    background:var(--rc,#ffb020);
+    box-shadow:0 0 26px var(--rc,#ffb020);
+  }
+  .modal-box::after{
+    content:'';position:absolute;left:50%;top:-90px;width:280px;height:200px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle,var(--rc,#ffb020),transparent 70%);
+    opacity:.22;pointer-events:none;
+  }
+  .modal-title{
+    font-size:12px;letter-spacing:2.4px;text-transform:uppercase;
+    color:var(--muted);font-weight:800;margin-bottom:16px;position:relative;
+  }
+  .modal-art{width:170px;margin:0 auto 14px;position:relative;color:var(--rc,#ffb020)}
+  .modal-art svg{width:100%;height:auto;filter:drop-shadow(0 8px 18px rgba(0,0,0,.6))}
+  .modal-name{font-size:19px;font-weight:800;margin-bottom:6px;position:relative}
+  .modal-rarity{
+    display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.4px;
+    text-transform:uppercase;padding:4px 12px;border-radius:20px;
+    color:var(--rc,#ffb020);
+    background:color-mix(in srgb,var(--rc,#ffb020) 16%,transparent);
+    border:1px solid color-mix(in srgb,var(--rc,#ffb020) 42%,transparent);
+    margin-bottom:10px;position:relative;
+  }
+  .modal-value{
+    font-size:13px;color:var(--muted);margin-bottom:20px;position:relative;
+  }
+  .modal-value b{color:var(--accent);font-weight:800;font-size:15px}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;position:relative}
+
+  /* --- MULTI RESULT --- */
+  .multi-box{max-width:540px}
+  .multi-summary{
+    display:flex;gap:8px;margin-bottom:14px;position:relative;
+  }
+  .ms-row{
+    flex:1;display:flex;flex-direction:column;gap:2px;
+    padding:9px 8px;border-radius:10px;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    text-align:center;
+  }
+  .ms-row span{
+    font-size:9px;text-transform:uppercase;letter-spacing:1px;
+    color:var(--muted);font-weight:700;
+  }
+  .ms-row b{font-size:14px;font-weight:800;color:var(--text)}
+  .ms-row.highlight b{color:var(--accent)}
+  .multi-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+    gap:10px;margin-bottom:18px;
+    max-height:46vh;overflow-y:auto;
+    padding:2px;position:relative;
+  }
+  .multi-card{
+    position:relative;
+    border-radius:10px;border:1px solid var(--border);
+    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+    padding:10px 8px 8px;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    overflow:hidden;
+    animation:cardIn .35s cubic-bezier(.2,1.3,.5,1) both;
+    transition:opacity .3s, filter .3s;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
+  .multi-card::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 110%,var(--rc) 0%,transparent 70%);
+    opacity:.18;pointer-events:none;
+  }
+  .multi-card .car-svg{width:80%;height:auto;position:relative;z-index:1}
+  .multi-name{font-size:10.5px;font-weight:700;text-align:center;line-height:1.2;position:relative;z-index:1}
+  .multi-rarity{
+    font-size:8.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+    color:var(--rc);position:relative;z-index:1;
+  }
+  .multi-sell{
+    width:100%;margin-top:2px;padding:6px 4px;border-radius:7px;
+    border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);
+    background:color-mix(in srgb,var(--rc) 12%,transparent);
+    color:var(--rc);font-size:10px;font-weight:800;
+    cursor:pointer;font-family:inherit;transition:.15s;
+    position:relative;z-index:1;
+  }
+  .multi-sell:hover:not(:disabled){filter:brightness(1.25)}
+  .multi-sell:active:not(:disabled){transform:scale(.96)}
+  .multi-sell:disabled{opacity:.45;cursor:default}
+  .multi-card.sold{opacity:.4;filter:grayscale(.7)}
+  .multi-card.sold .car-svg{filter:grayscale(1)}
+
+  /* ============ TOAST ============ */
+  .toast{
+    position:fixed;left:50%;bottom:26px;z-index:200;
+    transform:translate(-50%,20px);
+    padding:12px 22px;border-radius:11px;
+    background:#1e2836;border:1px solid #33445c;
+    color:var(--text);font-size:13.5px;font-weight:600;
+    box-shadow:0 12px 30px rgba(0,0,0,.55);
+    opacity:0;pointer-events:none;transition:.25s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast i { color: var(--accent); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width:640px){
+    :root{--item-w:94px;--item-h:118px;--gap:8px;--radius:12px}
+    main{padding:14px 10px 50px}
+    .logo-text{font-size:14px}
+    .logo i {font-size:18px;}
+    .balance{padding:4px 9px}
+    .bal-value{font-size:12.5px}
+    .bal-label{font-size:8px}
+    .icon-btn{width:34px;height:34px;font-size:14px}
+    .cases-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+    .case-card{padding:14px 10px 14px;gap:8px}
+    .case-name{font-size:12.5px}
+    .case-price{font-size:12px;padding:5px 12px}
+    .case-tag{font-size:8px;padding:2px 6px;top:7px;right:7px}
+    .item-name{font-size:8.5px}
+    .roulette{height:calc(var(--item-h) + 34px)}
+    .roulette.compact{
+      --item-w:60px;
+      --item-h:66px;
+      --gap:5px;
+      height:calc(var(--item-h) + 18px);
+    }
+    .roulette.compact .item-name{display:none}
+    .roulette.compact .item .car-svg{width:88%}
+    .roulettes-wrap{gap:7px;margin-bottom:16px}
+    .roulettes-wrap.multi .fade{width:20px}
+    .fade{width:36px}
+    .btn{padding:14px;font-size:14px}
+    .open-title{font-size:16px}
+    .modal-art{width:140px}
+    .modal-name{font-size:17px}
+    .qty-btn{width:34px;height:34px;font-size:13px}
+    .switch-row{font-size:12.5px;padding:11px 12px}
+    .garage-header h2{font-size:14px}
+    .garage-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px}
+    .multi-grid{grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:8px;max-height:42vh}
+    .multi-box{padding:20px 14px 16px}
+    .instant-panel{height:calc(var(--item-h) + 34px);margin-bottom:16px}
+    .instant-panel .ip-icon i{font-size:30px}
+    .instant-panel .ip-text{font-size:14px}
+    .ms-row b{font-size:12.5px}
+    .ms-row span{font-size:8px}
+    .sell-all-garage-btn{font-size:13px;padding:10px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <i class="fa-solid fa-car-side"></i>
+    <span class="logo-text">CAR<b>CASE</b></span>
+  </div>
+  <div class="spacer"></div>
+  
+  <button class="icon-btn garage-btn" id="garageBtn" title="Гараж" aria-label="Гараж">
+    <i class="fa-solid fa-warehouse"></i>
+    <span class="badge hidden" id="garageBadge">0</span>
+  </button>
+  
+  <button class="icon-btn" id="soundBtn" title="Звук" aria-label="Звук">
+    <i class="fa-solid fa-volume-high"></i>
+  </button>
+  
+  <div class="balance">
+    <span class="bal-label">Баланс</span>
+    <span class="bal-value" id="balanceValue">5 000 ₽</span>
+  </div>
+</header>
+
+<main>
+  <!-- ===== ВЫБОР КЕЙСА ===== -->
+  <section id="casesView">
+    <h2>Выберите кейс</h2>
+    <div class="cases-grid" id="casesGrid"></div>
+  </section>
+
+  <!-- ===== ОТКРЫТИЕ ===== -->
+  <section id="openView" class="hidden">
+    <button class="back-btn" id="backBtn"><i class="fa-solid fa-arrow-left"></i> Назад к кейсам</button>
+
+    <div class="open-title" id="openTitle">Кейс</div>
+    <div class="open-sub" id="openSub">Крутите и заберите автомобиль</div>
+
+    <div class="roulettes-wrap" id="roulettesWrap"></div>
+
+    <div class="instant-panel hidden" id="instantPanel">
+      <div class="ip-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div class="ip-text">Моментальное открытие</div>
+      <div>Результат появится сразу после нажатия</div>
+    </div>
+
+    <div class="qty-row">
+      <span class="qty-label">Количество</span>
+      <div class="qty-btns" id="qtyBtns"></div>
+    </div>
+
+    <label class="switch-row">
+      <span><i class="fa-solid fa-bolt"></i> Моментальное открытие</span>
+      <input type="checkbox" id="instantToggle">
+      <span class="switch"></span>
+    </label>
+
+    <button class="btn primary" id="openBtn">Открыть</button>
+  </section>
+
+  <!-- ===== ГАРАЖ ===== -->
+  <section id="garageView" class="hidden">
+    <button class="back-btn" id="garageBackBtn"><i class="fa-solid fa-arrow-left"></i> К кейсам</button>
+    <div class="garage-header">
+      <h2>Гараж</h2>
+      <span class="garage-count" id="garageCount">0 авто</span>
+    </div>
+    
+    <button class="btn sell-all-garage-btn hidden" id="sellAllGarageBtn">
+      <i class="fa-solid fa-sack-dollar"></i> Продать все авто
+    </button>
+    
+    <div class="garage-grid" id="garageGrid"></div>
+  </section>
+</main>
+
+<!-- ===== МОДАЛКА ВЫИГРЫША (одиночная) ===== -->
+<div class="modal hidden" id="modal">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-title">Ваш автомобиль</div>
+    <div class="modal-art" id="modalArt"></div>
+    <div class="modal-name" id="modalName"></div>
+    <div class="modal-rarity" id="modalRarity"></div>
+    <div class="modal-value" id="modalValue"></div>
+    <div class="modal-actions">
+      <button class="btn primary" id="sellBtn">Продать</button>
+      <button class="btn ghost" id="keepBtn">Оставить в гараже</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== МОДАЛКА РЕЗУЛЬТАТОВ (множественная) ===== -->
+<div class="modal hidden" id="multiModal">
+  <div class="modal-box multi-box">
+    <div class="modal-title">Результаты</div>
+    <div class="multi-summary">
+      <div class="ms-row highlight"><span>Выпало на сумму</span><b id="multiTotal">0 ₽</b></div>
+      <div class="ms-row"><span>Продано</span><b id="multiSold">0 ₽</b></div>
+    </div>
+    <div class="multi-grid" id="multiGrid"></div>
+    <div class="modal-actions">
+      <button class="btn primary" id="sellAllBtn">Продать всё</button>
+      <button class="btn ghost" id="keepAllBtn">Забрать в гараж</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   ДАННЫЕ
+   ========================================================= */
+const RARITY = {
+  common:   { label:'Обычное',         color:'#9ca3af', weight:59, value:80    },
+  rare:     { label:'Редкое',          color:'#3b82f6', weight:35, value:450   },
+  epic:     { label:'Крайне редкое',   color:'#a855f7', weight:5,  value:2500  },
+  legend:   { label:'Легендарное',     color:'#eab308', weight:1,  value:20000 }
+};
+
+const CARS = {
+  common:   ['Лада Гранта','Рено Логан','Киа Рио','Хёндай Солярис','Фольксваген Поло','Шкода Рапид'],
+  rare:     ['Тойота Камри','Мазда 6','Шкода Октавия','Форд Мондео','Хёндай Тусон','БМВ 5 серии','Ауди A6','Мерседес E-класс','Лексус RX'],
+  epic:     ['Порше 911','Ниссан GT-R','БМВ M5','Ауди RS6','Порше Макан'],
+  legend:   ['Ламборгини Урус','Феррари F8','Макларен 720S','Бугатти Широн','Кёнигсегг ЙесКО']
+};
+
+const CASES = [
+  { id:'budget',  name:'Бюджетный кейс', price:99,   tag:'СТАРТ',
+    color:'#5b8fd6', mult:{ common:1, rare:1, epic:.8, legend:.5 } },
+  { id:'city',    name:'Городской кейс', price:499,  tag:'ХИТ',
+    color:'#9b4bff', mult:{ common:.95, rare:1.05, epic:1.2, legend:1.5 } },
+  { id:'premium', name:'Премиум гараж',  price:1999, tag:'ТОП',
+    color:'#ffc93c', mult:{ common:.8, rare:1.2, epic:2, legend:3 } }
+];
+
+/* =========================================================
+   SVG МАШИНЫ (оставляем кастомный SVG для самих машин)
+   ========================================================= */
+const CAR_SVG = `<svg class="car-svg" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 42 L6 33 C6 30 8 28 12 27.5 L32 24 L46 12 C48.5 9.5 51 8.5 54 8.5 L78 8.5 C82 8.5 85 9.8 87.5 12.5 L99 25 L108 27 C112 28 114 30 114 33 L114 42 Z" fill="currentColor"/>
+  <path d="M52 22 L62 13 L74 13 L74 22 Z M78 22 L78 13 L84 13 L92 22 Z" fill="rgba(255,255,255,.55)"/>
+  <circle cx="32" cy="42" r="9.5" fill="#0d1117"/>
+  <circle cx="90" cy="42" r="9.5" fill="#0d1117"/>
+  <circle cx="32" cy="42" r="3.6" fill="#4d5b70"/>
+  <circle cx="90" cy="42" r="3.6" fill="#4d5b70"/>
+</svg>`;
+
+/* =========================================================
+   СОСТОЯНИЕ
+   ========================================================= */
+let balance   = 5000;
+let spinning  = false;
+let soundOn   = true;
+let currentCase = null;
+let lastWin   = null;
+
+let garage = [];
+let instantMode = false;
+let qty = 1;
+let uidCounter = 0;
+let multiWinners = [];
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const casesView = $('casesView'), openView = $('openView'), garageView = $('garageView');
+const casesGrid = $('casesGrid');
+const roulettesWrap = $('roulettesWrap');
+const openBtn = $('openBtn'), openTitle = $('openTitle'), openSub = $('openSub'), backBtn = $('backBtn');
+const modal = $('modal'), modalBox = $('modalBox'), modalArt = $('modalArt');
+const modalName = $('modalName'), modalRarity = $('modalRarity'), modalValue = $('modalValue');
+const sellBtn = $('sellBtn'), keepBtn = $('keepBtn');
+const balanceValue = $('balanceValue'), soundBtn = $('soundBtn');
+const toastEl = $('toast');
+const qtyBtns = $('qtyBtns'), instantToggle = $('instantToggle'), instantPanel = $('instantPanel');
+const multiModal = $('multiModal'), multiGrid = $('multiGrid');
+const multiTotal = $('multiTotal'), multiSold = $('multiSold');
+const sellAllBtn = $('sellAllBtn'), keepAllBtn = $('keepAllBtn');
+const garageGrid = $('garageGrid'), garageCount = $('garageCount'), garageBadge = $('garageBadge');
+const garageBtn = $('garageBtn'), garageBackBtn = $('garageBackBtn');
+const sellAllGarageBtn = $('sellAllGarageBtn');
+
+/* =========================================================
+   УТИЛИТЫ
+   ========================================================= */
+const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
+
+let toastTimer;
+function toast(msg){
+  toastEl.innerHTML = msg; // используем innerHTML для отображения иконок
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+}
+
+/* --- звук --- */
+let actx = null;
+function initAudio(){
+  if(!actx){
+    try{ actx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
+  }
+  if(actx && actx.state === 'suspended') actx.resume();
+}
+let lastTickTime = 0;
+function playTick(){
+  if(!soundOn || !actx) return;
+  const now = performance.now();
+  if(now - lastTickTime < 30) return;
+  lastTickTime = now;
+  const t = actx.currentTime;
+  const osc = actx.createOscillator();
+  const gain = actx.createGain();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(900 + Math.random()*500, t);
+  gain.gain.setValueAtTime(0.045, t);
+  gain.gain.exponentialRampToValueAtTime(0.0008, t + 0.035);
+  osc.connect(gain).connect(actx.destination);
+  osc.start(t); osc.stop(t + 0.04);
+}
+function playWin(){
+  if(!soundOn || !actx) return;
+  const t = actx.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'triangle';
+    o.frequency.value = f;
+    const s = t + i * 0.09;
+    g.gain.setValueAtTime(0.0001, s);
+    g.gain.exponentialRampToValueAtTime(0.09, s + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, s + 0.42);
+    o.connect(g).connect(actx.destination);
+    o.start(s); o.stop(s + 0.45);
+  });
+}
+
+/* =========================================================
+   КРИВАЯ РАЗГОНА / ТОРМОЖЕНИЯ
+   ========================================================= */
+function makeSpinEase(accelEnd, decelStart){
+  const total = 0.5 * (1 - accelEnd + decelStart);
+  return function(s){
+    if(s <= 0) return 0;
+    if(s >= 1) return 1;
+    if(s < accelEnd){
+      const u = s / accelEnd;
+      const S = u*u*u - 0.5*u*u*u*u;
+      return (accelEnd * S) / total;
+    }
+    if(s <= decelStart){
+      return (0.5*accelEnd + (s - accelEnd)) / total;
+    }
+    const u = (1 - s) / (1 - decelStart);
+    const S = u*u*u - 0.5*u*u*u*u;
+    return (0.5*(1 - accelEnd + decelStart) - (1 - decelStart)*S) / total;
+  };
+}
+
+/* =========================================================
+   ВЗВЕШЕННЫЙ РАНДОМ
+   ========================================================= */
+function buildPool(cs){
+  const pool = [];
+  for(const key in CARS){
+    const tierWeight = RARITY[key].weight * (cs.mult[key] ?? 1);
+    const perItem = tierWeight / CARS[key].length;
+    CARS[key].forEach(name => {
+      pool.push({ name, rarity:key, w:perItem });
+    });
+  }
+  return pool;
+}
+
+function pickWeighted(pool){
+  let total = 0;
+  for(const p of pool) total += p.w;
+  let r = Math.random() * total;
+  for(const p of pool){
+    r -= p.w;
+    if(r <= 0) return p;
+  }
+  return pool[pool.length - 1];
+}
+
+/* =========================================================
+   НАВИГАЦИЯ
+   ========================================================= */
+function showView(name){
+  casesView.classList.toggle('hidden', name !== 'cases');
+  openView.classList.toggle('hidden', name !== 'open');
+  garageView.classList.toggle('hidden', name !== 'garage');
+  if(name === 'garage') renderGarage();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+garageBtn.addEventListener('click', () => {
+  if(spinning) return;
+  showView('garage');
+});
+garageBackBtn.addEventListener('click', () => showView('cases'));
+
+/* =========================================================
+   РЕНДЕР КЕЙСОВ
+   ========================================================= */
+function itemHTML(car){
+  const color = RARITY[car.rarity].color;
+  return `<div class="item" style="--rc:${color};color:${color}">
+    ${CAR_SVG}
+    <div class="item-name">${car.name}</div>
+  </div>`;
+}
+
+function renderCases(){
+  casesGrid.innerHTML = CASES.map(cs => `
+    <div class="case-card" data-id="${cs.id}" style="--cc:${cs.color}">
+      <div class="case-tag">${cs.tag}</div>
+      <div class="case-art">${CAR_SVG}</div>
+      <div class="case-name">${cs.name}</div>
+      <div class="case-price">${fmt(cs.price)}</div>
+    </div>
+  `).join('');
+
+  casesGrid.querySelectorAll('.case-card').forEach(el => {
+    el.addEventListener('click', () => selectCase(el.dataset.id));
+  });
+}
+
+function selectCase(id){
+  currentCase = CASES.find(c => c.id === id);
+  if(!currentCase) return;
+
+  initAudio();
+
+  openTitle.textContent = currentCase.name;
+  renderPreview();
+  updateOpenUI();
+  showView('open');
+}
+
+/* =========================================================
+   РУЛЕТКИ: раскладка
+   ========================================================= */
+function renderRoulettes(n){
+  const compact = n >= 3;
+  roulettesWrap.classList.toggle('multi', n >= 3);
+  roulettesWrap.innerHTML = '';
+  const list = [];
+  for(let i = 0; i < n; i++){
+    const row = document.createElement('div');
+    row.className = 'roulette' + (compact ? ' compact' : '');
+    row.innerHTML =
+      '<div class="strip"></div>' +
+      '<div class="fade fade-l"></div>' +
+      '<div class="fade fade-r"></div>' +
+      '<div class="pointer"></div>';
+    roulettesWrap.appendChild(row);
+    list.push(row);
+  }
+  applyBottomUpPlacement(list, n);
+  return list;
+}
+
+function applyBottomUpPlacement(rows, n){
+  if(n <= 1) return;
+
+  if(n === 2){
+    rows[0].style.gridRow = '2';
+    rows[0].style.gridColumn = '1';
+    rows[1].style.gridRow = '1';
+    rows[1].style.gridColumn = '1';
+    return;
+  }
+
+  const R = Math.ceil(n / 2);
+  const isOdd = n % 2 === 1;
+
+  rows.forEach((row, i) => {
+    if(isOdd && i === n - 1){
+      row.style.gridRow = '1';
+      row.style.gridColumn = '1 / span 2';
+    } else {
+      const pairIndex = Math.floor(i / 2);
+      row.style.gridRow = String(R - pairIndex);
+      row.style.gridColumn = (i % 2 === 0) ? '1' : '2';
+    }
+  });
+}
+
+function renderPreview(){
+  if(!currentCase || instantMode) return;
+  const pool = buildPool(currentCase);
+  const rows = renderRoulettes(1);
+  const strip = rows[0].querySelector('.strip');
+  const items = [];
+  for(let i = 0; i < 24; i++) items.push(pickWeighted(pool));
+  strip.innerHTML = items.map(itemHTML).join('');
+}
+
+/* =========================================================
+   UI ОТКРЫТИЯ (с проверкой доступности)
+   ========================================================= */
+function renderQtyButtons(){
+  qtyBtns.innerHTML = [1,2,3,4,5].map(n =>
+    `<button class="qty-btn ${n===qty?'active':''}" data-q="${n}">${n}</button>`
+  ).join('');
+}
+
+function updateOpenUI(){
+  if(!currentCase) return;
+  const total = currentCase.price * qty;
+
+  qtyBtns.querySelectorAll('.qty-btn').forEach(b => {
+    const q = +b.dataset.q;
+    const cost = currentCase.price * q;
+    b.classList.toggle('active', q === qty);
+    b.disabled = spinning || (balance < cost);
+  });
+
+  if(balance < total){
+    openBtn.textContent = `Не хватает ${fmt(total - balance)}`;
+    openBtn.disabled = true;
+  } else {
+    openBtn.textContent = `Открыть за ${fmt(total)}${qty > 1 ? ' ×' + qty : ''}`;
+    openBtn.disabled = spinning;
+  }
+
+  backBtn.disabled = spinning;
+  instantToggle.disabled = spinning;
+
+  if(instantMode){
+    roulettesWrap.classList.add('hidden');
+    instantPanel.classList.remove('hidden');
+    instantPanel.querySelector('.ip-text').textContent =
+      qty > 1 ? `Моментальное открытие ×${qty}` : 'Моментальное открытие';
+    openSub.textContent = 'Результат появится сразу после нажатия';
+  } else {
+    roulettesWrap.classList.remove('hidden');
+    instantPanel.classList.add('hidden');
+    openSub.textContent = qty > 1
+      ? `Одновременное открытие ${qty} кейсов`
+      : 'Крутите и заберите автомобиль';
+  }
+
+  instantToggle.checked = instantMode;
+}
+
+qtyBtns.addEventListener('click', e => {
+  const btn = e.target.closest('.qty-btn');
+  if(!btn || spinning || btn.disabled) return;
+  qty = +btn.dataset.q;
+  renderPreview();
+  updateOpenUI();
+});
+
+instantToggle.addEventListener('change', () => {
+  if(spinning) return;
+  instantMode = instantToggle.checked;
+  renderPreview();
+  updateOpenUI();
+});
+
+/* =========================================================
+   ОТКРЫТИЕ
+   ========================================================= */
+function openCase(){
+  if(spinning || !currentCase) return;
+  const total = currentCase.price * qty;
+  if(balance < total){ toast('Недостаточно средств'); return; }
+
+  initAudio();
+  balance -= total;
+  updateBalance(); 
+
+  const pool = buildPool(currentCase);
+  const winners = [];
+  for(let i = 0; i < qty; i++) winners.push(pickWeighted(pool));
+
+  if(instantMode){
+    if(winners.length === 1) showResult(winners[0]);
+    else showMultiResults(winners);
+  } else {
+    startSpin(winners);
+  }
+}
+
+/* =========================================================
+   АНИМАЦИЯ
+   ========================================================= */
+function startSpin(winners){
+  spinning = true;
+  updateOpenUI(); 
+
+  const cs = currentCase;
+  const pool = buildPool(cs);
+  const n = winners.length;
+  const compact = n >= 3;
+  const rows = renderRoulettes(n);
+
+  const isMobile = window.innerWidth < 640;
+  const baseDuration = isMobile ? 4800 : 5400;
+
+  const rowsData = [];
+
+  rows.forEach((row, i) => {
+    const strip = row.querySelector('.strip');
+    const winner = winners[i];
+
+    const TOTAL = compact ? 46 : 70;
+    const targetIndex = compact
+      ? 34 + Math.floor(Math.random() * 5)
+      : 50 + Math.floor(Math.random() * 5);
+
+    const items = [];
+    for(let j = 0; j < TOTAL; j++) items.push(pickWeighted(pool));
+    items[targetIndex] = winner;
+
+    strip.innerHTML = items.map(itemHTML).join('');
+
+    const firstItem = strip.children[0];
+    const itemW = firstItem.offsetWidth;
+    const gap = parseFloat(getComputedStyle(strip).gap) || 10;
+    const step = itemW + gap;
+    const containerW = row.clientWidth;
+
+    const jitter = (Math.random() - 0.5) * itemW * 0.55;
+    const finalX = -(targetIndex * step + itemW / 2 - containerW / 2 + jitter);
+
+    strip.style.transition = 'none';
+    strip.style.transform = 'translateX(0px)';
+
+    rowsData.push({
+      strip, finalX,
+      duration: baseDuration + Math.floor(Math.random() * 350),
+      delay: i * 60,
+      step, containerW, targetIndex
+    });
+  });
+
+  void rowsData[0].strip.offsetWidth;
+
+  runSpin(rowsData, () => onSpinEnd(rowsData, winners));
+}
+
+function runSpin(rowsData, done){
+  const ease = makeSpinEase(0.13, 0.48);
+  const start = performance.now();
+  const tickRow = rowsData[0];
+  let lastTickIdx = -1;
+
+  function frame(now){
+    const elapsed = now - start;
+    let allDone = true;
+
+    for(let i = 0; i < rowsData.length; i++){
+      const rd = rowsData[i];
+      const e = elapsed - rd.delay;
+      if(e < 0){ allDone = false; continue; }
+      const s = Math.min(e / rd.duration, 1);
+      rd.strip.style.transform = `translateX(${rd.finalX * ease(s)}px)`;
+      if(s < 1) allDone = false;
+    }
+
+    const e0 = Math.max(elapsed - tickRow.delay, 0);
+    const s0 = Math.min(e0 / tickRow.duration, 1);
+    const tx = tickRow.finalX * ease(s0);
+    const idx = Math.floor((tickRow.containerW / 2 - tx) / tickRow.step);
+    if(idx !== lastTickIdx){
+      lastTickIdx = idx;
+      playTick();
+    }
+
+    if(!allDone) requestAnimationFrame(frame);
+    else done();
+  }
+  requestAnimationFrame(frame);
+}
+
+function onSpinEnd(rowsData, winners){
+  spinning = false;
+  updateOpenUI(); 
+
+  rowsData.forEach(rd => {
+    const el = rd.strip.children[rd.targetIndex];
+    if(el) el.classList.add('winner');
+  });
+
+  playWin();
+
+  setTimeout(() => {
+    if(winners.length === 1) showResult(winners[0]);
+    else showMultiResults(winners);
+  }, 550);
+}
+
+/* =========================================================
+   ОДИНОЧНАЯ МОДАЛКА
+   ========================================================= */
+function showResult(car){
+  const r = RARITY[car.rarity];
+  lastWin = car;
+  modalBox.style.setProperty('--rc', r.color);
+  modalArt.style.color = r.color;
+  modalArt.innerHTML = CAR_SVG;
+  modalName.textContent = car.name;
+  modalRarity.textContent = r.label;
+  modalValue.innerHTML = `Стоимость: <b>${fmt(r.value)}</b>`;
+  sellBtn.textContent = `Продать за ${fmt(r.value)}`;
+  modal.classList.remove('hidden');
+}
+
+function closeModal(){
+  modal.classList.add('hidden');
+}
+
+sellBtn.addEventListener('click', () => {
+  if(lastWin){
+    balance += RARITY[lastWin.rarity].value;
+    updateBalance();
+    toast(`+${fmt(RARITY[lastWin.rarity].value)}`);
+    lastWin = null;
+  }
+  closeModal();
+});
+
+keepBtn.addEventListener('click', () => {
+  if(lastWin){
+    addToGarage(lastWin);
+    toast('Автомобиль в гараже <i class="fa-solid fa-flag-checkered"></i>');
+    lastWin = null;
+  }
+  closeModal();
+});
+
+modal.addEventListener('click', e => {
+  if(e.target === modal){
+    if(lastWin){
+      addToGarage(lastWin);
+      toast('Автомобиль в гараже <i class="fa-solid fa-flag-checkered"></i>');
+      lastWin = null;
+    }
+    closeModal();
+  }
+});
+
+/* =========================================================
+   ГАРАЖ
+   ========================================================= */
+function updateGarageCount(){
+  const n = garage.length;
+  garageCount.textContent = `${n} авто`;
+  garageBadge.textContent = n;
+  garageBadge.classList.toggle('hidden', n === 0);
+  sellAllGarageBtn.classList.toggle('hidden', n === 0);
+}
+
+function addToGarage(car){
+  garage.push({ ...car, uid: ++uidCounter });
+  updateGarageCount();
+}
+
+function renderGarage(){
+  updateGarageCount();
+  if(!garage.length){
+    garageGrid.innerHTML = `<div class="garage-empty">Гараж пуст.<br>Откройте кейс и оставьте машину.</div>`;
+    return;
+  }
+  garageGrid.innerHTML = garage.map(c => {
+    const r = RARITY[c.rarity];
+    return `<div class="garage-card" style="--rc:${r.color};color:${r.color}">
+      ${CAR_SVG}
+      <div class="garage-name">${c.name}</div>
+      <div class="garage-rarity">${r.label}</div>
+      <button class="garage-sell" data-uid="${c.uid}">Продать ${fmt(r.value)}</button>
+    </div>`;
+  }).join('');
+}
+
+garageGrid.addEventListener('click', e => {
+  const btn = e.target.closest('.garage-sell');
+  if(!btn) return;
+  const uid = +btn.dataset.uid;
+  const idx = garage.findIndex(c => c.uid === uid);
+  if(idx === -1) return;
+  const car = garage[idx];
+  balance += RARITY[car.rarity].value;
+  updateBalance();
+  garage.splice(idx, 1);
+  renderGarage();
+  toast(`+${fmt(RARITY[car.rarity].value)}`);
+  playTick();
+});
+
+sellAllGarageBtn.addEventListener('click', () => {
+  if(!garage.length) return;
+  
+  let total = 0;
+  garage.forEach(c => {
+    total += RARITY[c.rarity].value;
+  });
+  
+  balance += total;
+  updateBalance();
+  garage = [];
+  renderGarage();
+  
+  toast(`Все авто проданы! +${fmt(total)}`);
+  playWin();
+});
+
+/* =========================================================
+   МНОЖЕСТВЕННЫЙ РЕЗУЛЬТАТ
+   ========================================================= */
+function showMultiResults(winners){
+  multiWinners = winners.map(w => ({ ...w, sold:false, uid: ++uidCounter }));
+  renderMultiGrid();
+  updateMultiSummary();
+  updateMultiButtons();
+  multiModal.classList.remove('hidden');
+  playWin();
+}
+
+function renderMultiGrid(){
+  multiGrid.innerHTML = multiWinners.map((w, i) => {
+    const r = RARITY[w.rarity];
+    return `<div class="multi-card ${w.sold?'sold':''}" style="--rc:${r.color};color:${r.color};animation-delay:${i*70}ms">
+      ${CAR_SVG}
+      <div class="multi-name">${w.name}</div>
+      <div class="multi-rarity">${r.label}</div>
+      <button class="multi-sell" data-idx="${i}" ${w.sold?'disabled':''}>${w.sold?'Продано':'Продать '+fmt(r.value)}</button>
+    </div>`;
+  }).join('');
+}
+
+function updateMultiSummary(){
+  let total = 0, sold = 0;
+  for(const w of multiWinners){
+    const v = RARITY[w.rarity].value;
+    total += v;
+    if(w.sold) sold += v;
+  }
+  multiTotal.textContent = fmt(total);
+  multiSold.textContent = fmt(sold);
+}
+
+function updateMultiButtons(){
+  const unsold = multiWinners.filter(w => !w.sold).length;
+  sellAllBtn.disabled = unsold === 0;
+  sellAllBtn.textContent = unsold === 0 ? 'Всё продано' : 'Продать всё';
+  keepAllBtn.textContent = unsold > 0 ? `Забрать в гараж (${unsold})` : 'Закрыть';
+}
+
+multiGrid.addEventListener('click', e => {
+  const btn = e.target.closest('.multi-sell');
+  if(!btn || btn.disabled) return;
+  const idx = +btn.dataset.idx;
+  const w = multiWinners[idx];
+  if(!w || w.sold) return;
+
+  w.sold = true;
+  balance += RARITY[w.rarity].value;
+  updateBalance();
+
+  const card = btn.closest('.multi-card');
+  card.classList.add('sold');
+  btn.disabled = true;
+  btn.textContent = 'Продано';
+
+  updateMultiSummary();
+  updateMultiButtons();
+  playTick();
+});
+
+sellAllBtn.addEventListener('click', () => {
+  let total = 0;
+  multiWinners.forEach(w => {
+    if(!w.sold){ w.sold = true; total += RARITY[w.rarity].value; }
+  });
+  if(total){
+    balance += total;
+    updateBalance();
+    toast(`+${fmt(total)}`);
+  }
+  Array.from(multiGrid.children).forEach((card, i) => {
+    const w = multiWinners[i];
+    if(w && w.sold){
+      card.classList.add('sold');
+      const b = card.querySelector('.multi-sell');
+      if(b){ b.disabled = true; b.textContent = 'Продано'; }
+    }
+  });
+  updateMultiSummary();
+  updateMultiButtons();
+});
+
+keepAllBtn.addEventListener('click', () => {
+  let kept = 0;
+  multiWinners.forEach(w => {
+    if(!w.sold){ addToGarage(w); kept++; }
+  });
+  if(kept) toast(`${kept} авто в гараже <i class="fa-solid fa-flag-checkered"></i>`);
+  closeMultiModal();
+});
+
+function closeMultiModal(){
+  multiModal.classList.add('hidden');
+  multiWinners = [];
+}
+
+/* =========================================================
+   ОБНОВЛЕНИЕ БАЛАНСА И UI
+   ========================================================= */
+function updateBalance(){
+  balanceValue.textContent = fmt(balance);
+  if(currentCase) updateOpenUI();
+}
+
+/* =========================================================
+   СОБЫТИЯ
+   ========================================================= */
+openBtn.addEventListener('click', openCase);
+
+backBtn.addEventListener('click', () => {
+  if(spinning) return;
+  showView('cases');
+});
+
+soundBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  soundBtn.innerHTML = soundOn 
+    ? '<i class="fa-solid fa-volume-high"></i>' 
+    : '<i class="fa-solid fa-volume-xmark"></i>';
+  soundBtn.classList.toggle('muted', !soundOn);
+  if(soundOn) initAudio();
+});
+
+/* =========================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ========================================================= */
+renderCases();
+renderQtyButtons();
+updateBalance();
+updateGarageCount();
+</script>
+</body>
+</html>
