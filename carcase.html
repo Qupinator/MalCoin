@@ -85,6 +85,9 @@
     .mobile-nav { display: flex; }
     main { padding-bottom: 100px; }
     .toast { bottom: 90px; }
+    
+    /* Инвентарь и каталог в колонку на мобильных и планшетах */
+    .upgrade-bottom { grid-template-columns: 1fr; }
   }
 
   .icon-btn{
@@ -559,7 +562,7 @@
     .chance-val { font-size: 20px; }
 
     .upgrade-controls { max-width: 100%; }
-	.toast{bottom:95px};
+    .toast{bottom:95px}
     .upgrade-bottom { grid-template-columns: 1fr; }
   }
 </style>
@@ -776,6 +779,22 @@
   </div>
 </div>
 
+<!-- ===== МОДАЛКА УСПЕШНОГО АПГРЕЙДА ===== -->
+<div class="modal hidden" id="upgradeResultModal">
+  <div class="modal-box" id="upgradeResultBox">
+    <div class="modal-title" style="color:#4ade80;">УСПЕШНЫЙ АПГРЕЙД</div>
+    <div style="font-size: 13px; margin-bottom: 12px; color: var(--text); font-weight: 600;" id="upgradeResultChance">Апгрейд выполнен на 75.50% шанса</div>
+    <div class="modal-art" id="upgradeResultArt"></div>
+    <div class="modal-name" id="upgradeResultName"></div>
+    <div class="modal-rarity" id="upgradeResultRarity"></div>
+    <div class="modal-value" id="upgradeResultValue"></div>
+    <div class="modal-actions">
+      <button class="btn primary" id="upgradeResultSellBtn">Продать</button>
+      <button class="btn ghost" id="upgradeResultKeepBtn">В гараж</button>
+    </div>
+  </div>
+</div>
+
 <canvas id="confetti-canvas"></canvas>
 <div class="toast" id="toast"></div>
 
@@ -833,6 +852,7 @@ let multiWinners = [];
 let upgFrom = null;
 let upgTo = null;
 let isUpgrading = false;
+let lastUpgradeChance = 0;
 
 let stats = {
   opened: 0,
@@ -869,6 +889,13 @@ const instantUpgradeToggle = $('instantUpgradeToggle');
 const upgradeInvGrid = $('upgradeInvGrid'), upgradeCatalogGrid = $('upgradeCatalogGrid');
 const arrowWrap = $('arrowWrap');
 const betAmountInput = $('betAmount');
+
+// Upgrade Result Modal DOM
+const upgradeResultModal = $('upgradeResultModal'), upgradeResultBox = $('upgradeResultBox');
+const upgradeResultChance = $('upgradeResultChance');
+const upgradeResultArt = $('upgradeResultArt'), upgradeResultName = $('upgradeResultName');
+const upgradeResultRarity = $('upgradeResultRarity'), upgradeResultValue = $('upgradeResultValue');
+const upgradeResultSellBtn = $('upgradeResultSellBtn'), upgradeResultKeepBtn = $('upgradeResultKeepBtn');
 
 const statBal = $('statBal'), profileBalCard = $('profileBalCard');
 const statOpened = $('statOpened'), statSpent = $('statSpent'), statEarned = $('statEarned'), statLegend = $('statLegend');
@@ -977,7 +1004,6 @@ function playLoseSound() {
   o.start(t); o.stop(t + 0.5);
 }
 
-// Звук для кручения апгрейда
 let upgradeSoundInterval = null;
 function playUpgradeSpinSound() {
   if (!soundOn || !actx) return;
@@ -988,12 +1014,10 @@ function playUpgradeSpinSound() {
     if (tickCount > maxTicks || !isUpgrading) return;
     const t = actx.currentTime;
     const o = actx.createOscillator(), g = actx.createGain();
-    
     o.type = 'square';
     o.frequency.setValueAtTime(800 + Math.random() * 400, t);
     g.gain.setValueAtTime(0.04, t);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-    
     o.connect(g).connect(actx.destination);
     o.start(t); o.stop(t + 0.05);
     
@@ -1377,6 +1401,9 @@ doUpgradeBtn.addEventListener('click', () => {
   let chance = (totalFromValue / valTo) * 100;
   if (chance > 100) chance = 100;
 
+  // Сохраняем шанс для отображения в модалке
+  lastUpgradeChance = chance;
+
   isUpgrading = true;
   doUpgradeBtn.disabled = true;
   
@@ -1420,28 +1447,70 @@ function resolveUpgrade(isSuccess, valTo) {
   clearTimeout(upgradeSoundInterval);
   
   if (isSuccess) {
-    toast(`УСПЕХ! Вы получили ${upgTo.name}`);
     playLegendarySound();
     triggerConfetti(RARITY[upgTo.rarity].color);
-    
-    const newCar = { ...upgTo, uid: ++uidCounter };
-    garage.push(newCar);
-    
-    if (!stats.bestCar || valTo > RARITY[stats.bestCar.rarity].value) {
-      stats.bestCar = newCar;
-    }
+    showUpgradeResult(upgTo, lastUpgradeChance);
   } else {
     toast(`Провал! Вы потеряли средства и авто.`);
     playLoseSound();
+    saveState();
+    updateGarageCount();
+    setTimeout(() => {
+      initUpgrade();
+    }, 2000);
   }
-  
+}
+
+function showUpgradeResult(car, chance) {
+  const r = RARITY[car.rarity];
+  upgradeResultBox.style.setProperty('--rc', r.color);
+  upgradeResultArt.style.color = r.color;
+  upgradeResultArt.innerHTML = CAR_SVG;
+  upgradeResultChance.textContent = `Апгрейд выполнен на ${chance.toFixed(2)}% шанса`;
+  upgradeResultName.textContent = car.name;
+  upgradeResultRarity.textContent = r.label;
+  upgradeResultValue.innerHTML = `Стоимость: <b>${fmt(r.value)}</b>`;
+  upgradeResultSellBtn.textContent = `Продать за ${fmt(r.value)}`;
+  upgradeResultModal.classList.remove('hidden');
+}
+
+function closeUpgradeResult() {
+  upgradeResultModal.classList.add('hidden');
   saveState();
   updateGarageCount();
-  
   setTimeout(() => {
     initUpgrade();
-  }, 2000);
+  }, 300);
 }
+
+// Обработчики кнопок в модалке апгрейда
+upgradeResultSellBtn.addEventListener('click', () => {
+  if (upgTo) {
+    balance += RARITY[upgTo.rarity].value;
+    updateStatsOnSell(RARITY[upgTo.rarity].value);
+    updateBalance();
+    toast(`+${fmt(RARITY[upgTo.rarity].value)}`);
+    closeUpgradeResult();
+  }
+});
+
+upgradeResultKeepBtn.addEventListener('click', () => {
+  if (upgTo) {
+    addToGarage(upgTo);
+    toast('Автомобиль в гараже <i class="fa-solid fa-flag-checkered"></i>');
+    closeUpgradeResult();
+  }
+});
+
+upgradeResultModal.addEventListener('click', (e) => {
+  if (e.target === upgradeResultModal) {
+    if (upgTo) {
+      addToGarage(upgTo);
+      toast('Автомобиль в гараже <i class="fa-solid fa-flag-checkered"></i>');
+      closeUpgradeResult();
+    }
+  }
+});
 
 /* =========================================================
    РЕНДЕР КЕЙСОВ
