@@ -38,7 +38,7 @@
     -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
 
-  header { position: sticky; top: 0; z-index: 40; padding: 0px; padding-top: calc(5px + max(env(safe-area-inset-top, 0px), var(--tg-safe-top))); }
+  header { position: sticky; top: 0; z-index: 40; padding: 0px; height: var(--tg-content-safe-area-inset-top); }
   .header-inner { width: 100%; max-width: var(--main-max); margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 36px; }
   .icon-btn { width: 30px; height: 30px; border-radius: 30px; /*border: 1px solid var(--border);*/ border: none; background: #ffffff90; display: grid; place-items: center; font-size: 15px; color: var(--text); cursor: pointer; flex-shrink: 0; backdrop-filter:blur(10px); }
   .balance-box { display: flex; align-items: center; gap: 6px; background: #ffffff90; /*border: 1px solid var(--border);*/ border-radius: 30px; padding: 4px 8px 4px 4px; cursor: pointer; backdrop-filter:blur(10px); }
