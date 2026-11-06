@@ -18,6 +18,7 @@
     --muted: #8e8e93;
     --accent: #E71B3F;
     --accent-light: #FF5776;
+    --accent-muted: #B3122F;
     --green: #34c759;
     --border: #e5e5ea;
     --ctrl-h: 48px;
@@ -25,10 +26,18 @@
     --main-max: 480px;
     --tg-safe-top: 0px;
     --tg-safe-bottom: 0px;
+    --tg-content-safe-top: 0px;
+    --tg-content-safe-bottom: 0px;
     --radius: 14px;
-    
-    /* Новые цвета для колеса */
     --wheel-dark: #0f1722;
+    --thumb-size: 22px;
+    --thumb-half: 11px;
+  }
+  @media (max-width: 640px) {
+    :root {
+      --thumb-size: 18px;
+      --thumb-half: 9px;
+    }
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -38,16 +47,20 @@
     -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
 
-  header { position: sticky; top: 0; z-index: 40; padding: 0px; height: var(--tg-content-safe-area-inset-top); }
+  header {
+    position: sticky; top: 0; z-index: 40;
+    padding: 0 16px;
+    padding-top: calc(8px + var(--tg-content-safe-top));
+    padding-bottom: 4px;
+  }
   .header-inner { width: 100%; max-width: var(--main-max); margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 36px; }
-  .icon-btn { width: 30px; height: 30px; border-radius: 30px; /*border: 1px solid var(--border);*/ border: none; background: #ffffff90; display: grid; place-items: center; font-size: 15px; color: var(--text); cursor: pointer; flex-shrink: 0; backdrop-filter:blur(10px); }
-  .balance-box { display: flex; align-items: center; gap: 6px; background: #ffffff90; /*border: 1px solid var(--border);*/ border-radius: 30px; padding: 4px 8px 4px 4px; cursor: pointer; backdrop-filter:blur(10px); }
+  .icon-btn { width: 30px; height: 30px; border-radius: 30px; border: none; background: #ffffff90; display: grid; place-items: center; font-size: 15px; color: var(--text); cursor: pointer; flex-shrink: 0; backdrop-filter: blur(10px); }
+  .balance-box { display: flex; align-items: center; gap: 6px; background: #ffffff90; border-radius: 30px; padding: 4px 8px 4px 4px; cursor: pointer; backdrop-filter: blur(10px); }
   .balance-plus { width: 22px; height: 22px; border-radius: 30px; border: none; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; cursor: pointer; flex-shrink: 0; }
   .balance-info { display: flex; flex-direction: column; line-height: 1; }
   .balance-label { font-size: 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; text-align: center; }
   .balance-value { font-size: 12px; font-weight: 800; color: var(--accent); }
 
-  /* ============ LIVE STRIP ============ */
   .live-strip { display: flex; gap: 4px; overflow-x: auto; padding: 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; border: 1px solid var(--border); }
   .live-strip::before { content: 'LIVE'; flex: auto; align-self: center; font-size: 9px; font-weight: 800; color: var(--accent); letter-spacing: 4px; opacity: 0.85; rotate: -90deg; width: 10px; display: flex; justify-content: center; align-items: center; margin-top: -8px; }
   .live-strip::-webkit-scrollbar { display: none; }
@@ -88,11 +101,23 @@
   }
 
 main { max-width: var(--main-max); margin: 0 auto; padding: 16px 20px calc(110px + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-bottom))); }
-main > section.active { animation: fadeIn 0.22s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Плавное переключение вкладок */
+main > section { display: none; }
+main > section.active {
+  display: block;
+  animation: pageIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .section-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; text-align: left; width: max-content; }
 
-.case-section { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+/* Убран display: flex, чтобы не перебивать main > section { display: none } */
+.case-section { flex-direction: column; align-items: center; gap: 15px; }
+#casesView.active { display: flex; }
 .case-section > .section-title { align-self: flex-start; }
 .case-card { background: #e8eaed; border-radius: 20px; cursor: pointer; color: #000; position: relative; min-height: 373px; max-width: 288px; transition: all .3s ease; user-select: none; }
 .case-card:hover { background: var(--accent); color: #fff; }
@@ -107,15 +132,10 @@ main > section.active { animation: fadeIn 0.22s ease; }
 .veh.active { opacity: 0; }
 .case-card:hover .veh-container .veh.active { opacity: 1; }
 
-#casesView, #openView, #invView, #profileView, #upgradeView { display: none; }
-#casesView.active { display: flex; }
-#openView.active, #invView.active, #profileView.active, #upgradeView.active { display: block; }
-
 .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--muted); background: none; border: 1px solid var(--muted); cursor: pointer; font-family: inherit; margin-bottom: 12px; padding: 5px 10px; border-radius: 10px; }
 .open-title { font-size: 17px; font-weight: 800; text-align: center; margin-bottom: 4px; }
 .open-sub { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
 
-/* ============ ROULETTE ============ */
 .roulettes-wrap { display: grid; gap: 8px; margin-bottom: 14px; }
 .roulettes-wrap.n1 { grid-template-columns: 1fr; }
 .roulettes-wrap.n2 { grid-template-columns: 1fr; }
@@ -139,11 +159,11 @@ main > section.active { animation: fadeIn 0.22s ease; }
 
 .instant-preview { height: 110px; border-radius: 12px; background: linear-gradient(135deg, rgba(229,57,53,0.08), rgba(229,57,53,0.02)); border: 1.5px dashed var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--accent); font-weight: 700; font-size: 13px; animation: fadeIn 0.32s ease; }
 .instant-preview i { font-size: 26px; filter: drop-shadow(0 0 6px rgba(229,57,53,0.5)); animation: boltPulse 1.6s ease-in-out infinite; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes boltPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.12); opacity: 0.85; } }
 .instant-flash { animation: instantFlash 0.5s ease; }
 @keyframes instantFlash { 0% { opacity: 0; transform: scale(0.96); } 100% { opacity: 1; transform: scale(1); } }
 
-/* ============ CONTROLS ============ */
 .controls-panel { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; margin-bottom: 18px; }
 .controls-mobile-top { display: contents; }
 .fast-toggle { width: var(--ctrl-h); height: var(--ctrl-h); flex-shrink: 0; border-radius: 12px; border: 1.5px solid var(--border); background: #fff; display: grid; place-items: center; cursor: pointer; transition: 0.2s; }
@@ -162,8 +182,8 @@ main > section.active { animation: fadeIn 0.22s ease; }
 .qty-btn:disabled { opacity: 0.35; background: transparent; }
 .qty-btn.active:disabled { background: var(--accent); }
 
-.open-btn { min-width: 180px; height: var(--ctrl-ah); border: none; border-radius: 12px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; padding: 0 16px; transition: 0.2s; }
-.open-btn .qty-span { padding:0px 4px; background: rgba(255,255,255, 0.5); color:var(--text); line-height:1; border-radius:5px; }
+.open-btn { min-width: 180px; height: var(--ctrl-h); border: none; border-radius: 12px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; padding: 0 16px; transition: 0.2s; }
+.open-btn .qty-span { padding:0px 4px; background: var(--accent-light); color: #fff; line-height:1; border-radius:5px; }
 .open-btn.instant-on { background: linear-gradient(135deg, #ff5252, #e53935); box-shadow: 0 4px 16px rgba(229,57,53,0.45), 0 0 0 2px rgba(229,57,53,0.3); }
 .open-btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
@@ -179,7 +199,6 @@ main > section.active { animation: fadeIn 0.22s ease; }
   .open-btn { width: 100%; min-width: 0; }
 }
 
-/* ============ CARDS / RARITY ============ */
 .rarity-corner { position: absolute; top: 6px; right: 6px; z-index: 3; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; padding: 2px 6px; border-radius: 4px; line-height: 1.2; }
 .drop-item, .inv-card, .result-card, .best-card { position: relative; overflow: hidden; }
 .drop-item::before, .inv-card::before, .result-card::before, .best-card::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: radial-gradient(ellipse at 50% 100%, var(--rc) 0%, transparent 70%); opacity: 0.18; pointer-events: none; z-index: 0; }
@@ -188,13 +207,11 @@ main > section.active { animation: fadeIn 0.22s ease; }
 img.skeleton { background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; min-width: 40px; min-height: 30px; }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-/* ============ DROPS ============ */
 .drops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .drop-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; min-height: 130px; position: relative; }
 .drop-item img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 92%; max-height: 92px; object-fit: contain; }
 .drop-name { font-size: 12px; font-weight: 700; text-align: left; line-height: 1.25; position: relative; z-index: 1; width: 100%; margin-top: auto; }
 
-/* ============ INVENTORY ============ */
 .inv-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; justify-content: space-between; }
 .inv-filters { display: flex; gap: 4px; flex-wrap: wrap; }
 .inv-filter { padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
@@ -210,336 +227,69 @@ img.skeleton { background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ece
 .inv-card .result-sell-btn { width: max-content; margin-top: 4px; align-self: flex-start; }
 .inv-empty { text-align: center; padding: 40px 16px; color: var(--muted); font-size: 14px; border: 1px dashed var(--border); border-radius: 12px; width: 100%; grid-column: 1 / -1; }
 
-/* ============ UPGRADE ============ */
-.upgrade-main-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.upgrade-center-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
+.upgrade-main-layout { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
+.upgrade-center-column { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
 
-/* --- Слоты выбора в ряд --- */
-.upgrade-slots-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}
+.upgrade-slots-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 
-.upgrade-slot {
-  background: #fff;
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  padding: 14px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.2s;
-  position: relative;
-  overflow: hidden;
-  min-height: 170px;
-}
+.upgrade-slot { background: #fff; border: 2px dashed var(--border); border-radius: var(--radius); padding: 14px 8px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; min-height: 170px; }
 .upgrade-slot:hover { border-color: var(--accent); background: #fff5f7; }
 .upgrade-slot.filled { border-style: solid; border-color: var(--rc, var(--accent)); }
-.upgrade-slot.filled::before {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 55%;
-  background: radial-gradient(ellipse at 50% 100%, var(--rc, var(--accent)) 0%, transparent 70%);
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: 0;
-}
-.upgrade-slot.filled::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 4px;
-  background: var(--rc, var(--accent));
-  box-shadow: 0 0 12px var(--rc, var(--accent));
-  z-index: 2;
-}
-.upgrade-slot img {
-  max-width: 130px;
-  max-height: 95px;
-  object-fit: contain;
-  position: relative;
-  z-index: 1;
-}
-.upgrade-slot .u-price-tl {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--accent);
-  background: rgba(255,255,255,0.9);
-  padding: 2px 6px;
-  border-radius: 5px;
-  z-index: 3;
-  line-height: 1.2;
-  backdrop-filter: blur(2px);
-}
-.upgrade-slot .u-name-bl {
-  position: absolute;
-  bottom: 10px;
-  left: 8px;
-  right: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text);
-  z-index: 3;
-  text-align: left;
-  line-height: 1.15;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.95);
-}
+.upgrade-slot.filled::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: radial-gradient(ellipse at 50% 100%, var(--rc, var(--accent)) 0%, transparent 70%); opacity: 0.18; pointer-events: none; z-index: 0; }
+.upgrade-slot.filled::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--rc, var(--accent)); box-shadow: 0 0 12px var(--rc, var(--accent)); z-index: 2; }
+.upgrade-slot img { max-width: 130px; max-height: 95px; object-fit: contain; position: relative; z-index: 1; }
+.upgrade-slot .u-price-tl { position: absolute; top: 8px; left: 8px; font-size: 13px; font-weight: 800; color: var(--accent); background: rgba(255,255,255,0.9); padding: 2px 6px; border-radius: 5px; z-index: 3; line-height: 1.2; backdrop-filter: blur(2px); }
+.upgrade-slot .u-name-bl { position: absolute; bottom: 10px; left: 8px; right: 8px; font-size: 11px; font-weight: 700; color: var(--text); z-index: 3; text-align: left; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 2px rgba(255,255,255,0.95); }
 .upgrade-placeholder { color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.4; position: relative; z-index: 1; }
 
-/* ============ НОВОЕ КОЛЕСО АПГРЕЙДА ============ */
-.upgrade-circle {
-  width: 335px;
-  height: 335px;
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.1);
-  flex-shrink: 0;
-  border: 7px solid var(--border);
-  box-sizing: border-box;
-}
+.upgrade-circle { width: 335px; height: 335px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.05), 0 10px 30px rgba(0,0,0,0.1); flex-shrink: 0; border: 5px solid #fff; box-sizing: border-box; }
+.upgrade-circle::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--accent) 0%, var(--accent) var(--p, 0%), #e5e5ea var(--p, 0%), #e5e5ea 100%); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 30px), #000 calc(100% - 29px)); mask: radial-gradient(farthest-side, transparent calc(100% - 30px), #000 calc(100% - 29px)); z-index: 0; }
 
-/* Полоса прогресса (30px) */
-.upgrade-circle::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(
-    var(--accent) 0%, 
-    var(--accent) var(--p, 0%), 
-    #e5e5ea var(--p, 0%), 
-    #e5e5ea 100%
-  );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 30px), #000 calc(100% - 29px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 30px), #000 calc(100% - 29px));
-  z-index: 0;
-}
+.arrow-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; z-index: 5; }
 
-.arrow-wrap {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Треугольник, указывающий вверх, накладывается на полосу изнутри */
 .arrow-head {
   position: absolute;
-  top: 20px; /* Середина 30px полосы */
+  top: 20px;
   left: 50%;
   margin-left: -10px;
   width: 0; height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 16px solid var(--accent-light);
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  border-bottom: 16px solid #ffffff;
+  filter: drop-shadow(0 0 5px var(--accent)) drop-shadow(0 0 5px var(--accent)) drop-shadow(0 20px 19px rgba(0,0,0,0.35));
 }
 
-/* Центральный блок */
-.upgrade-inner-box {
-  /*background: var(--wheel-dark);
-  border-radius: 14px;*/
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* Отступ между процентами и кнопкой */
-  width: 200px;
-  /*padding: 10px;*/
-  position: relative;
-  z-index: 2;
-  /*box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  border: 1px solid rgba(231, 27, 63, 0.2);*/
-}
+.upgrade-inner-box { display: flex; flex-direction: column; gap: 10px; width: 200px; position: relative; z-index: 2; }
 
-/* Блок с процентами */
-.percent-container {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  background: transparent;
-  position: relative;
-  border-radius: 10px;
-  box-shadow: inset 0 0 20px rgba(231, 27, 63, 0.3); /* Внутренняя тень акцентом */
-  height: var(--ctrl-ah);
-}
+.percent-container { padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; background: transparent; position: relative; border-radius: 10px; box-shadow: inset 0 0 20px rgba(179, 18, 47, 0.25); height: var(--ctrl-ah); transition: box-shadow 0.25s ease; }
+.percent-container::before, .percent-container::after { content: ''; position: absolute; top: 20%; height: 60%; width: 4px; background: var(--accent-muted); box-shadow: 0 0 8px rgba(179, 18, 47, 0.35); transition: background 0.25s ease, box-shadow 0.25s ease; }
+.percent-container::before { left: 0; border-radius: 0 4px 4px 0; }
+.percent-container::after { right: 0; border-radius: 4px 0 0 4px; }
+.percent-container.ready { box-shadow: inset 0 0 20px rgba(231, 27, 63, 0.45); }
+.percent-container.ready::before, .percent-container.ready::after { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-/* Боковые скобки по краям блока */
-.percent-container::before,
-.percent-container::after {
-  content: '';
-  position: absolute;
-  top: 20%;
-  height: 60%;
-  width: 4px;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-.percent-container::before { 
-  left: 0; 
-  border-radius: 0 4px 4px 0; 
-}
-.percent-container::after { 
-  right: 0; 
-  border-radius: 4px 0 0 4px; 
-}
+.chance-val { font-family: 'Share Tech Mono', monospace; font-size: 34px; font-weight: 400; color: var(--accent-muted); text-shadow: 0 0 6px rgba(179, 18, 47, 0.4); line-height: 1; transition: color 0.25s ease, text-shadow 0.25s ease; }
+.percent-container.ready .chance-val { color: var(--accent); text-shadow: 0 0 10px rgba(231,27,63,0.6); }
+.chance-label { font-size: 10px; color: #7f8da6; font-weight: 600; }
 
-.chance-val {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 34px;
-  font-weight: 400;
-  color: var(--accent);
-  text-shadow: 0 0 10px rgba(231,27,63,0.6);
-  line-height: 1;
-}
+.btn-upgrade-inside { width: 100%; height: var(--ctrl-h); border: none; background: var(--accent-muted); color: rgba(255,255,255,0.85); font-size: 20px; font-weight: 900; cursor: pointer; font-family: inherit; transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; letter-spacing: 0.5px; border-radius: 10px; }
+.btn-upgrade-inside.ready { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(231,27,63,0.35); }
+.btn-upgrade-inside:disabled { opacity: 0.55; background: var(--accent-muted); color: rgba(255,255,255,0.6); cursor: not-allowed; box-shadow: none; }
 
-.chance-label {
-  font-size: 10px;
-  color: #7f8da6;
-  text-transform: none;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
-
-/* Кнопка со старыми стилями, но внутри колеса */
-.btn-upgrade-inside {
-  width: 100%;
-  height: var(--ctrl-h);
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-size: 20px;
-  font-weight: 900;
-  cursor: pointer;
-  font-family: inherit;
-  transition: 0.2s;
-  letter-spacing: 0.5px;
-  border-radius: 10px;
-}
-.btn-upgrade-inside:disabled {
-  opacity: 0.4;
-  background: #4a4a4a;
-  cursor: not-allowed;
-}
-
-.upgrade-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  max-width: 360px;
-}
-
-/* --- Подложка кнопок ⚡ и ×N --- */
-.upgrade-controls-top {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  height: var(--ctrl-ah);
-  align-items: stretch;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 6px;
-}
-.upgrade-controls-top .fast-toggle { flex-shrink: 0; }
-.mult-btn {
-  flex: 1;
-  height: var(--ctrl-h);
-  border-radius: 12px;
-  border: 1.5px solid var(--border);
-  background: #fafafa;
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  font-family: inherit;
-  transition: 0.15s;
-  min-width: 0;
-  padding: 0 4px;
-}
+.upgrade-controls { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 360px; }
+.upgrade-controls-top { display: flex; gap: 6px; width: 100%; height: var(--ctrl-ah); align-items: stretch; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px; }
+.upgrade-controls-top .fast-toggle { flex-shrink: 0; width: auto; flex: 1; border:1px solid #fafafa; color:var(--text); background: #fafafa;}
+.mult-btn { flex: 1; height: var(--ctrl-h); border-radius: 12px; /*border: 1.5px solid var(--border);*/ border:none; background: #fafafa; color: var(--muted); font-size: 18px; font-weight: 900; cursor: pointer; font-family: inherit; transition: 0.15s; min-width: 0; padding: 0 4px; }
 .mult-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: #fff5f7; }
 .mult-btn:active:not(:disabled) { transform: scale(0.95); }
 .mult-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* --- Панель баланса --- */
-.upgrade-balance-panel {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  height: var(--ctrl-ah);
-}
-.upgrade-balance-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.ub-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.ub-amount-wrap {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 3px;
-}
-.ub-amount-input {
-  border: none;
-  background: transparent;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--accent);
-  text-align: right;
-  padding: 0;
-  outline: none;
-  font-family: inherit;
-  width: 90px;
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-.ub-amount-input::-webkit-outer-spin-button,
-.ub-amount-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+.upgrade-balance-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; width: 100%; height: var(--ctrl-ah); }
+.upgrade-balance-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ub-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.ub-amount-wrap { display: inline-flex; align-items: baseline; gap: 3px; }
+.ub-amount-input { border: none; background: transparent; font-size: 18px; font-weight: 800; color: var(--accent); text-align: right; padding: 0; outline: none; font-family: inherit; width: 90px; -moz-appearance: textfield; appearance: textfield; }
+.ub-amount-input::-webkit-outer-spin-button, .ub-amount-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .ub-amount-input::placeholder { color: var(--accent); opacity: 0.4; }
 .ub-currency { font-size: 15px; font-weight: 800; color: var(--accent); }
 
@@ -549,15 +299,20 @@ img.skeleton { background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ece
   appearance: none;
   height: 22px;
   border-radius: 20px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--slider-p, 0%), #e5e5ea var(--slider-p, 0%), #e5e5ea 100%);
   outline: none;
   cursor: pointer;
   min-width: 0;
+  background: linear-gradient(90deg,
+    var(--accent) 0,
+    var(--accent) calc(var(--thumb-half) + (100% - var(--thumb-size)) * var(--slider-p, 0)),
+    #e5e5ea calc(var(--thumb-half) + (100% - var(--thumb-size)) * var(--slider-p, 0)),
+    #e5e5ea 100%);
 }
 .balance-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px; height: 22px;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
   border-radius: 50%;
   background: var(--accent);
   border: 1px solid #fff;
@@ -565,7 +320,8 @@ img.skeleton { background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ece
   cursor: pointer;
 }
 .balance-slider::-moz-range-thumb {
-  width: 20px; height: 20px;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
   border-radius: 50%;
   background: var(--accent);
   border: 1px solid #fff;
@@ -573,189 +329,52 @@ img.skeleton { background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ece
   cursor: pointer;
 }
 
-/* --- Табы --- */
-.upgrade-tabs {
-  display: flex;
-  gap: 4px;
-  background: #fafafa;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 4px;
-  margin-bottom: 8px;
-}
-.upgrade-tab {
-  flex: 1;
-  padding: 8px 4px;
-  border-radius: 7px;
-  border: none;
-  background: transparent;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  cursor: pointer;
-  font-family: inherit;
-  transition: 0.15s;
-}
+.upgrade-tabs { display: flex; gap: 4px; background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 4px; margin-bottom: 8px; }
+.upgrade-tab { flex: 1; padding: 8px 4px; border-radius: 7px; border: none; background: transparent; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; font-family: inherit; transition: 0.15s; }
 .upgrade-tab.active { background: var(--accent); color: #fff; }
 
-/* --- Панель диапазона цены --- */
-.upgrade-price-range-panel {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 8px;
-  margin-bottom: 8px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+.upgrade-price-range-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; margin-bottom: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.upgrade-main-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; }
 
-/* --- Основная панель с фильтрами --- */
-.upgrade-main-panel {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px;
-}
-
-.uf-input {
-  height: 38px;
-  padding: 0 10px;
-  background: #fafafa;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  outline: none;
-  min-width: 0;
-}
+.uf-input { height: 38px; padding: 0 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text); outline: none; min-width: 0; }
 .uf-input:focus { border-color: var(--accent); background: #fff; }
 .uf-input::placeholder { color: var(--muted); }
-select.uf-input {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-  background-position: calc(100% - 14px) 50%, calc(100% - 10px) 50%;
-  background-size: 4px 4px, 4px 4px;
-  background-repeat: no-repeat;
-  padding-right: 26px;
-  background-color: #fafafa;
-}
+select.uf-input { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 14px) 50%, calc(100% - 10px) 50%; background-size: 4px 4px, 4px 4px; background-repeat: no-repeat; padding-right: 26px; background-color: #fafafa; }
 
-.upgrade-cards-header {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
-  flex-wrap: nowrap;
-}
+.upgrade-cards-header { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: nowrap; }
 .upgrade-cards-header .uf-input:first-child { flex: 2; min-width: 0; }
 .upgrade-cards-header .uf-input:last-child { flex: 1; min-width: 100px; }
 
 .upgrade-tab-panel { display: none; }
 .upgrade-tab-panel.active { display: block; }
 
-.u-items-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 108px);
-  gap: 8px;
-  justify-content: center;
-}
+.u-items-list { display: grid; grid-template-columns: repeat(auto-fill, 108px); gap: 8px; justify-content: center; }
 @media (max-width: 360px) { .u-items-list { grid-template-columns: repeat(auto-fill, 96px); } }
 
-.u-card {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #fafafa;
-  cursor: pointer;
-  overflow: hidden;
-  transition: 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.u-card { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; border: 1px solid var(--border); background: #fafafa; cursor: pointer; overflow: hidden; transition: 0.15s; display: flex; align-items: center; justify-content: center; }
 .u-card:hover { border-color: var(--rc, var(--accent)); transform: translateY(-2px); }
 .u-card.selected { border-color: var(--rc, var(--accent)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--rc, var(--accent)) 55%, transparent); background: #fff; }
-.u-card::before {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 55%;
-  background: radial-gradient(ellipse at 50% 100%, var(--rc, #ccc) 0%, transparent 70%);
-  opacity: 0.18;
-  pointer-events: none;
-  z-index: 0;
-}
-.u-card::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 3px;
-  background: var(--rc, #ccc);
-  box-shadow: 0 0 10px var(--rc, #ccc);
-  z-index: 2;
-}
+.u-card::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: radial-gradient(ellipse at 50% 100%, var(--rc, #ccc) 0%, transparent 70%); opacity: 0.18; pointer-events: none; z-index: 0; }
+.u-card::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--rc, #ccc); box-shadow: 0 0 10px var(--rc, #ccc); z-index: 2; }
 .u-card img { max-width: 110%; max-height: 100%; object-fit: contain; position: relative; z-index: 1; }
-.u-card .u-price-tl {
-  position: absolute;
-  top: 3px;
-  left: 4px;
-  font-size: 9px;
-  font-weight: 800;
-  color: var(--accent);
-  z-index: 3;
-  background: rgba(255,255,255,0.9);
-  padding: 1px 4px;
-  border-radius: 4px;
-  line-height: 1.2;
-}
-.u-card .u-name-bl {
-  position: absolute;
-  bottom: 6px;
-  left: 4px;
-  right: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--text);
-  z-index: 3;
-  line-height: 1.1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  text-align: left;
-}
+.u-card .u-price-tl { position: absolute; top: 3px; left: 4px; font-size: 9px; font-weight: 800; color: var(--accent); z-index: 3; background: rgba(255,255,255,0.9); padding: 1px 4px; border-radius: 4px; line-height: 1.2; }
+.u-card .u-name-bl { position: absolute; bottom: 6px; left: 4px; right: 4px; font-size: 9px; font-weight: 700; color: var(--text); z-index: 3; line-height: 1.1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; text-align: left; }
 .empty-list { text-align: center; padding: 26px 16px; color: var(--muted); font-size: 13px; grid-column: 1 / -1; }
 
-/* Mobile small */
 @media (max-width: 640px) {
-  .upgrade-circle {
-    width: min(335px, 90vw);
-    height: min(335px, 90vw);
-  }
-  .upgrade-inner-box {
-    width: 180px;
-  }
-  .chance-val {
-    font-size: 28px;
-  }
+  .upgrade-circle { width: min(335px, 90vw); height: min(335px, 90vw); }
+  .upgrade-inner-box { width: 180px; }
+  .chance-val { font-size: 28px; }
   .upgrade-slot { min-height: 110px; padding: 8px 4px; }
   .upgrade-slot img { max-width: 60px; max-height: 45px; }
   .upgrade-slot .u-price-tl { font-size: 9px; top: 4px; left: 4px; padding: 1px 3px; }
   .upgrade-slot .u-name-bl { font-size: 8px; bottom: 7px; left: 4px; right: 4px; }
   .upgrade-placeholder { font-size: 9px; line-height: 1.25; }
-  .mult-btn { font-size: 14px; padding: 0 2px; }
   .upgrade-balance-panel { padding: 8px 10px; gap: 6px; }
   .ub-label { font-size: 10px; }
   .ub-amount-input { font-size: 15px; width: 70px; }
   .ub-currency { font-size: 13px; }
   .upgrade-balance-panel .balance-slider { height: 18px; }
-  .upgrade-balance-panel .balance-slider::-webkit-slider-thumb { width: 18px; height: 18px; }
-
   .upgrade-price-range-panel { padding: 6px; gap: 6px; }
   .upgrade-price-range-panel .uf-input { height: 32px; font-size: 11px; padding: 0 8px; }
   .upgrade-main-panel { padding: 8px; }
@@ -766,7 +385,6 @@ select.uf-input {
   .u-items-list { grid-template-columns: repeat(auto-fill, 92px); }
 }
 
-/* ============ PROFILE ============ */
 .profile-hero { background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); border-radius: 18px; padding: 16px; margin-bottom: 14px; color: #fff; position: relative; overflow: hidden; }
 .profile-hero::after { content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px; border-radius: 50%; background: rgba(229,57,53,0.25); pointer-events: none; }
 .profile-top { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
@@ -822,14 +440,12 @@ select.uf-input {
 .referral-myid b { color: var(--text); font-weight: 800; font-size: 13px; }
 .referral-copy-btn { padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; color: var(--accent); }
 
-/* BOTTOM NAV */
 .bottom-nav { position: fixed; left: 14px; right: 14px; bottom: calc(14px + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-bottom))); max-width: var(--main-max); margin: 0 auto; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 16px; display: flex; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.08); padding: 5px; }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 2px; font-size: 10px; font-weight: 600; color: var(--muted); cursor: pointer; background: none; border: none; font-family: inherit; border-radius: 12px; position: relative; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 2px; font-size: 10px; font-weight: 600; color: var(--muted); cursor: pointer; background: none; border: none; font-family: inherit; border-radius: 12px; position: relative; transition: color 0.2s ease, background 0.2s ease; }
 .nav-item.active { color: var(--accent); background: rgba(229,57,53,0.08); }
 .nav-item i { font-size: 18px; }
 .tab-badge { position: absolute; top: 4px; right: 25%; min-width: 14px; height: 14px; padding: 0 4px; border-radius: 7px; background: var(--accent); color: #fff; font-size: 9px; font-weight: 800; display: grid; place-items: center; line-height: 1; }
 
-/* MODALS */
 .modal-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .modal-overlay.show { opacity: 1; pointer-events: auto; }
 .modal-sheet { width: 100%; max-width: 380px; background: #fff; border-radius: 16px; max-height: calc(100vh - 32px); overflow-y: auto; transform: scale(0.96); transition: transform 0.2s; }
@@ -896,7 +512,7 @@ select.uf-input {
 
 @media (min-width: 768px) {
   :root { --main-max: 720px; }
-  header { padding: 14px 24px; padding-top: calc(14px + max(env(safe-area-inset-top, 0px), var(--tg-safe-top))); }
+  header { padding: 14px 24px; padding-top: calc(14px + var(--tg-content-safe-top)); }
   .header-inner { max-width: var(--main-max); }
   .live-strip { padding: 10px 24px; max-width: var(--main-max); margin: 0 auto; border-radius: 0 0 12px 12px; }
   main { max-width: var(--main-max); padding: 24px 28px calc(120px + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-bottom))); }
@@ -973,7 +589,7 @@ select.uf-input {
 <div class="live-strip" id="liveStrip"></div>
 
 <main>
-  <section id="casesView" class="case-section">
+  <section id="casesView" class="case-section active">
     <div class="section-title">Выберите коробку</div>
     <div class="case-card" id="mainCase">
       <div class="case-timer">ОСТАЛОСЬ 47 ДНЕЙ</div>
@@ -1031,17 +647,15 @@ select.uf-input {
   <section id="upgradeView">
     <div class="section-title">Апгрейд</div>
 
-    <!-- Основная раскладка: колесо + контролы -->
     <div class="upgrade-main-layout">
       <div class="upgrade-center-column">
         
-        <!-- НОВОЕ КОЛЕСО -->
         <div class="upgrade-circle" id="upgradeCircle">
           <div class="arrow-wrap" id="arrowWrap">
             <div class="arrow-head"></div>
           </div>
           <div class="upgrade-inner-box">
-            <div class="percent-container">
+            <div class="percent-container" id="percentContainer">
               <span class="chance-val" id="upgradeChance">0.00%</span>
               <span class="chance-label">Вероятность успеха</span>
             </div>
@@ -1049,7 +663,6 @@ select.uf-input {
           </div>
         </div>
 
-        <!-- Управление под колесом -->
         <div class="upgrade-controls">
           <div class="upgrade-controls-top">
             <label class="fast-toggle" title="Моментальный апгрейд">
@@ -1076,7 +689,6 @@ select.uf-input {
       </div>
     </div>
 
-    <!-- Слоты выбора: два в ряд -->
     <div class="upgrade-slots-row">
       <div class="upgrade-slot" id="slotFrom">
         <div class="upgrade-placeholder">Выберите авто<br>или введите сумму</div>
@@ -1086,13 +698,11 @@ select.uf-input {
       </div>
     </div>
 
-    <!-- Табы над панелью -->
     <div class="upgrade-tabs" id="upgradeTabs">
       <button class="upgrade-tab active" data-tab="inv" type="button">Мои предметы</button>
       <button class="upgrade-tab" data-tab="catalog" type="button">Автомобили</button>
     </div>
 
-    <!-- Панель с фильтрами и карточками -->
     <div class="upgrade-main-panel">
     <div class="upgrade-price-range-panel">
       <input type="number" class="uf-input" id="filterPriceFrom" placeholder="Цена от" min="0">
@@ -1233,7 +843,7 @@ select.uf-input {
     <div class="result-actions" id="resultActions">
       <button id="resSellAll" class="sell-all"><i class="fa-solid fa-tag"></i> Продать всё</button>
       <button id="resInv" class="secondary"><i class="fa-solid fa-box-open"></i> В инвентарь</button>
-      <button id="resBack"><i class="fa-solid fa-rotate-left"></i> В кейс</button>
+      <button id="resBack"><i class="fa-solid fa-rotate-left"></i> Открыть ещё раз</button>
     </div>
   </div>
 </div>
@@ -1271,8 +881,12 @@ select.uf-input {
   function updateSafeArea() {
     const top = Math.max((tg.safeAreaInset && tg.safeAreaInset.top) || 0, (tg.contentSafeAreaInset && tg.contentSafeAreaInset.top) || 0);
     const bottom = Math.max((tg.safeAreaInset && tg.safeAreaInset.bottom) || 0, (tg.contentSafeAreaInset && tg.contentSafeAreaInset.bottom) || 0);
+    const contentTop = (tg.contentSafeAreaInset && tg.contentSafeAreaInset.top) || 0;
+    const contentBottom = (tg.contentSafeAreaInset && tg.contentSafeAreaInset.bottom) || 0;
     document.documentElement.style.setProperty('--tg-safe-top', top + 'px');
     document.documentElement.style.setProperty('--tg-safe-bottom', bottom + 'px');
+    document.documentElement.style.setProperty('--tg-content-safe-top', contentTop + 'px');
+    document.documentElement.style.setProperty('--tg-content-safe-bottom', contentBottom + 'px');
   }
   updateSafeArea();
   try {
@@ -1348,7 +962,6 @@ let seenInvCount = 0;
 let invFilter = 'all';
 let invSort = 'price-desc';
 
-/* --- Апгрейд --- */
 let upgFrom = null;
 let upgTo = null;
 let isUpgrading = false;
@@ -1379,7 +992,6 @@ function haptic(ms = 10) {
   if (navigator.vibrate) try { navigator.vibrate(ms); } catch(e) {}
 }
 
-/* ========== КЭШ ИЗОБРАЖЕНИЙ ========== */
 const IMG_CACHE = new Map();
 function getAllCarUrls() {
   const urls = [];
@@ -1612,8 +1224,7 @@ function baseShow(v) {
   if (v === 'profile') renderProfile();
   scrollTo(0, 0);
 }
-let currentView = 'cases';
-function show(v) { currentView = v; baseShow(v); }
+function show(v) { baseShow(v); }
 
 document.querySelectorAll('.nav-item').forEach(el => {
   el.addEventListener('click', () => {
@@ -1632,26 +1243,6 @@ function updateInvBadge() {
     b.style.display = 'none';
   }
 }
-
-/* ========== SWIPE ========== */
-let touchStartX = 0, touchStartY = 0;
-const viewsOrder = ['cases', 'inv', 'upgrade', 'profile'];
-document.addEventListener('touchstart', e => {
-  if (spinning || isUpgrading || $('resultScreen').classList.contains('show') || $('upgradeResultScreen').classList.contains('show')) return;
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
-document.addEventListener('touchend', e => {
-  if (spinning || isUpgrading || $('resultScreen').classList.contains('show') || $('upgradeResultScreen').classList.contains('show')) return;
-  if (currentView === 'open') return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  const dy = e.changedTouches[0].clientY - touchStartY;
-  if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
-  const idx = viewsOrder.indexOf(currentView);
-  if (idx < 0) return;
-  if (dx < 0 && idx < viewsOrder.length - 1) show(viewsOrder[idx + 1]);
-  if (dx > 0 && idx > 0) show(viewsOrder[idx - 1]);
-}, { passive: true });
 
 /* ========== DAILY BONUS ========== */
 function isDailyAvailable() {
@@ -2287,11 +1878,14 @@ function setActiveUpgTab(tab) {
   });
 }
 
+/* Слайдер: передаём долю 0..1, CSS сам считает с учётом ползунка */
 function updateSliderFill() {
   const sl = $('betSlider');
   if (!sl) return;
-  const pct = sl.max > 0 ? (sl.value / sl.max) * 100 : 0;
-  sl.style.setProperty('--slider-p', pct + '%');
+  const max = parseFloat(sl.max) || 1;
+  const val = parseFloat(sl.value) || 0;
+  const ratio = max > 0 ? Math.min(Math.max(val / max, 0), 1) : 0;
+  sl.style.setProperty('--slider-p', String(ratio));
 }
 
 function renderUCard(car, selected, uidOrNull) {
@@ -2403,6 +1997,7 @@ function updateUpgradeUI() {
   const btn = $('doUpgradeBtn');
   const circle = $('upgradeCircle');
   const chanceEl = $('upgradeChance');
+  const percentBox = $('percentContainer');
 
   if (isUpgrading) return;
 
@@ -2412,6 +2007,8 @@ function updateUpgradeUI() {
       circle.style.setProperty('--p', '0%');
       btn.disabled = true;
       btn.textContent = 'Не хватает';
+      btn.classList.remove('ready');
+      percentBox.classList.remove('ready');
       return;
     }
     let chance = (totalFromValue / upgTo.sell) * 100;
@@ -2420,15 +2017,18 @@ function updateUpgradeUI() {
     circle.style.setProperty('--p', chance + '%');
     btn.disabled = false;
     btn.textContent = 'АПГРЕЙД';
+    btn.classList.add('ready');
+    percentBox.classList.add('ready');
   } else {
     chanceEl.textContent = '0.00%';
     circle.style.setProperty('--p', '0%');
     btn.disabled = true;
     btn.textContent = 'АПГРЕЙД';
+    btn.classList.remove('ready');
+    percentBox.classList.remove('ready');
   }
 }
 
-/* --- Вкладки --- */
 document.querySelectorAll('.upgrade-tab').forEach(t => {
   t.addEventListener('click', () => {
     if (isUpgrading) return;
@@ -2436,7 +2036,6 @@ document.querySelectorAll('.upgrade-tab').forEach(t => {
   });
 });
 
-/* --- Фильтры --- */
 $('filterPriceFrom').addEventListener('input', () => {
   upgFilterPriceFrom = parseInt($('filterPriceFrom').value) || 0;
   renderUpgradeView();
@@ -2455,7 +2054,6 @@ $('filterSearch').addEventListener('input', () => {
   renderUpgradeView();
 });
 
-/* --- Ставка: слайдер + поле --- */
 $('betSlider').addEventListener('input', () => {
   if (isUpgrading) return;
   const v = parseInt($('betSlider').value) || 0;
@@ -2484,7 +2082,6 @@ $('betAmount').addEventListener('input', () => {
   updateUpgradeUI();
 });
 
-/* --- Клики по карточкам --- */
 $('upgradeInvGrid').addEventListener('click', e => {
   if (isUpgrading) return;
   const card = e.target.closest('.u-card');
@@ -2518,7 +2115,6 @@ $('slotTo').addEventListener('click', () => {
   renderUpgradeView();
 });
 
-/* --- Кнопки ×N --- */
 document.querySelectorAll('.mult-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (isUpgrading) return;
@@ -2546,7 +2142,6 @@ document.querySelectorAll('.mult-btn').forEach(btn => {
   });
 });
 
-/* --- Кнопка Апгрейд --- */
 $('doUpgradeBtn').addEventListener('click', () => {
   if (!upgTo || isUpgrading) return;
   const betValue = parseInt($('betAmount').value) || 0;
@@ -2562,6 +2157,8 @@ $('doUpgradeBtn').addEventListener('click', () => {
 
   isUpgrading = true;
   $('doUpgradeBtn').disabled = true;
+  $('doUpgradeBtn').classList.remove('ready');
+  $('percentContainer').classList.remove('ready');
 
   if (betValue > 0) {
     balance -= betValue;
