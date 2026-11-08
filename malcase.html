@@ -19,7 +19,7 @@ body{font-family:'Roboto',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
 .ruble-symbol{display:inline-block;width:1.1em;height:1.1em;background:url('https://qupinator.github.io/MalCoin/ruble_icon.png') no-repeat center/contain;vertical-align:middle;margin-left:1px;margin-right:1px;flex-shrink:0}
 
 header{position:sticky;top:0;z-index:40;padding:0 16px;padding-top:calc(8px + var(--tg-content-safe-top));padding-bottom:4px}
-.header-inner{width:100%;max-width:var(--main-max);margin:0 auto;display:flex;align-items:center;justify-content:center;gap:10px;min-height:36px}
+.header-inner{width:100%;max-width:var(--main-max);margin:0 auto;display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px}
 .icon-btn{width:30px;height:30px;border-radius:30px;border:none;background:#ffffff90;display:grid;place-items:center;font-size:15px;color:var(--text);cursor:pointer;flex-shrink:0;backdrop-filter:blur(10px)}
 .balance-box{display:flex;align-items:center;gap:6px;background:#ffffff90;border-radius:30px;padding:4px 8px 4px 4px;cursor:pointer;backdrop-filter:blur(10px)}
 .balance-plus{width:22px;height:22px;border-radius:30px;border:none;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:14px;cursor:pointer;flex-shrink:0}
@@ -63,7 +63,8 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 .open-title{font-size:17px;font-weight:800;text-align:center;margin-bottom:4px}
 .open-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:14px}
 
-.roulettes-wrap{display:grid;gap:8px;margin-bottom:14px;transition:opacity 0.25s ease}
+.roulettes-wrap{display:grid;gap:8px;overflow:hidden;max-height:0;opacity:0;margin-bottom:0;transition:max-height 0.4s cubic-bezier(0.2,0.8,0.2,1),opacity 0.3s ease,margin-bottom 0.3s ease}
+.roulettes-wrap.revealed{max-height:800px;opacity:1;margin-bottom:14px}
 .roulettes-wrap.n1{grid-template-columns:1fr}
 .roulettes-wrap.n2{grid-template-columns:1fr}
 .roulettes-wrap.n3,.roulettes-wrap.n4,.roulettes-wrap.n5{grid-template-columns:1fr 1fr}
@@ -95,11 +96,20 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 .instant-preview i{font-size:26px;filter:drop-shadow(0 0 6px rgba(229,57,53,0.5));animation:boltPulse 1.6s ease-in-out infinite}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes boltPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:0.85}}
-.instant-flash{animation:instantFlash 0.5s ease}
-@keyframes instantFlash{0%{opacity:0;transform:scale(0.96)}100%{opacity:1;transform:scale(1)}}
 
-.controls-panel{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:10px;margin-bottom:18px;transition:opacity 0.2s ease}
+.controls-area{position:relative;margin-bottom:18px}
+.controls-panel{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:10px;transition:opacity 0.2s ease,transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.controls-area.showing-results .controls-panel{opacity:0;transform:translateY(-15px);pointer-events:none}
 .controls-mobile-top{display:contents}
+.open-action-group{display:flex;flex-direction:row;gap:10px;align-items:center;width:100%}
+.open-action-group .open-btn{flex:1;min-width:0}
+
+.extra-square-btn{width:var(--ctrl-h);height:var(--ctrl-h);flex-shrink:0;border:none;border-radius:12px;display:grid;place-items:center;font-size:18px;cursor:pointer;padding:0;transition:transform 0.15s ease,background 0.15s ease}
+.extra-square-btn.accent{background:var(--accent);color:#fff}
+.extra-square-btn.accent:active{transform:scale(0.94);background:var(--accent-muted)}
+.extra-square-btn.secondary{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.extra-square-btn.secondary:active{transform:scale(0.94);background:#fdecea}
+
 .fast-toggle{width:var(--ctrl-h);height:var(--ctrl-h);flex-shrink:0;border-radius:12px;border:1.5px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer;transition:0.2s}
 .fast-toggle input{display:none}
 .fast-toggle i{font-size:18px;color:var(--muted);transition:0.2s}
@@ -109,7 +119,7 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 
 .qty-group{display:flex;align-items:center}
 .qty-pill{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:5px 6px;height:var(--ctrl-h)}
-.qty-pill span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.qty-pill span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;white-space:nowrap;margin-inline:4px}
 .qty-btns{display:flex;gap:2px}
 .qty-btn{width:36px;height:36px;border-radius:8px;border:none;background:#00000009;font-size:14px;font-weight:800;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center}
 .qty-btn.active{background:var(--accent);color:#fff}
@@ -117,12 +127,14 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 .qty-btn.active:disabled{background:var(--accent)}
 
 .open-btn{min-width:180px;height:var(--ctrl-h);border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;padding:0 16px;transition:0.2s;display:flex;align-items:center;justify-content:center}
+.open-btn .btn-tag {margin-left:5px}
 .open-btn .qty-span{padding:0px 4px;background:var(--accent-light);color:#fff;line-height:1;border-radius:5px;margin-left:4px}
 .open-btn.instant-on{background:linear-gradient(135deg,#ff5252,#e53935);box-shadow:0 4px 16px rgba(229,57,53,0.45),0 0 0 2px rgba(229,57,53,0.3)}
 .open-btn:disabled{opacity:0.45;cursor:not-allowed;box-shadow:none}
 
-#inlineControls{display:none;flex-direction:row;gap:10px;margin-bottom:18px;width:100%;transition:opacity 0.25s ease}
-#inlineControls button{flex:1;height:48px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:0.2s;border:none}
+#inlineControls{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:row;gap:10px;width:100%;opacity:0;transform:translateY(15px);pointer-events:none;transition:opacity 0.25s ease,transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.controls-area.showing-results #inlineControls{opacity:1;transform:translateY(0);pointer-events:auto}
+#inlineControls button{flex:1;height:48px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:background 0.15s ease,transform 0.15s ease;border:none;padding:0 8px}
 .btn-inline-sell{background:#fdecea;color:var(--accent)}
 .btn-inline-sell:hover{background:#fce3e0}
 .btn-inline-sell:active{transform:scale(0.97);background:#fce3e0}
@@ -133,16 +145,13 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 .btn-inline-open:hover{box-shadow:inset 0 0 24px rgba(231,27,63,0.35)}
 .btn-inline-open:active{transform:scale(0.97)}
 
-.open-extra{display:none;gap:8px;justify-content:center;margin:-8px 0 14px;flex-wrap:wrap}
-.open-extra.show{display:flex}
-.extra-btn{padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);background:#fff;color:var(--text);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
-.extra-btn.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
-.extra-btn i{font-size:11px}
-
 @media (max-width: 520px){
-  .controls-panel{flex-direction:column;gap:10px}
-  .controls-mobile-top{display:flex;flex-direction:row;justify-content:space-between;align-items:center;width:100%}
-  .open-btn{width:100%;min-width:0}
+  .controls-panel{display:grid;grid-template-columns:1fr;grid-template-rows:48px auto;gap:10px;transition:grid-template-rows 0.3s cubic-bezier(0.4,0,0.2,1),gap 0.3s cubic-bezier(0.4,0,0.2,1),opacity 0.2s ease,transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+  .controls-panel.spinning{grid-template-rows:0px auto;gap:0}
+  .controls-panel > *{min-height:0;overflow:hidden}
+  .controls-mobile-top{display:flex;flex-direction:row;justify-content:space-between;align-items:center;width:100%;transition:opacity 0.2s ease,transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+  .controls-panel.spinning .controls-mobile-top{opacity:0;transform:translateY(20px)}
+  .open-action-group{width:100%}
 }
 
 .rv-auto{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background-color:#ffffff;background-image:radial-gradient(ellipse 85% 50% at 50% 100%,color-mix(in srgb,var(--rc) 35%,rgba(0,0,0,0.1)) 0%,transparent 100%);border:1px solid #eaeaea;border-radius:14px;padding:20px 10px 14px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.06);width:100%;height:100%}
@@ -165,7 +174,22 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 .inv-sort,.inv-sellall{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
 .inv-sellall{background:rgba(229,57,53,0.1);color:var(--accent);border-color:transparent}
 .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.inv-card{min-height:170px;position:relative}
+.inv-card{min-height:170px;position:relative;transition:box-shadow 0.2s ease}
+
+/* ===== АНИМАЦИЯ ПРОДАЖИ КАРТОЧКИ ===== */
+.inv-card.selling{
+  animation: cardSell 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 5;
+}
+@keyframes cardSell {
+  0%   { transform: scale(1) translateY(0);    opacity: 1; }
+  30%  { transform: scale(0.94) translateY(-3px); opacity: 0.9;
+         box-shadow: 0 0 0 3px var(--green), 0 0 22px rgba(52,199,89,0.5); }
+  100% { transform: scale(0.18) translateY(-40px); opacity: 0;
+         box-shadow: 0 0 0 0 transparent; }
+}
+
 .inv-card .result-sell-btn{position:absolute;top:8px;left:8px;z-index:10;margin:0;padding:5px 10px;border-radius:7px;background:#fdecea;color:var(--accent);font-size:11px;font-weight:800;border:1px solid rgba(231,27,63,0.3);cursor:pointer;box-shadow:0 1px 3px rgba(231,27,63,0.15);width:max-content;display:flex;align-items:center;gap:2px;font-family:inherit;transition:0.15s}
 .inv-card .result-sell-btn:hover{background:#fce3e0}
 .inv-card .result-sell-btn:active{transform:scale(0.95);background:#fce3e0}
@@ -186,7 +210,6 @@ main > section.active{display:block;animation:pageIn 0.3s cubic-bezier(0.2,0.8,0
 
 .upgrade-circle{width:335px;height:335px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset 0 0 20px rgba(0,0,0,0.05),0 10px 30px rgba(0,0,0,0.1);flex-shrink:0;border:5px solid #fff;box-sizing:border-box}
 .upgrade-circle::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) 0%,var(--accent) var(--p,0%),#e5e5ea var(--p,0%),#e5e5ea 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 30px),#000 calc(100% - 29px));mask:radial-gradient(farthest-side,transparent calc(100% - 30px),#000 calc(100% - 29px));z-index:0}
-
 .upgrade-circle.right-zone::before{background:conic-gradient(var(--accent) 0%,var(--accent) var(--p,0%),#e5e5ea var(--p,0%),#e5e5ea 100%)}
 .upgrade-circle.left-zone::before{background:conic-gradient(#e5e5ea 0%,#e5e5ea calc(100% - var(--p,0%)),var(--accent) calc(100% - var(--p,0%)),var(--accent) 100%)}
 
@@ -248,7 +271,6 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
 
 .u-items-list{display:grid;grid-template-columns:repeat(auto-fill,108px);gap:8px;justify-content:center}
 @media (max-width: 360px){.u-items-list{grid-template-columns:repeat(auto-fill,96px)}}
-
 .u-card{position:relative;width:100%;aspect-ratio:1 / 1;border-radius:10px;cursor:pointer;overflow:hidden;transition:0.15s;background:transparent;border:none;padding:0}
 .u-card:hover{transform:translateY(-2px)}
 .u-card.selected .rv-auto{border-color:var(--rc);box-shadow:0 0 0 2px color-mix(in srgb,var(--rc) 55%,transparent);background-color:#fff}
@@ -363,12 +385,22 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
 .promo-input:focus{border-color:var(--accent)}
 .promo-btn{height:40px;padding:0 16px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
 
+.confirm-sheet{max-width:360px}
+.confirm-message{font-size:14px;line-height:1.5;color:var(--text);text-align:center;padding:8px 0 18px}
+.confirm-message b{color:var(--accent);font-weight:800;display:inline-flex;align-items:center;gap:1px}
+.confirm-message .ruble-symbol{width:1.05em;height:1.05em;margin-left:2px}
+.confirm-actions{display:flex;gap:8px}
+.confirm-actions button{flex:1;height:46px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:0.15s ease}
+.confirm-cancel{background:#f0f0f0;color:var(--text)}
+.confirm-cancel:active{background:#e5e5e5;transform:scale(0.97)}
+.confirm-ok{background:var(--accent);color:#fff}
+.confirm-ok:active{filter:brightness(0.92);transform:scale(0.97)}
+
 .toast{position:fixed;left:50%;bottom:calc(100px + max(env(safe-area-inset-bottom,0px),var(--tg-safe-bottom)));z-index:300;transform:translateX(-50%) translateY(12px);background:#2c2c2e;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:0.2s;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;justify-content:center;gap:2px}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:250}
 
-.roulette-result-wrapper{display:flex;flex-direction:column;gap:8px;animation:resultFadeIn 0.3s cubic-bezier(0.2,0.8,0.2,1)}
-@keyframes resultFadeIn{from{opacity:0;transform:translateY(8px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.roulette-result-wrapper{display:flex;flex-direction:column;gap:8px}
 .roulette-result-card{position:relative;height:110px;border-radius:12px;background:#fff;border:1px solid #eaeaea;overflow:hidden;background-image:radial-gradient(ellipse 85% 50% at 50% 100%,color-mix(in srgb,var(--rc) 35%,rgba(0,0,0,0.1)) 0%,transparent 100%);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
 .roulette-result-card.compact{height:84px}
 .roulette-result-card img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;height:100%;object-fit:contain;padding:4px 4px 26px;z-index:1}
@@ -382,11 +414,12 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
 .roulette-result-card.compact .result-capsule{width:14px;height:4px;top:6px;right:6px}
 .roulette-result-card .result-dotted{position:absolute;bottom:5px;left:20%;right:20%;height:2.5px;background-image:linear-gradient(90deg,color-mix(in srgb,var(--rc) 60%,transparent) 50%,transparent 50%);background-size:8px 2.5px;background-repeat:repeat-x;z-index:3}
 .roulette-result-card.compact .result-dotted{height:2px;background-size:6px 2px}
-
 .roulette-result-card .result-sell-btn{position:absolute;top:8px;left:8px;z-index:10;margin:0;padding:5px 10px;border-radius:7px;background:#fdecea;color:var(--accent);font-size:11px;font-weight:800;border:1px solid rgba(231,27,63,0.3);cursor:pointer;box-shadow:0 1px 3px rgba(231,27,63,0.15);width:max-content;font-family:inherit;transition:0.15s;display:flex;align-items:center;gap:2px}
 .roulette-result-card .result-sell-btn:hover{background:#fce3e0}
 .roulette-result-card .result-sell-btn:active{transform:scale(0.95);background:#fce3e0}
 .roulette-result-card .result-sell-btn.sold{background:#e8f8ec;color:var(--green);pointer-events:none;border-color:rgba(52,199,89,0.3)}
+
+.app-version{text-align:center;font-size:10px;color:var(--muted);opacity:0.6;margin:24px 0 8px;letter-spacing:0.5px;user-select:none}
 </style>
 </head>
 <body>
@@ -429,27 +462,27 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
     <div class="open-sub" id="openSub">Крутите и заберите автомобиль</div>
     <div class="roulettes-wrap n1" id="roulettesWrap"></div>
 
-    <div class="controls-panel" id="controls-panel">
-      <div class="controls-mobile-top">
-        <label class="fast-toggle" title="Моментальное открытие">
-          <input type="checkbox" id="instantToggle">
-          <i class="fa-solid fa-bolt"></i>
-        </label>
-        <div class="qty-group">
-          <div class="qty-pill" id="qtyPill"></div>
+    <div class="controls-area" id="controls-area">
+      <div class="controls-panel" id="controls-panel">
+        <div class="controls-mobile-top" id="controls-top">
+          <label class="fast-toggle" title="Моментальное открытие">
+            <input type="checkbox" id="instantToggle">
+            <i class="fa-solid fa-bolt"></i>
+          </label>
+          <div class="qty-group">
+            <div class="qty-pill" id="qtyPill"></div>
+          </div>
+        </div>
+        <div class="open-action-group">
+          <button class="extra-square-btn accent" id="extraTopup" style="display: none;" title="Бонусы"><i class="fa-solid fa-gift"></i></button>
+          <button class="extra-square-btn secondary" id="extraSell" style="display: none;" title="Продать из инвентаря"><i class="fa-solid fa-tag"></i></button>
+          <button class="open-btn" id="openBtn">Открыть</button>
         </div>
       </div>
-      <button class="open-btn" id="openBtn">Открыть</button>
-    </div>
-
-    <div id="inlineControls">
-      <button class="btn-inline-open" id="resOpenAgain">Открыть снова</button>
-      <button class="btn-inline-sell" id="resSellAll">Продать за 0 <span class="ruble-symbol"></span></button>
-    </div>
-
-    <div class="open-extra" id="openExtra">
-      <button class="extra-btn accent" id="extraTopup"><i class="fa-solid fa-gift"></i> Бонусы</button>
-      <button class="extra-btn" id="extraSell"><i class="fa-solid fa-tag"></i> Продать из инвентаря</button>
+      <div id="inlineControls">
+        <button class="btn-inline-open" id="resOpenAgain">Открыть снова</button>
+        <button class="btn-inline-sell" id="resSellAll">Продать за 0 <span class="ruble-symbol"></span></button>
+      </div>
     </div>
 
     <div class="section-title">Возможный транспорт</div>
@@ -470,10 +503,8 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
 
   <section id="upgradeView">
     <div class="section-title">Апгрейд</div>
-
     <div class="upgrade-main-layout">
       <div class="upgrade-center-column">
-        
         <div class="upgrade-circle" id="upgradeCircle">
           <div class="arrow-wrap" id="arrowWrap">
             <div class="arrow-head"></div>
@@ -514,7 +545,6 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
             <input type="range" class="balance-slider" id="betSlider" min="0" max="5000" value="0">
           </div>
         </div>
-
       </div>
     </div>
 
@@ -587,6 +617,8 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
     <div class="section-title">Лучший дроп</div>
     <div id="bestBlock"></div>
   </section>
+
+  <div class="app-version">V0.132.261109</div>
 </main>
 
 <nav class="bottom-nav">
@@ -630,10 +662,26 @@ select.uf-input{appearance:none;-webkit-appearance:none;background-image:linear-
   </div>
 </div>
 
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-sheet confirm-sheet">
+    <div class="pay-top">
+      <h2 id="confirmTitle">Подтверждение</h2>
+      <button class="pay-x" id="confirmClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-message" id="confirmMessage"></div>
+      <div class="confirm-actions">
+        <button class="confirm-cancel" id="confirmCancel">Отмена</button>
+        <button class="confirm-ok" id="confirmOk">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <canvas id="confetti-canvas"></canvas>
 <div class="toast" id="toast"></div>
 <script>
-/* ========== TELEGRAM FULLSCREEN MINI APP INIT + USER DATA ========== */
+/* ========== TELEGRAM ========== */
 let tgUserData = null;
 (function initTelegram() {
   const tg = window.Telegram && window.Telegram.WebApp;
@@ -654,19 +702,10 @@ let tgUserData = null;
     document.documentElement.style.setProperty('--tg-content-safe-bottom', contentBottom + 'px');
   }
   updateSafeArea();
-  try {
-    tg.onEvent('viewportChanged', updateSafeArea);
-    tg.onEvent('safeAreaChanged', updateSafeArea);
-    tg.onEvent('contentSafeAreaChanged', updateSafeArea);
-  } catch(e) {}
-  
-  try {
-    const u = tg.initDataUnsafe && tg.initDataUnsafe.user;
-    if (u) tgUserData = u;
-  } catch(e) {}
+  try { tg.onEvent('viewportChanged', updateSafeArea); tg.onEvent('safeAreaChanged', updateSafeArea); tg.onEvent('contentSafeAreaChanged', updateSafeArea); } catch(e) {}
+  try { const u = tg.initDataUnsafe && tg.initDataUnsafe.user; if (u) tgUserData = u; } catch(e) {}
 })();
 
-/* ========== КОНСТАНТЫ ========== */
 const RARITY = {
   common: { label: 'обычное', color: '#8e8e93', weight: 59 },
   rare:   { label: 'редкое', color: '#007aff', weight: 35 },
@@ -701,17 +740,16 @@ const START_BALANCE = 5000;
 const DAILY_REWARDS = [250, 500, 900, 1100, 1400, 1600, 2250];
 
 const ACHIEVEMENTS = [
-  { id: 'first',    name: 'Первый шаг',     desc: 'Открой первую коробку',      icon: 'fa-flag-checkered' },
-  { id: 'ten',      name: 'Десятка',        desc: 'Открой 10 коробок',          icon: 'fa-fire' },
-  { id: 'fifty',    name: 'Пятьдесят',      desc: 'Открой 50 коробок',          icon: 'fa-crown' },
-  { id: 'legend',   name: 'Легенда',        desc: 'Выбей легендарное авто',     icon: 'fa-star' },
-  { id: 'epic',     name: 'Эпик',           desc: 'Выбей эпическое авто',       icon: 'fa-gem' },
-  { id: 'rich',     name: 'Богач',          desc: 'Держи 20 000 на балансе',    icon: 'fa-sack-dollar' },
-  { id: 'seller',   name: 'Продавец',       desc: 'Продай 10 авто',             icon: 'fa-tags' },
-  { id: 'collector',name: 'Коллекционер',   desc: '20 авто в инвентаре',        icon: 'fa-layer-group' }
+  { id: 'first', name: 'Первый шаг', desc: 'Открой первую коробку', icon: 'fa-flag-checkered' },
+  { id: 'ten', name: 'Десятка', desc: 'Открой 10 коробок', icon: 'fa-fire' },
+  { id: 'fifty', name: 'Пятьдесят', desc: 'Открой 50 коробок', icon: 'fa-crown' },
+  { id: 'legend', name: 'Легенда', desc: 'Выбей легендарное авто', icon: 'fa-star' },
+  { id: 'epic', name: 'Эпик', desc: 'Выбей эпическое авто', icon: 'fa-gem' },
+  { id: 'rich', name: 'Богач', desc: 'Держи 20 000 на балансе', icon: 'fa-sack-dollar' },
+  { id: 'seller', name: 'Продавец', desc: 'Продай 10 авто', icon: 'fa-tags' },
+  { id: 'collector', name: 'Коллекционер', desc: '20 авто в инвентаре', icon: 'fa-layer-group' }
 ];
 
-/* ========== СОСТОЯНИЕ ========== */
 let balance = START_BALANCE;
 let soundOn = true;
 let qty = 1;
@@ -725,38 +763,23 @@ let profile = { name: 'Игрок', username: 'player', id: 100000 + Math.floor(
 let dailyState = { streak: 0, lastClaim: null };
 let usedPromos = [];
 let seenInvCount = 0;
-
 let invFilter = 'all';
 let invSort = 'price-desc';
-
-let upgFrom = null;
-let upgTo = null;
-let isUpgrading = false;
-let lastUpgradeChance = 0;
-let upgradeSoundInterval = null;
-let upgActiveTab = 'inv';
-let upgFilterPriceFrom = 0;
-let upgFilterPriceTo = Infinity;
-let upgFilterSort = 'price-desc';
-let upgFilterSearch = '';
+let upgFrom = null, upgTo = null, isUpgrading = false, lastUpgradeChance = 0, upgradeSoundInterval = null;
+let upgActiveTab = 'inv', upgFilterPriceFrom = 0, upgFilterPriceTo = Infinity, upgFilterSort = 'price-desc', upgFilterSearch = '';
 let upgSide = 'right';
+let sellingInProgress = false;
 
-/* ========== УТИЛИТЫ ========== */
 const $ = id => document.getElementById(id);
-const fmt = n => n.toLocaleString('ru-RU') + ' <span class="ruble-symbol"></span>';
+const fmt = n => n.toLocaleString('ru-RU') + '<span class="ruble-symbol"></span>';
 const fmtR = n => n.toLocaleString('ru-RU') + ' руб';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const todayStr = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-};
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 const escapeHtml = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
 function haptic(ms = 10) {
   const tg = window.Telegram && window.Telegram.WebApp;
-  if (tg && tg.HapticFeedback) {
-    try { tg.HapticFeedback.impactOccurred('light'); return; } catch(e) {}
-  }
+  if (tg && tg.HapticFeedback) { try { tg.HapticFeedback.impactOccurred('light'); return; } catch(e) {} }
   if (navigator.vibrate) try { navigator.vibrate(ms); } catch(e) {}
 }
 
@@ -764,42 +787,27 @@ const IMG_CACHE = new Map();
 function getAllCarUrls() {
   const urls = [];
   for (const k in CARS) CARS[k].forEach(c => urls.push(c.img));
-  for (let i = 1; i <= 4; i++) {
-    urls.push(`https://malinovka.org/img/shop/random/car-usa-${i}.png?39`);
-    urls.push(`https://malinovka.org/img/shop/random/car-usa-${i}-active.png?39`);
-  }
+  for (let i = 1; i <= 4; i++) { urls.push(`https://malinovka.org/img/shop/random/car-usa-${i}.png?39`); urls.push(`https://malinovka.org/img/shop/random/car-usa-${i}-active.png?39`); }
   return urls;
 }
 function preloadAllImages() {
-  const urls = getAllCarUrls();
-  urls.forEach(url => {
+  getAllCarUrls().forEach(url => {
     if (IMG_CACHE.has(url)) return;
-    const im = new Image();
-    im.decoding = 'async';
-    im.src = url;
-    IMG_CACHE.set(url, im);
+    const im = new Image(); im.decoding = 'async'; im.src = url; IMG_CACHE.set(url, im);
   });
 }
 function randomizeCaseCar() {
   const n = 1 + Math.floor(Math.random() * 4);
-  const main = $('vehMain');
-  const active = $('vehActive');
-  if (main)   main.src   = `https://malinovka.org/img/shop/random/car-usa-${n}.png?39`;
+  const main = $('vehMain'), active = $('vehActive');
+  if (main) main.src = `https://malinovka.org/img/shop/random/car-usa-${n}.png?39`;
   if (active) active.src = `https://malinovka.org/img/shop/random/car-usa-${n}-active.png?39`;
 }
-
 function toast(m) {
   const t = $('toast'); t.innerHTML = m; t.classList.add('show');
   clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2000);
 }
-
 function save() {
-  try {
-    localStorage.setItem('usCase18', JSON.stringify({
-      balance, inventory, uid, stats, profile,
-      dailyState, usedPromos, seenInvCount
-    }));
-  } catch(e) { console.warn('save failed', e); }
+  try { localStorage.setItem('usCase18', JSON.stringify({ balance, inventory, uid, stats, profile, dailyState, usedPromos, seenInvCount })); } catch(e) {}
 }
 function load() {
   try {
@@ -808,165 +816,42 @@ function load() {
     inventory = Array.isArray(d.inventory) ? d.inventory.filter(x => x && x.uid) : [];
     uid = Number.isFinite(d.uid) ? d.uid : 0;
     const s = d.stats || {};
-    stats = {
-      opened: Number.isFinite(s.opened) ? s.opened : 0,
-      spent: Number.isFinite(s.spent) ? s.spent : 0,
-      earned: Number.isFinite(s.earned) ? s.earned : 0,
-      legend: Number.isFinite(s.legend) ? s.legend : 0,
-      sold: Number.isFinite(s.sold) ? s.sold : 0,
-      best: s.best && s.best.name ? s.best : null,
-      achievements: Array.isArray(s.achievements) ? s.achievements : []
-    };
-    if (d.profile && typeof d.profile === 'object') {
-      profile = {
-        name: d.profile.name || profile.name,
-        username: d.profile.username || profile.username,
-        id: Number.isFinite(d.profile.id) ? d.profile.id : profile.id,
-        photo: d.profile.photo || null
-      };
-    }
-    dailyState = {
-      streak: Number.isFinite(d.dailyState?.streak) ? d.dailyState.streak : 0,
-      lastClaim: d.dailyState?.lastClaim || null
-    };
+    stats = { opened: Number.isFinite(s.opened) ? s.opened : 0, spent: Number.isFinite(s.spent) ? s.spent : 0, earned: Number.isFinite(s.earned) ? s.earned : 0, legend: Number.isFinite(s.legend) ? s.legend : 0, sold: Number.isFinite(s.sold) ? s.sold : 0, best: s.best && s.best.name ? s.best : null, achievements: Array.isArray(s.achievements) ? s.achievements : [] };
+    if (d.profile) { profile = { name: d.profile.name || profile.name, username: d.profile.username || profile.username, id: Number.isFinite(d.profile.id) ? d.profile.id : profile.id, photo: d.profile.photo || null }; }
+    dailyState = { streak: Number.isFinite(d.dailyState?.streak) ? d.dailyState.streak : 0, lastClaim: d.dailyState?.lastClaim || null };
     usedPromos = Array.isArray(d.usedPromos) ? d.usedPromos : [];
     seenInvCount = Number.isFinite(d.seenInvCount) ? d.seenInvCount : inventory.length;
-  } catch(e) { console.warn('load failed', e); }
+  } catch(e) {}
 }
-
 function updBal() {
   $('balanceValue').innerHTML = fmt(balance);
   const slider = $('betSlider');
-  if (slider) {
-    slider.max = Math.max(balance, 10);
-    if (parseInt(slider.value) > balance) slider.value = balance;
-    updateSliderFill();
-  }
+  if (slider) { slider.max = Math.max(balance, 0); if (parseInt(slider.value) > balance) slider.value = Math.max(balance, 0); updateSliderFill(); }
+  updateOpenUI();
 }
 
 /* ========== АУДИО ========== */
 let actx = null;
-function initAud() {
-  if (!actx) try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
-  if (actx && actx.state === 'suspended') actx.resume();
-}
+function initAud() { if (!actx) try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} if (actx && actx.state === 'suspended') actx.resume(); }
 let lastT = 0;
-function tick() {
-  if (!soundOn || !actx) return;
-  const now = performance.now();
-  if (now - lastT < 35) return;
-  lastT = now;
-  const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
-  o.type = 'square'; o.frequency.value = 700 + Math.random()*400;
-  g.gain.setValueAtTime(0.03, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-  o.connect(g).connect(actx.destination);
-  o.start(t); o.stop(t + 0.03);
-}
-function winSound() {
-  if (!soundOn || !actx) return;
-  const t = actx.currentTime;
-  [523, 659, 784, 1047].forEach((f, i) => {
-    const o = actx.createOscillator(), g = actx.createGain();
-    o.type = 'triangle'; o.frequency.value = f;
-    const s = t + i * 0.08;
-    g.gain.setValueAtTime(0.001, s);
-    g.gain.exponentialRampToValueAtTime(0.06, s + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.001, s + 0.3);
-    o.connect(g).connect(actx.destination);
-    o.start(s); o.stop(s + 0.35);
-  });
-}
-function loseSound() {
-  if (!soundOn || !actx) return;
-  const t = actx.currentTime;
-  const o = actx.createOscillator(), g = actx.createGain();
-  o.type = 'sawtooth';
-  o.frequency.setValueAtTime(200, t);
-  o.frequency.exponentialRampToValueAtTime(50, t + 0.5);
-  g.gain.setValueAtTime(0.08, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-  o.connect(g).connect(actx.destination);
-  o.start(t); o.stop(t + 0.5);
-}
-function upgradeSpinSound() {
-  if (!soundOn || !actx) return;
-  let ticks = 0;
-  const max = 45;
-  const step = () => {
-    if (ticks > max || !isUpgrading) return;
-    const t = actx.currentTime;
-    const o = actx.createOscillator(), g = actx.createGain();
-    o.type = 'square';
-    o.frequency.setValueAtTime(800 + Math.random()*400, t);
-    g.gain.setValueAtTime(0.035, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-    o.connect(g).connect(actx.destination);
-    o.start(t); o.stop(t + 0.05);
-    ticks++;
-    upgradeSoundInterval = setTimeout(step, 40 + ticks*ticks*0.8);
-  };
-  step();
-}
+function tick() { if (!soundOn || !actx) return; const now = performance.now(); if (now - lastT < 35) return; lastT = now; const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(); o.type = 'square'; o.frequency.value = 700 + Math.random()*400; g.gain.setValueAtTime(0.03, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.03); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 0.03); }
+function winSound() { if (!soundOn || !actx) return; const t = actx.currentTime; [523, 659, 784, 1047].forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(); o.type = 'triangle'; o.frequency.value = f; const s = t + i * 0.08; g.gain.setValueAtTime(0.001, s); g.gain.exponentialRampToValueAtTime(0.06, s + 0.02); g.gain.exponentialRampToValueAtTime(0.001, s + 0.3); o.connect(g).connect(actx.destination); o.start(s); o.stop(s + 0.35); }); }
+function loseSound() { if (!soundOn || !actx) return; const t = actx.currentTime; const o = actx.createOscillator(), g = actx.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(200, t); o.frequency.exponentialRampToValueAtTime(50, t + 0.5); g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.5); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 0.5); }
+function upgradeSpinSound() { if (!soundOn || !actx) return; let ticks = 0; const max = 45; const step = () => { if (ticks > max || !isUpgrading) return; const t = actx.currentTime; const o = actx.createOscillator(), g = actx.createGain(); o.type = 'square'; o.frequency.setValueAtTime(800 + Math.random()*400, t); g.gain.setValueAtTime(0.035, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.04); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + 0.05); ticks++; upgradeSoundInterval = setTimeout(step, 40 + ticks*ticks*0.8); }; step(); }
 
 /* ========== КОНФЕТТИ ========== */
 const cv = $('confetti-canvas'), cx = cv.getContext('2d');
 let parts = [], confRAF = null;
 function resize() { cv.width = innerWidth; cv.height = innerHeight; }
 addEventListener('resize', resize); resize();
-function confetti(col) {
-  for (let i = 0; i < 50; i++) {
-    parts.push({
-      x: cv.width/2, y: cv.height/2,
-      vx: (Math.random()-0.5)*18, vy: (Math.random()-0.5)*18-4,
-      s: Math.random()*4+2, c: col, life: 1,
-      d: Math.random()*0.02+0.01, g: 0.3
-    });
-  }
-  if (!confRAF) animC();
-}
-function animC() {
-  cx.clearRect(0, 0, cv.width, cv.height);
-  let a = false;
-  for (let i = parts.length-1; i >= 0; i--) {
-    const p = parts[i];
-    p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life -= p.d;
-    if (p.life > 0) {
-      a = true;
-      cx.globalAlpha = p.life; cx.fillStyle = p.c;
-      cx.fillRect(p.x, p.y, p.s, p.s);
-    } else parts.splice(i, 1);
-  }
-  cx.globalAlpha = 1;
-  confRAF = a ? requestAnimationFrame(animC) : null;
-}
+function confetti(col) { for (let i = 0; i < 50; i++) parts.push({ x: cv.width/2, y: cv.height/2, vx: (Math.random()-0.5)*18, vy: (Math.random()-0.5)*18-4, s: Math.random()*4+2, c: col, life: 1, d: Math.random()*0.02+0.01, g: 0.3 }); if (!confRAF) animC(); }
+function animC() { cx.clearRect(0, 0, cv.width, cv.height); let a = false; for (let i = parts.length-1; i >= 0; i--) { const p = parts[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g; p.life -= p.d; if (p.life > 0) { a = true; cx.globalAlpha = p.life; cx.fillStyle = p.c; cx.fillRect(p.x, p.y, p.s, p.s); } else parts.splice(i, 1); } cx.globalAlpha = 1; confRAF = a ? requestAnimationFrame(animC) : null; }
 
 /* ========== ПУЛ ========== */
-function buildPool() {
-  const p = [];
-  for (const k in CARS) {
-    const w = RARITY[k].weight / CARS[k].length;
-    CARS[k].forEach(c => p.push({ name: c.name, rarity: k, gov: c.gov, sell: c.sell, img: c.img, w }));
-  }
-  return p;
-}
-function pick(p) {
-  let t = 0; p.forEach(x => t += x.w);
-  let r = Math.random() * t;
-  for (const x of p) { r -= x.w; if (r <= 0) return x; }
-  return p[p.length-1];
-}
-function getAllCars() {
-  const all = [];
-  for (const k in CARS) {
-    CARS[k].forEach(c => all.push({ ...c, rarity: k }));
-  }
-  return all;
-}
-
-function carImg(c, cls = '') {
-  return `<img class="${cls}" src="${c.img}" alt="${escapeHtml(c.name)}" loading="eager" decoding="async">`;
-}
+function buildPool() { const p = []; for (const k in CARS) { const w = RARITY[k].weight / CARS[k].length; CARS[k].forEach(c => p.push({ name: c.name, rarity: k, gov: c.gov, sell: c.sell, img: c.img, w })); } return p; }
+function pick(p) { let t = 0; p.forEach(x => t += x.w); let r = Math.random() * t; for (const x of p) { r -= x.w; if (r <= 0) return x; } return p[p.length-1]; }
+function getAllCars() { const all = []; for (const k in CARS) CARS[k].forEach(c => all.push({ ...c, rarity: k })); return all; }
+function carImg(c, cls = '') { return `<img class="${cls}" src="${c.img}" alt="${escapeHtml(c.name)}" loading="eager" decoding="async">`; }
 
 /* ========== VIEW SWITCH ========== */
 function baseShow(v) {
@@ -975,372 +860,214 @@ function baseShow(v) {
   $('invView').classList.toggle('active', v === 'inv');
   $('upgradeView').classList.toggle('active', v === 'upgrade');
   $('profileView').classList.toggle('active', v === 'profile');
-
-  document.querySelectorAll('.nav-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.view === (v === 'open' ? 'cases' : v));
-  });
-
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.view === (v === 'open' ? 'cases' : v)));
   if (v === 'cases') randomizeCaseCar();
-  if (v === 'inv') {
-    renderInv();
-    seenInvCount = inventory.length;
-    updateInvBadge();
-    save();
-  }
+  if (v === 'inv') { renderInv(); seenInvCount = inventory.length; updateInvBadge(); save(); }
   if (v === 'upgrade') initUpgrade();
   if (v === 'profile') renderProfile();
   scrollTo(0, 0);
 }
 function show(v) { baseShow(v); }
+document.querySelectorAll('.nav-item').forEach(el => el.addEventListener('click', () => { if (spinning || isUpgrading) return; show(el.dataset.view); }));
+function updateInvBadge() { const diff = inventory.length - seenInvCount; const b = $('invBadge'); if (diff > 0) { b.textContent = diff > 99 ? '99+' : diff; b.style.display = 'grid'; } else b.style.display = 'none'; }
 
-document.querySelectorAll('.nav-item').forEach(el => {
-  el.addEventListener('click', () => {
-    if (spinning || isUpgrading) return;
-    show(el.dataset.view);
+/* ========== CUSTOM CONFIRM ========== */
+function showConfirm(htmlMessage, title = 'Подтверждение', okText = 'Подтвердить', cancelText = 'Отмена') {
+  return new Promise(resolve => {
+    const modal = $('confirmModal');
+    $('confirmTitle').textContent = title;
+    $('confirmMessage').innerHTML = htmlMessage;
+    $('confirmOk').textContent = okText;
+    $('confirmCancel').textContent = cancelText;
+    modal.classList.add('show');
+    function cleanup(result) {
+      modal.classList.remove('show');
+      $('confirmOk').removeEventListener('click', onOk);
+      $('confirmCancel').removeEventListener('click', onCancel);
+      $('confirmClose').removeEventListener('click', onCancel);
+      modal.removeEventListener('click', onOverlay);
+      resolve(result);
+    }
+    function onOk() { cleanup(true); }
+    function onCancel() { cleanup(false); }
+    function onOverlay(e) { if (e.target === modal) cleanup(false); }
+    $('confirmOk').addEventListener('click', onOk);
+    $('confirmCancel').addEventListener('click', onCancel);
+    $('confirmClose').addEventListener('click', onCancel);
+    modal.addEventListener('click', onOverlay);
   });
-});
-
-function updateInvBadge() {
-  const diff = inventory.length - seenInvCount;
-  const b = $('invBadge');
-  if (diff > 0) {
-    b.textContent = diff > 99 ? '99+' : diff;
-    b.style.display = 'grid';
-  } else {
-    b.style.display = 'none';
-  }
 }
 
-/* ========== DAILY BONUS ========== */
-function isDailyAvailable() {
-  return dailyState.lastClaim !== todayStr() && dailyState.streak < DAILY_REWARDS.length;
-}
-function openDaily() {
-  renderDaily();
-  $('dailyModal').classList.add('show');
-}
+/* ========== DAILY ========== */
+function isDailyAvailable() { return dailyState.lastClaim !== todayStr() && dailyState.streak < DAILY_REWARDS.length; }
+function openDaily() { renderDaily(); $('dailyModal').classList.add('show'); }
 $('balanceBox').addEventListener('click', openDaily);
 $('dailyClose').addEventListener('click', () => $('dailyModal').classList.remove('show'));
 $('dailyModal').addEventListener('click', e => { if (e.target === $('dailyModal')) $('dailyModal').classList.remove('show'); });
-
 function renderDaily() {
-  const today = todayStr();
-  const claimed = dailyState.lastClaim === today;
-  const can = isDailyAvailable();
+  const today = todayStr(), claimed = dailyState.lastClaim === today, can = isDailyAvailable();
   $('dailyGrid').innerHTML = DAILY_REWARDS.map((r, i) => {
-    const isClaimed = i < dailyState.streak;
-    const isToday = i === dailyState.streak && can;
-    const cls = ['daily-day'];
-    if (isClaimed) cls.push('claimed');
-    if (isToday) cls.push('today');
-    return `<div class="${cls.join(' ')}">
-      <div class="daily-day-num">День ${i+1}</div>
-      <div class="daily-day-reward">${r}<span class="ruble-symbol"></span></div>
-    </div>`;
+    const isClaimed = i < dailyState.streak, isToday = i === dailyState.streak && can;
+    const cls = ['daily-day']; if (isClaimed) cls.push('claimed'); if (isToday) cls.push('today');
+    return `<div class="${cls.join(' ')}"><div class="daily-day-num">День ${i+1}</div><div class="daily-day-reward">${r}<span class="ruble-symbol"></span></div></div>`;
   }).join('');
   const btn = $('dailyClaim');
-  if (claimed) {
-    $('dailySubtitle').textContent = 'Возвращайся завтра за новой наградой!';
-    btn.textContent = 'Уже получено сегодня';
-    btn.disabled = true;
-    btn.classList.add('taken');
-  } else if (can) {
-    $('dailySubtitle').textContent = `Сегодня: ${DAILY_REWARDS[dailyState.streak]} ₽`;
-    btn.innerHTML = `Забрать ${DAILY_REWARDS[dailyState.streak]}<span class="ruble-symbol"></span>`;
-    btn.disabled = false;
-    btn.classList.remove('taken');
-  } else {
-    $('dailySubtitle').textContent = 'Ты собрал все бонусы недели!';
-    btn.textContent = 'Все бонусы получены';
-    btn.disabled = true;
-    btn.classList.add('taken');
-  }
+  if (claimed) { $('dailySubtitle').textContent = 'Возвращайся завтра за новой наградой!'; btn.textContent = 'Уже получено сегодня'; btn.disabled = true; btn.classList.add('taken'); }
+  else if (can) { $('dailySubtitle').textContent = `Сегодня: ${DAILY_REWARDS[dailyState.streak]} ₽`; btn.innerHTML = `Забрать ${DAILY_REWARDS[dailyState.streak]}<span class="ruble-symbol"></span>`; btn.disabled = false; btn.classList.remove('taken'); }
+  else { $('dailySubtitle').textContent = 'Ты собрал все бонусы недели!'; btn.textContent = 'Все бонусы получены'; btn.disabled = true; btn.classList.add('taken'); }
 }
-
 $('dailyClaim').addEventListener('click', () => {
-  haptic(20);
-  if (!isDailyAvailable()) return;
+  haptic(20); if (!isDailyAvailable()) return;
   const reward = DAILY_REWARDS[dailyState.streak];
-  balance += reward;
-  dailyState.streak++;
-  dailyState.lastClaim = todayStr();
-  updBal();
-  save();
-  toast(`Ежедневный бонус +${fmt(reward)}`);
-  renderDaily();
-  checkAchievements();
+  balance += reward; dailyState.streak++; dailyState.lastClaim = todayStr();
+  updBal(); save(); toast(`Ежедневный бонус +${fmt(reward)}`); renderDaily(); checkAchievements();
 });
 
 /* ========== ПРОМОКОДЫ ========== */
-const PROMOS = {
-  'WELCOME': 1000, 'USA2024': 500, 'BONUS100': 100,
-  'MALINA': 1500, 'CARCASE': 750, 'TEST': 10000
-};
-const SPECIAL_PROMOS = {
-  'RADMIR': 'NEGATIVE', 'BLACKRUSSIA': 'NEGATIVE', 'VISHNEVKA': 'NEGATIVE',
-  'AMAZING': 'NEGATIVE', 'HASSLE': 'NEGATIVE', 'GRAND': 'NEGATIVE',
-  'MATRESHKA': 'NEGATIVE', 'ZERO': 'ZERO', 'CLEAR': 'CLEAR'
-};
-
+const PROMOS = { 'WELCOME': 1000, 'USA2024': 500, 'BONUS100': 100, 'MALINA': 1500, 'CARCASE': 750, 'TEST': 10000 };
+const SPECIAL_PROMOS = { 'RADMIR': 'NEGATIVE', 'BLACKRUSSIA': 'NEGATIVE', 'VISHNEVKA': 'NEGATIVE', 'AMAZING': 'NEGATIVE', 'HASSLE': 'NEGATIVE', 'GRAND': 'NEGATIVE', 'MATRESHKA': 'NEGATIVE', 'ZERO': 'ZERO', 'CLEAR': 'CLEAR' };
 $('promoApply').addEventListener('click', applyPromo);
 $('promoInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyPromo(); });
-
 function applyPromo() {
-  const raw = $('promoInput').value.trim().toUpperCase();
-  if (!raw) { toast('Введите код'); return; }
+  const raw = $('promoInput').value.trim().toUpperCase(); if (!raw) { toast('Введите код'); return; }
   const special = SPECIAL_PROMOS[raw];
   if (special) {
-    $('promoInput').value = '';
-    haptic(30);
-    if (special === 'NEGATIVE') {
-      balance = -1000; updBal(); save();
-      toast(`Промокод ${raw} активирован. Баланс: −1 000 <span class="ruble-symbol"></span>`);
-      updateOpenUI(); checkAchievements(); return;
-    }
-    if (special === 'ZERO') {
-      balance = 0; updBal(); save();
-      toast(`Промокод ${raw} активирован. Баланс обнулён`);
-      updateOpenUI(); checkAchievements(); return;
-    }
-    if (special === 'CLEAR') {
-      try { localStorage.clear(); } catch(e) {}
-      toast('Все данные очищены. Перезагрузка...');
-      setTimeout(() => location.reload(), 900); return;
-    }
+    $('promoInput').value = ''; haptic(30);
+    if (special === 'NEGATIVE') { balance = -1000; updBal(); save(); toast(`Промокод ${raw} активирован. Баланс: −1 000 <span class="ruble-symbol"></span>`); updateOpenUI(); checkAchievements(); return; }
+    if (special === 'ZERO') { balance = 0; updBal(); save(); toast(`Промокод ${raw} активирован. Баланс обнулён`); updateOpenUI(); checkAchievements(); return; }
+    if (special === 'CLEAR') { try { localStorage.clear(); } catch(e) {} toast('Все данные очищены. Перезагрузка...'); setTimeout(() => location.reload(), 900); return; }
   }
   if (usedPromos.includes(raw)) { toast('Этот промокод уже использован'); return; }
-  const reward = PROMOS[raw];
-  if (!reward) { toast('Неверный промокод'); return; }
-  usedPromos.push(raw);
-  balance += reward;
-  updBal(); save(); haptic(20);
-  toast(`Промокод активирован: +${fmt(reward)}`);
-  $('promoInput').value = '';
-  updateOpenUI(); checkAchievements();
+  const reward = PROMOS[raw]; if (!reward) { toast('Неверный промокод'); return; }
+  usedPromos.push(raw); balance += reward; updBal(); save(); haptic(20);
+  toast(`Промокод активирован: +${fmt(reward)}`); $('promoInput').value = ''; updateOpenUI(); checkAchievements();
 }
 
 /* ========== LIVE STRIP ========== */
 const FAKE_NAMES = ['Ivan','Nastya','Alex','Dima','Kate','Max','Lena','Sasha','Roman','Vika'];
-function startLiveFeed() {
-  for (let i = 0; i < 5; i++) addLiveItem();
-  setInterval(addLiveItem, 6500);
-}
+function startLiveFeed() { for (let i = 0; i < 5; i++) addLiveItem(); setInterval(addLiveItem, 6500); }
 function addLiveItem() {
-  const strip = $('liveStrip');
-  if (!strip) return;
+  const strip = $('liveStrip'); if (!strip) return;
   while (strip.children.length > 8) strip.removeChild(strip.lastElementChild);
-  const w = Math.random();
-  let pickRarity = 'common';
-  if (w > 0.98) pickRarity = 'legend';
-  else if (w > 0.9) pickRarity = 'epic';
-  else if (w > 0.55) pickRarity = 'rare';
-  const pool = buildPool();
-  const filtered = pool.filter(x => x.rarity === pickRarity);
+  const w = Math.random(); let pickRarity = 'common';
+  if (w > 0.98) pickRarity = 'legend'; else if (w > 0.9) pickRarity = 'epic'; else if (w > 0.55) pickRarity = 'rare';
+  const pool = buildPool(); const filtered = pool.filter(x => x.rarity === pickRarity);
   const car = filtered[Math.floor(Math.random() * filtered.length)];
   const name = FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)] + '***' + Math.floor(Math.random()*90+10);
   const r = RARITY[car.rarity];
-  const cell = document.createElement('div');
-  cell.className = 'live-cell';
-  cell.style.setProperty('--rc', r.color);
-  cell.innerHTML = `
-    <span class="live-nick">${escapeHtml(name)}</span>
-    <img src="${car.img}" alt="${escapeHtml(car.name)}">
-    <span class="live-carname">${escapeHtml(car.name)}</span>
-    <div style="position:absolute;top:4px;right:4px;width:10px;height:3px;border-radius:3px;background:${r.color};opacity:0.9;z-index:5;"></div>
-  `;
+  const cell = document.createElement('div'); cell.className = 'live-cell'; cell.style.setProperty('--rc', r.color);
+  cell.innerHTML = `<span class="live-nick">${escapeHtml(name)}</span><img src="${car.img}" alt="${escapeHtml(car.name)}"><span class="live-carname">${escapeHtml(car.name)}</span><div style="position:absolute;top:4px;right:4px;width:10px;height:3px;border-radius:3px;background:${r.color};opacity:0.9;z-index:5;"></div>`;
   cell.addEventListener('click', openCase);
   strip.insertBefore(cell, strip.firstChild);
 }
 
-/* ========== ОТКРЫТИЕ КЕЙСА ========== */
+/* ========== КЕЙС ========== */
+function clearWrapInlineStyles() {
+  const wrap = $('roulettesWrap');
+  wrap.style.transition = '';
+  wrap.style.maxHeight = '';
+  wrap.style.opacity = '';
+  wrap.style.overflow = '';
+}
+
 function resetOpenState() {
-  qty = 1;
-  instantMode = false;
+  qty = 1; instantMode = false;
   $('instantToggle').checked = false;
-  $('inlineControls').style.display = 'none';
-  $('inlineControls').style.opacity = '';
-  $('controls-panel').style.display = 'flex';
-  $('controls-panel').style.opacity = '';
-  $('openExtra').classList.remove('show');
+  $('controls-area').classList.remove('showing-results');
+  $('controls-panel').classList.remove('spinning');
+  clearWrapInlineStyles();
   updateOpenUI();
 }
 function openCase() {
   if (spinning || isUpgrading) return;
-  resetOpenState();
-  renderQty();
-  renderPreview();
-  renderDrops();
-  updateOpenUI();
+  resetOpenState(); renderQty(); renderPreview(); renderDrops(); updateOpenUI();
   show('open');
 }
 $('mainCase').addEventListener('click', openCase);
-$('backBtn').addEventListener('click', () => {
-  if (spinning) return;
-  resetOpenState();
-  show('cases');
-});
+$('backBtn').addEventListener('click', () => { if (spinning) return; resetOpenState(); show('cases'); });
 
 function renderQty() {
-  $('qtyPill').innerHTML = '<span>кол-во</span><div class="qty-btns">' +
-    [1,2,3,4,5].map(n => `<button class="qty-btn ${n===qty?'active':''}" data-q="${n}">${n}</button>`).join('') +
-    '</div>';
-  $('qtyPill').querySelectorAll('.qty-btn').forEach(b => {
-    b.addEventListener('click', () => {
-      if (spinning) return;
-      qty = +b.dataset.q;
-      haptic(8);
-      renderQty(); renderPreview(); updateOpenUI();
-    });
-  });
+  $('qtyPill').innerHTML = '<span>кол-во</span><div class="qty-btns">' + [1,2,3,4,5].map(n => `<button class="qty-btn ${n===qty?'active':''}" data-q="${n}">${n}</button>`).join('') + '</div>';
+  $('qtyPill').querySelectorAll('.qty-btn').forEach(b => b.addEventListener('click', () => { if (spinning) return; qty = +b.dataset.q; haptic(8); renderQty(); renderPreview(); updateOpenUI(); }));
 }
-
-$('instantToggle').addEventListener('change', () => {
-  if (spinning) return;
-  instantMode = $('instantToggle').checked;
-  haptic(10);
-  renderPreview(); updateOpenUI();
-});
+$('instantToggle').addEventListener('change', () => { if (spinning) return; instantMode = $('instantToggle').checked; haptic(10); renderPreview(); updateOpenUI(); });
 
 function updateOpenUI() {
   const total = PRICE * qty;
-  $('qtyPill').querySelectorAll('.qty-btn').forEach(b => {
-    const q = +b.dataset.q;
-    b.disabled = spinning || balance < PRICE * q;
-    b.classList.toggle('active', q === qty);
-  });
+  $('qtyPill').querySelectorAll('.qty-btn').forEach(b => { const q = +b.dataset.q; b.disabled = spinning || balance < PRICE * q; b.classList.toggle('active', q === qty); });
   const insufficient = balance < total;
   const btn = $('openBtn');
-  if (spinning) {
-    btn.disabled = true;
-  } else if (insufficient) {
-    btn.innerHTML = `Не хватает <span class="btn-tag">${fmt(total - balance)}</span>`;
-    btn.disabled = true;
-  } else {
-    btn.innerHTML = qty > 1
-      ? `Открыть за ${fmt(total)} <span class="qty-span">×${qty}</span>`
-      : `Открыть за ${fmt(PRICE)}`;
-    btn.disabled = false;
-  }
+  if (spinning) btn.disabled = true;
+  else if (insufficient) { btn.innerHTML = `Не хватает <span class="btn-tag">${fmt(total - balance)}</span>`; btn.disabled = true; }
+  else { btn.innerHTML = qty > 1 ? `Открыть за ${fmt(total)} <span class="qty-span">×${qty}</span>` : `Открыть за ${fmt(PRICE)}`; btn.disabled = false; }
   $('instantToggle').disabled = spinning;
   $('openBtn').classList.toggle('instant-on', instantMode && !spinning && !insufficient);
-  $('openSub').textContent = instantMode
-    ? 'Моментальное открытие'
-    : (qty > 1 ? `Открытие ${qty} коробок` : 'Крутите и заберите');
-  $('openExtra').classList.toggle('show', insufficient && !spinning);
-  if (insufficient && !spinning) {
-    $('extraSell').style.display = inventory.length ? '' : 'none';
-  }
+  const showExtras = !spinning && balance < PRICE;
+  $('extraTopup').style.display = showExtras ? '' : 'none';
+  $('extraSell').style.display = (showExtras && inventory.length) ? '' : 'none';
 }
-
 $('extraTopup').addEventListener('click', () => openDaily());
 $('extraSell').addEventListener('click', () => { resetOpenState(); show('inv'); });
 
 function itemHTML(c) {
   const r = RARITY[c.rarity];
-  return `<div class="item" style="--rc:${r.color}">
-    ${carImg(c)}
-    <div class="item-content">
-      <div class="item-type">${r.label}</div>
-      <div class="item-name">${escapeHtml(c.name)}</div>
-    </div>
-  </div>`;
+  return `<div class="item" style="--rc:${r.color}">${carImg(c)}<div class="item-content"><div class="item-type">${r.label}</div><div class="item-name">${escapeHtml(c.name)}</div></div></div>`;
 }
 
 function renderPreview() {
   const wrap = $('roulettesWrap');
+  clearWrapInlineStyles();
   wrap.className = 'roulettes-wrap n1'; wrap.innerHTML = '';
-  wrap.style.opacity = '';
   if (instantMode) {
-    const box = document.createElement('div');
-    box.className = 'instant-preview';
+    const box = document.createElement('div'); box.className = 'instant-preview';
     box.innerHTML = `<i class="fa-solid fa-bolt"></i><span>Моментальное открытие</span>`;
     wrap.appendChild(box);
+    requestAnimationFrame(() => wrap.classList.add('revealed'));
     return;
   }
   const pool = buildPool();
-  const row = document.createElement('div');
-  row.className = 'roulette';
+  const row = document.createElement('div'); row.className = 'roulette';
   row.innerHTML = '<div class="strip"></div><div class="fade fade-l"></div><div class="fade fade-r"></div><div class="pointer"></div>';
   wrap.appendChild(row);
-  const items = [];
-  for (let i = 0; i < 18; i++) items.push(pick(pool));
+  const items = []; for (let i = 0; i < 18; i++) items.push(pick(pool));
   row.querySelector('.strip').innerHTML = items.map(itemHTML).join('');
+  requestAnimationFrame(() => wrap.classList.add('revealed'));
 }
 
 function renderDrops() {
-  const all = [];
-  for (const k in CARS) CARS[k].forEach(c => all.push({ ...c, rarity: k }));
-  all.sort((a, b) => {
-    const ra = RARITY_ORDER[a.rarity] ?? 9;
-    const rb = RARITY_ORDER[b.rarity] ?? 9;
-    if (ra !== rb) return ra - rb;
-    return b.sell - a.sell;
-  });
-  $('dropsGrid').innerHTML = all.map(c => {
-    const r = RARITY[c.rarity];
-    return `<div class="drop-item" style="--rc:${r.color}">
-      <div class="rv-auto">
-        ${carImg(c)}
-        <div class="rv-auto-content">
-          <div class="rv-auto-type">${r.label}</div>
-          <div class="rv-auto-name">${escapeHtml(c.name)}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  const all = []; for (const k in CARS) CARS[k].forEach(c => all.push({ ...c, rarity: k }));
+  all.sort((a, b) => { const ra = RARITY_ORDER[a.rarity] ?? 9, rb = RARITY_ORDER[b.rarity] ?? 9; if (ra !== rb) return ra - rb; return b.sell - a.sell; });
+  $('dropsGrid').innerHTML = all.map(c => { const r = RARITY[c.rarity]; return `<div class="drop-item" style="--rc:${r.color}"><div class="rv-auto">${carImg(c)}<div class="rv-auto-content"><div class="rv-auto-type">${r.label}</div><div class="rv-auto-name">${escapeHtml(c.name)}</div></div></div></div>`; }).join('');
 }
 
-/* ========== КНОПКА ОТКРЫТЬ ========== */
+/* ========== ОТКРЫТИЕ ========== */
 $('openBtn').addEventListener('click', handleOpenClick);
 
 async function handleOpenClick() {
   if (spinning) return;
   const total = PRICE * qty;
   if (balance < total) { toast('Недостаточно средств'); return; }
-  
   spinning = true;
-  
-  const controls = $('controls-panel');
   const openBtn = $('openBtn');
-  const wrap = $('roulettesWrap');
-  
-  // 1. Change button text immediately
+  $('controls-panel').classList.add('spinning');
   openBtn.textContent = 'Открывается...';
   openBtn.disabled = true;
-  
-  // 2. Deduct balance and calculate winners right away
   initAud();
-  balance -= total;
-  updBal();
-  stats.opened += qty;
-  stats.spent += total;
-
-  const pool = buildPool();
-  const winners = [];
+  balance -= total; updBal();
+  stats.opened += qty; stats.spent += total;
+  const pool = buildPool(); const winners = [];
   for (let i = 0; i < qty; i++) {
-    const w = pick(pool);
-    const item = { ...w, uid: ++uid };
-    winners.push(item);
-    inventory.push(item);
+    const w = pick(pool); const item = { ...w, uid: ++uid };
+    winners.push(item); inventory.push(item);
     if (w.rarity === 'legend') stats.legend++;
     if (!stats.best || w.sell > stats.best.sell) stats.best = w;
   }
-  save();
-  updateInvBadge();
-  checkAchievements();
-  
-  // 3. Fade out controls
-  controls.style.opacity = '0';
-  await sleep(200);
-  controls.style.display = 'none';
-  controls.style.opacity = '';
-  
-  // 4. Start spin or instant result
+  save(); updateInvBadge(); checkAchievements();
   if (instantMode) {
-    // Instant: quick fade of wrap then show results
+    const wrap = $('roulettesWrap');
+    wrap.style.transition = 'opacity 0.2s ease';
     wrap.style.opacity = '0';
-    await sleep(200);
-    wrap.style.opacity = '';
+    await sleep(220);
     renderInlineResults(winners);
   } else {
     startMultiSpin(winners);
@@ -1351,8 +1078,7 @@ async function handleOpenClick() {
 function makeEase(a, d) {
   const tot = 0.5 * (1 - a + d);
   return s => {
-    if (s <= 0) return 0;
-    if (s >= 1) return 1;
+    if (s <= 0) return 0; if (s >= 1) return 1;
     if (s < a) { const u = s / a; return (a * (u*u*u - 0.5*u*u*u*u)) / tot; }
     if (s <= d) return (0.5*a + (s - a)) / tot;
     const u = (1 - s) / (1 - d);
@@ -1361,18 +1087,19 @@ function makeEase(a, d) {
 }
 
 function startMultiSpin(winners) {
-  updateOpenUI();
-  haptic(15);
   const n = winners.length;
   const compact = n >= 3;
   const wrap = $('roulettesWrap');
-  wrap.className = 'roulettes-wrap n' + n;
+  const startHeight = wrap.getBoundingClientRect().height || 110;
+  wrap.className = 'roulettes-wrap n' + n + ' revealed';
   wrap.innerHTML = '';
-
+  wrap.style.transition = 'none';
+  wrap.style.overflow = 'hidden';
+  wrap.style.opacity = '1';
+  wrap.style.maxHeight = startHeight + 'px';
   const pool = buildPool();
   const rowsData = [];
   const baseDur = 4800;
-
   for (let i = 0; i < n; i++) {
     const row = document.createElement('div');
     row.className = 'roulette' + (compact ? ' compact' : '');
@@ -1387,29 +1114,26 @@ function startMultiSpin(winners) {
     strip.innerHTML = items.map(itemHTML).join('');
     rowsData.push({ strip, row, target, delay: i * 35, duration: baseDur + Math.random() * 400 });
   }
-
-  if (n === 2) {
-    rowsData[0].row.style.gridRow = '2';
-    rowsData[1].row.style.gridRow = '1';
-  } else if (n >= 3) {
+  if (n === 2) { rowsData[0].row.style.gridRow = '2'; rowsData[1].row.style.gridRow = '1'; }
+  else if (n >= 3) {
     const R = Math.ceil(n / 2);
     rowsData.forEach((rd, i) => {
-      if (n % 2 === 1 && i === n-1) {
-        rd.row.style.gridRow = '1';
-        rd.row.style.gridColumn = '1 / span 2';
-      } else {
-        const pi = Math.floor(i / 2);
-        rd.row.style.gridRow = String(R - pi);
-        rd.row.style.gridColumn = (i % 2 === 0) ? '1' : '2';
-      }
+      if (n % 2 === 1 && i === n-1) { rd.row.style.gridRow = '1'; rd.row.style.gridColumn = '1 / span 2'; }
+      else { const pi = Math.floor(i / 2); rd.row.style.gridRow = String(R - pi); rd.row.style.gridColumn = (i % 2 === 0) ? '1' : '2'; }
     });
   }
-
+  void wrap.offsetHeight;
+  wrap.style.maxHeight = 'none';
+  const targetHeight = wrap.scrollHeight;
+  wrap.style.maxHeight = startHeight + 'px';
+  void wrap.offsetHeight;
+  requestAnimationFrame(() => {
+    wrap.style.transition = 'max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    wrap.style.maxHeight = targetHeight + 'px';
+  });
   void rowsData[0].strip.offsetWidth;
   const ease = makeEase(0.12, 0.48);
-  const anims = [];
-  const metas = [];
-
+  const anims = [], metas = [];
   rowsData.forEach(rd => {
     const first = rd.strip.children[0];
     const w = first.offsetWidth;
@@ -1424,10 +1148,8 @@ function startMultiSpin(winners) {
       kf.push({ offset: s, transform: `translateX(${finalX * ease(s)}px)` });
     }
     const anim = rd.strip.animate(kf, { duration: rd.duration, delay: rd.delay, easing: 'linear', fill: 'forwards' });
-    anims.push(anim);
-    metas.push(rd);
+    anims.push(anim); metas.push(rd);
   });
-
   let lastIdx = -1;
   let tickRAF = null;
   function tickLoop() {
@@ -1442,62 +1164,37 @@ function startMultiSpin(winners) {
     if (s < 1) tickRAF = requestAnimationFrame(tickLoop);
   }
   tickRAF = requestAnimationFrame(tickLoop);
-
   Promise.all(anims.map(a => a.finished)).then(async () => {
     if (tickRAF) cancelAnimationFrame(tickRAF);
-    
-    // Cancel animations to allow inline style control
     anims.forEach(a => { try { a.cancel(); } catch(e) {} });
-    
-    // Set current transform to prevent jump
-    rowsData.forEach(rd => {
-      rd.strip.style.transform = `translateX(${rd.finalX}px)`;
-    });
-    
-    // Force reflow
+    rowsData.forEach(rd => { rd.strip.style.transform = `translateX(${rd.finalX}px)`; });
     void wrap.offsetWidth;
-    
-    // Smoothly center winners precisely
     rowsData.forEach(rd => {
       const exactX = -(rd.target * rd.step + rd.w/2 - rd.contW/2);
       rd.strip.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
       rd.strip.style.transform = `translateX(${exactX}px)`;
-      
       const el = rd.strip.children[rd.target];
       if (el) el.classList.add('winner');
     });
-    
-    haptic(30);
-    winSound();
+    haptic(30); winSound();
     const best = winners.reduce((a, b) => a.sell > b.sell ? a : b);
     if (best.rarity === 'legend' || best.rarity === 'epic') confetti(RARITY[best.rarity].color);
-    
-    // Wait for centering to complete
     await sleep(320);
-    
-    // Fade out roulettes
+    wrap.style.transition = 'opacity 0.2s ease';
     wrap.style.opacity = '0';
-    await sleep(200);
-    
-    // Reset styles and show results
-    wrap.style.opacity = '';
+    await sleep(220);
     renderInlineResults(winners);
   });
 }
 
-/* ========== РЕЗУЛЬТАТ КЕЙСА (ИНЛАЙН) ========== */
+/* ========== РЕЗУЛЬТАТЫ ========== */
 function renderInlineResults(winners) {
-  $('controls-panel').style.display = 'none';
-  $('openExtra').classList.remove('show');
-
   const wrap = $('roulettesWrap');
   wrap.innerHTML = '';
   const n = winners.length;
   const compact = n >= 3;
-  wrap.className = 'roulettes-wrap n' + n;
-
+  wrap.className = 'roulettes-wrap n' + n + ' revealed';
   lastWinners = winners.map(w => ({ ...w, sold: false }));
-
   lastWinners.forEach((w, i) => {
     const r = RARITY[w.rarity];
     const cardWrapper = document.createElement('div');
@@ -1519,174 +1216,120 @@ function renderInlineResults(winners) {
     w.el = cardWrapper.querySelector('.result-sell-btn');
     w.el.addEventListener('click', () => sellIndividual(i));
   });
-
   const cards = wrap.children;
-  if (n === 2) {
-    cards[0].style.gridRow = '2';
-    cards[1].style.gridRow = '1';
-  } else if (n >= 3) {
+  if (n === 2) { cards[0].style.gridRow = '2'; cards[1].style.gridRow = '1'; }
+  else if (n >= 3) {
     const R = Math.ceil(n / 2);
     Array.from(cards).forEach((card, i) => {
-      if (n % 2 === 1 && i === n-1) {
-        card.style.gridRow = '1';
-        card.style.gridColumn = '1 / span 2';
-      } else {
-        const pi = Math.floor(i / 2);
-        card.style.gridRow = String(R - pi);
-        card.style.gridColumn = (i % 2 === 0) ? '1' : '2';
-      }
+      if (n % 2 === 1 && i === n-1) { card.style.gridRow = '1'; card.style.gridColumn = '1 / span 2'; }
+      else { const pi = Math.floor(i / 2); card.style.gridRow = String(R - pi); card.style.gridColumn = (i % 2 === 0) ? '1' : '2'; }
     });
   }
-
+  wrap.style.maxHeight = 'none';
+  const newH = wrap.scrollHeight;
+  wrap.style.maxHeight = newH + 'px';
+  wrap.style.transition = 'opacity 0.25s ease';
+  requestAnimationFrame(() => { wrap.style.opacity = '1'; });
   spinning = false;
-  
-  // Show inline controls with fade in
-  const inline = $('inlineControls');
-  inline.style.display = 'flex';
-  inline.style.opacity = '0';
   updateInlineControls();
-  
-  requestAnimationFrame(() => {
-    inline.style.opacity = '1';
-    setTimeout(() => { inline.style.opacity = ''; }, 250);
-  });
+  $('controls-area').classList.add('showing-results');
 }
 
 function sellIndividual(idx) {
-  const w = lastWinners[idx];
-  if (w.sold) return;
-  w.sold = true;
-  balance += w.sell;
-  stats.earned += w.sell;
-  stats.sold++;
+  const w = lastWinners[idx]; if (w.sold) return;
+  w.sold = true; balance += w.sell; stats.earned += w.sell; stats.sold++;
   updBal();
   const invIdx = inventory.findIndex(c => c.uid === w.uid);
   if (invIdx >= 0) inventory.splice(invIdx, 1);
-  save();
-  updateInvBadge();
-  w.el.textContent = 'Продано';
-  w.el.classList.add('sold');
-  w.el.disabled = true;
-  haptic(10);
-  toast('+' + fmt(w.sell));
-  updateInlineControls();
-  checkAchievements();
+  save(); updateInvBadge();
+  w.el.textContent = 'Продано'; w.el.classList.add('sold'); w.el.disabled = true;
+  haptic(10); toast('+' + fmt(w.sell)); updateInlineControls(); checkAchievements();
 }
 
 function updateInlineControls() {
   const active = lastWinners.filter(w => !w.sold);
   const sellAllBtn = $('resSellAll');
-  if (active.length === 0) {
-    sellAllBtn.style.display = 'none';
-  } else {
-    sellAllBtn.style.display = 'flex';
-    const total = active.reduce((s, w) => s + w.sell, 0);
-    sellAllBtn.innerHTML = `Продать за ${fmt(total)}`;
-  }
+  if (active.length === 0) sellAllBtn.style.display = 'none';
+  else { sellAllBtn.style.display = 'flex'; const total = active.reduce((s, w) => s + w.sell, 0); sellAllBtn.innerHTML = `Продать за ${fmt(total)}`; }
 }
 
-$('resOpenAgain').addEventListener('click', () => {
-  if (spinning) return;
-  exitResults();
-});
+$('resOpenAgain').addEventListener('click', () => { if (spinning) return; exitResults(); });
 
-$('resSellAll').addEventListener('click', async () => {
+$('resSellAll').addEventListener('click', () => {
   const active = lastWinners.filter(w => !w.sold);
   if (!active.length) return;
   let total = 0;
   active.forEach(w => {
-    w.sold = true;
-    balance += w.sell;
-    stats.earned += w.sell;
-    stats.sold++;
-    total += w.sell;
-    if (w.el) {
-      w.el.textContent = 'Продано';
-      w.el.classList.add('sold');
-      w.el.disabled = true;
-    }
+    w.sold = true; balance += w.sell; stats.earned += w.sell; stats.sold++; total += w.sell;
+    if (w.el) { w.el.textContent = 'Продано'; w.el.classList.add('sold'); w.el.disabled = true; }
     const invIdx = inventory.findIndex(c => c.uid === w.uid);
     if (invIdx >= 0) inventory.splice(invIdx, 1);
   });
-  updBal();
-  save();
-  updateInvBadge();
-  haptic(25);
+  updBal(); save(); updateInvBadge(); haptic(25);
   toast(`Продано на ${fmt(total)}`);
-  updateInlineControls();
-  checkAchievements();
-  exitResults();
+  updateInlineControls(); checkAchievements(); exitResults();
 });
 
 function exitResults() {
-  const inline = $('inlineControls');
-  inline.style.display = 'none';
-  inline.style.opacity = '';
-  $('roulettesWrap').innerHTML = '';
-  renderPreview();
-  
-  const controls = $('controls-panel');
-  controls.style.display = 'flex';
-  controls.style.opacity = '0';
-  updateOpenUI();
-  
-  requestAnimationFrame(() => {
-    controls.style.opacity = '1';
-    setTimeout(() => { controls.style.opacity = ''; }, 250);
-  });
+  $('controls-area').classList.remove('showing-results');
+  setTimeout(() => {
+    $('controls-panel').classList.remove('spinning');
+    clearWrapInlineStyles();
+    $('roulettesWrap').innerHTML = '';
+    $('roulettesWrap').classList.remove('revealed');
+    renderPreview();
+    updateOpenUI();
+  }, 220);
 }
 
 /* ========== ИНВЕНТАРЬ ========== */
-const FILTERS = [
-  { id: 'all', label: 'Все' },
-  { id: 'legend', label: 'Лег.' },
-  { id: 'epic', label: 'Эпик' },
-  { id: 'rare', label: 'Ред.' },
-  { id: 'common', label: 'Об.' }
-];
+const FILTERS = [{ id: 'all', label: 'Все' }, { id: 'legend', label: 'Лег.' }, { id: 'epic', label: 'Эпик' }, { id: 'rare', label: 'Ред.' }, { id: 'common', label: 'Об.' }];
 function renderInvFilters() {
-  $('invFilters').innerHTML = FILTERS.map(f =>
-    `<button class="inv-filter${f.id === invFilter ? ' active' : ''}" data-f="${f.id}">${f.label}</button>`
-  ).join('');
-  $('invFilters').querySelectorAll('.inv-filter').forEach(b => {
-    b.addEventListener('click', () => {
-      invFilter = b.dataset.f;
-      renderInvFilters(); renderInv(); haptic(5);
-    });
-  });
+  $('invFilters').innerHTML = FILTERS.map(f => `<button class="inv-filter${f.id === invFilter ? ' active' : ''}" data-f="${f.id}">${f.label}</button>`).join('');
+  $('invFilters').querySelectorAll('.inv-filter').forEach(b => b.addEventListener('click', () => { invFilter = b.dataset.f; renderInvFilters(); renderInv(); haptic(5); }));
 }
 renderInvFilters();
+$('invSort').addEventListener('click', () => { invSort = invSort === 'price-desc' ? 'price-asc' : 'price-desc'; $('invSort').textContent = invSort === 'price-desc' ? 'По цене ↓' : 'По цене ↑'; renderInv(); haptic(5); });
 
-$('invSort').addEventListener('click', () => {
-  invSort = invSort === 'price-desc' ? 'price-asc' : 'price-desc';
-  $('invSort').textContent = invSort === 'price-desc' ? 'По цене ↓' : 'По цене ↑';
-  renderInv(); haptic(5);
-});
-
-$('invSellAll').addEventListener('click', () => {
+/* ========== ПРОДАЖА ВСЕГО С АНИМАЦИЕЙ ========== */
+$('invSellAll').addEventListener('click', async () => {
+  if (sellingInProgress) return;
   if (!inventory.length) { toast('Инвентарь пуст'); return; }
   const filtered = getFilteredInv();
   if (!filtered.length) { toast('Нет авто для продажи'); return; }
   const total = filtered.reduce((s, c) => s + c.sell, 0);
-  if (!confirm(`Продать ${filtered.length} авто на ${fmt(total)}?`)) return;
-  filtered.forEach(c => {
-    balance += c.sell;
-    stats.earned += c.sell;
-    stats.sold++;
-  });
+  const ok = await showConfirm(`Продать <b>${filtered.length}</b> авто на <b>${fmt(total)}</b>?`, 'Продажа авто', 'Продать');
+  if (!ok) return;
+  if (sellingInProgress) return;
+  sellingInProgress = true;
+
+  const toSellSet = new Set(filtered.map(c => c.uid));
+  const grid = $('invGrid');
+  const cardsToSell = [...grid.querySelectorAll('.inv-card')].filter(el => toSellSet.has(+el.dataset.uid));
+
+  // Обновляем данные сразу
+  filtered.forEach(c => { balance += c.sell; stats.earned += c.sell; stats.sold++; });
   const ids = new Set(filtered.map(c => c.uid));
   inventory = inventory.filter(c => !ids.has(c.uid));
-  updBal(); save(); renderInv(); updateInvBadge(); haptic(25);
+  updBal(); save();
+
+  // Каскадная анимация
+  cardsToSell.forEach((el, i) => {
+    el.style.animationDelay = `${Math.min(i * 25, 400)}ms`;
+    el.classList.add('selling');
+  });
+
+  await sleep(360 + Math.min(cardsToSell.length * 25, 400));
+
+  sellingInProgress = false;
+  renderInv();
+  updateInvBadge();
+  haptic(25);
   toast(`Продано на ${fmt(total)}`);
   checkAchievements();
 });
 
-function getFilteredInv() {
-  let arr = inventory.slice();
-  if (invFilter !== 'all') arr = arr.filter(c => c.rarity === invFilter);
-  arr.sort((a, b) => invSort === 'price-desc' ? b.sell - a.sell : a.sell - b.sell);
-  return arr;
-}
+function getFilteredInv() { let arr = inventory.slice(); if (invFilter !== 'all') arr = arr.filter(c => c.rarity === invFilter); arr.sort((a, b) => invSort === 'price-desc' ? b.sell - a.sell : a.sell - b.sell); return arr; }
 
 function renderInv() {
   $('invCount').textContent = `(${inventory.length})`;
@@ -1697,104 +1340,94 @@ function renderInv() {
   }
   $('invGrid').innerHTML = arr.map(c => {
     const r = RARITY[c.rarity];
-    return `<div class="inv-card" style="--rc:${r.color}">
-      <div class="rv-auto">
-        ${carImg(c)}
-        <div class="rv-auto-content">
-          <div class="rv-auto-type">${r.label}</div>
-          <div class="rv-auto-name">${escapeHtml(c.name)}</div>
-          <div style="font-size: 9px; color: var(--muted); margin-top: 2px;">гос. ${fmtR(c.gov)}</div>
-        </div>
-      </div>
+    return `<div class="inv-card" data-uid="${c.uid}" style="--rc:${r.color}">
+      <div class="rv-auto">${carImg(c)}<div class="rv-auto-content"><div class="rv-auto-type">${r.label}</div><div class="rv-auto-name">${escapeHtml(c.name)}</div><div style="font-size: 9px; color: var(--muted); margin-top: 2px;">гос. ${fmtR(c.gov)}</div></div></div>
       <button class="result-sell-btn" data-uid="${c.uid}">${fmt(c.sell)}</button>
     </div>`;
   }).join('');
 }
 
+/* ========== ОДИНОЧНАЯ ПРОДАЖА С АНИМАЦИЕЙ (FLIP) ========== */
 $('invGrid').addEventListener('click', e => {
+  if (sellingInProgress) return;
   const btn = e.target.closest('.result-sell-btn');
   if (!btn || btn.classList.contains('sold')) return;
   const id = +btn.dataset.uid;
   const i = inventory.findIndex(c => c.uid === id);
   if (i < 0) return;
   const car = inventory[i];
-  balance += car.sell;
-  stats.earned += car.sell;
-  stats.sold++;
-  updBal();
-  inventory.splice(i, 1);
-  save(); renderInv(); updateInvBadge(); haptic(15);
-  toast('+' + fmt(car.sell));
-  checkAchievements();
+  const card = btn.closest('.inv-card');
+  if (!card || card.classList.contains('selling')) return;
+
+  sellingInProgress = true;
+
+  const grid = $('invGrid');
+  const currentCards = [...grid.querySelectorAll('.inv-card')];
+  const beforePositions = new Map();
+  currentCards.forEach(el => {
+    beforePositions.set(+el.dataset.uid, el.getBoundingClientRect());
+  });
+
+  // Данные обновляем сразу
+  balance += car.sell; stats.earned += car.sell; stats.sold++; updBal();
+  inventory.splice(i, 1); save();
+
+  // Запускаем анимацию исчезновения продаваемой карточки
+  card.classList.add('selling');
+  btn.disabled = true;
+
+  card.addEventListener('animationend', () => {
+    card.remove();
+
+    // FLIP для остальных
+    const remaining = [...grid.querySelectorAll('.inv-card')];
+    remaining.forEach(el => {
+      const before = beforePositions.get(+el.dataset.uid);
+      if (!before) return;
+      const after = el.getBoundingClientRect();
+      const dx = before.left - after.left;
+      const dy = before.top - after.top;
+      if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+        el.style.transition = 'none';
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+        void el.offsetWidth;
+        el.style.transition = 'transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        el.style.transform = '';
+        el.addEventListener('transitionend', () => {
+          el.style.transition = '';
+          el.style.transform = '';
+        }, { once: true });
+      }
+    });
+
+    // Обновляем счётчик и пустоту
+    $('invCount').textContent = `(${inventory.length})`;
+    if (!inventory.length) grid.innerHTML = `<div class="inv-empty">Инвентарь пуст</div>`;
+    else if (!getFilteredInv().length) grid.innerHTML = `<div class="inv-empty">Ничего не найдено</div>`;
+
+    sellingInProgress = false;
+    updateInvBadge();
+    haptic(15);
+    toast('+' + fmt(car.sell));
+    checkAchievements();
+  }, { once: true });
 });
 
-/* =========================================================
-   АПГРЕЙД
-   ========================================================= */
+/* ========== АПГРЕЙД ========== */
 function initUpgrade() {
-  upgFrom = null;
-  upgTo = null;
-  isUpgrading = false;
-  upgSide = 'right';
-  $('betAmount').value = '';
-  $('betSlider').value = 0;
+  upgFrom = null; upgTo = null; isUpgrading = false; upgSide = 'right';
+  $('betAmount').value = ''; $('betSlider').value = 0;
   clearTimeout(upgradeSoundInterval);
-  $('arrowWrap').style.transition = 'none';
-  $('arrowWrap').style.transform = 'rotate(0deg)';
-  updateSliderFill();
-  setActiveUpgTab('inv');
-  renderUpgradeView();
-  updBal();
+  $('arrowWrap').style.transition = 'none'; $('arrowWrap').style.transform = 'rotate(0deg)';
+  updateSliderFill(); setActiveUpgTab('inv'); renderUpgradeView(); updBal();
   updateSideToggleUI();
-  $('upgradeCircle').classList.add('right-zone');
-  $('upgradeCircle').classList.remove('left-zone');
+  $('upgradeCircle').classList.add('right-zone'); $('upgradeCircle').classList.remove('left-zone');
 }
-
-function setActiveUpgTab(tab) {
-  upgActiveTab = tab;
-  document.querySelectorAll('.upgrade-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.tab === tab);
-  });
-  document.querySelectorAll('.upgrade-tab-panel').forEach(p => {
-    p.classList.toggle('active', p.dataset.panel === tab);
-  });
-}
-
-function updateSliderFill() {
-  const sl = $('betSlider');
-  if (!sl) return;
-  const max = parseFloat(sl.max) || 1;
-  const val = parseFloat(sl.value) || 0;
-  const ratio = max > 0 ? Math.min(Math.max(val / max, 0), 1) : 0;
-  sl.style.setProperty('--slider-p', String(ratio));
-}
-
-function renderUCard(car, selected, uidOrNull) {
-  const r = RARITY[car.rarity];
-  const cls = 'u-card' + (selected ? ' selected' : '');
-  const dataAttr = uidOrNull !== null
-    ? `data-uid="${uidOrNull}"`
-    : `data-name="${escapeHtml(car.name)}"`;
-  
-  return `<div class="${cls}" ${dataAttr} style="--rc:${r.color}">
-    <div class="rv-auto">
-      <div class="u-price-tl">${fmt(car.sell)}</div>
-      <img src="${car.img}" alt="" loading="lazy">
-      <div class="rv-auto-content">
-        <div class="rv-auto-type">${r.label}</div>
-        <div class="rv-auto-name">${escapeHtml(car.name)}</div>
-      </div>
-    </div>
-  </div>`;
-}
-
+function setActiveUpgTab(tab) { upgActiveTab = tab; document.querySelectorAll('.upgrade-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab)); document.querySelectorAll('.upgrade-tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab)); }
+function updateSliderFill() { const sl = $('betSlider'); if (!sl) return; const max = parseFloat(sl.max); const val = parseFloat(sl.value) || 0; const ratio = (max > 0) ? Math.min(Math.max(val / max, 0), 1) : 0; sl.style.setProperty('--slider-p', String(ratio)); }
+function renderUCard(car, selected, uidOrNull) { const r = RARITY[car.rarity]; const cls = 'u-card' + (selected ? ' selected' : ''); const dataAttr = uidOrNull !== null ? `data-uid="${uidOrNull}"` : `data-name="${escapeHtml(car.name)}"`; return `<div class="${cls}" ${dataAttr} style="--rc:${r.color}"><div class="rv-auto"><div class="u-price-tl">${fmt(car.sell)}</div><img src="${car.img}" alt="" loading="lazy"><div class="rv-auto-content"><div class="rv-auto-type">${r.label}</div><div class="rv-auto-name">${escapeHtml(car.name)}</div></div></div></div>`; }
 function filterAndSortCars(cars) {
-  let res = cars.filter(c => {
-    if (c.sell < upgFilterPriceFrom) return false;
-    if (c.sell > upgFilterPriceTo) return false;
-    if (upgFilterSearch && !c.name.toLowerCase().includes(upgFilterSearch.toLowerCase())) return false;
-    return true;
-  });
+  let res = cars.filter(c => { if (c.sell < upgFilterPriceFrom) return false; if (c.sell > upgFilterPriceTo) return false; if (upgFilterSearch && !c.name.toLowerCase().includes(upgFilterSearch.toLowerCase())) return false; return true; });
   switch (upgFilterSort) {
     case 'price-desc': res.sort((a,b) => b.sell - a.sell); break;
     case 'price-asc': res.sort((a,b) => a.sell - b.sell); break;
@@ -1805,65 +1438,33 @@ function filterAndSortCars(cars) {
   }
   return res;
 }
-
 function renderUpgradeView() {
   const invGrid = $('upgradeInvGrid');
-  if (!inventory.length) {
-    invGrid.innerHTML = '<div class="empty-list">Гараж пуст</div>';
-  } else {
+  if (!inventory.length) invGrid.innerHTML = '<div class="empty-list">Гараж пуст</div>';
+  else {
     const invCars = filterAndSortCars(inventory.slice());
-    if (!invCars.length) {
-      invGrid.innerHTML = '<div class="empty-list">Ничего не найдено</div>';
-    } else {
-      invGrid.innerHTML = invCars.map(car => {
-        const sel = upgFrom && upgFrom.uid === car.uid;
-        return renderUCard(car, sel, car.uid);
-      }).join('');
-    }
+    if (!invCars.length) invGrid.innerHTML = '<div class="empty-list">Ничего не найдено</div>';
+    else invGrid.innerHTML = invCars.map(car => { const sel = upgFrom && upgFrom.uid === car.uid; return renderUCard(car, sel, car.uid); }).join('');
   }
-
   const catGrid = $('upgradeCatalogGrid');
   const allCars = filterAndSortCars(getAllCars());
-  if (!allCars.length) {
-    catGrid.innerHTML = '<div class="empty-list">Ничего не найдено</div>';
-  } else {
-    catGrid.innerHTML = allCars.map(car => {
-      const sel = upgTo && upgTo.name === car.name;
-      return renderUCard(car, sel, null);
-    }).join('');
-  }
-
+  if (!allCars.length) catGrid.innerHTML = '<div class="empty-list">Ничего не найдено</div>';
+  else catGrid.innerHTML = allCars.map(car => { const sel = upgTo && upgTo.name === car.name; return renderUCard(car, sel, null); }).join('');
   updateUpgradeUI();
 }
-
-function updateSideToggleUI() {
-  const toggle = $('upgradeSideToggle');
-  if (upgFrom && upgTo) {
-    toggle.style.display = 'flex';
-  } else {
-    toggle.style.display = 'none';
-  }
-  document.querySelectorAll('.side-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.side === upgSide);
-  });
-}
-
+function updateSideToggleUI() { const toggle = $('upgradeSideToggle'); const betValue = parseInt($('betAmount').value) || 0; if (upgTo && (upgFrom || betValue > 0)) toggle.style.display = 'flex'; else toggle.style.display = 'none'; document.querySelectorAll('.side-btn').forEach(b => b.classList.toggle('active', b.dataset.side === upgSide)); }
 function updateUpgradeUI() {
   const betValue = parseInt($('betAmount').value) || 0;
   const carValue = upgFrom ? upgFrom.sell : 0;
   const totalFromValue = carValue + betValue;
-
   const slotFrom = $('slotFrom');
   if (upgFrom || betValue > 0) {
     slotFrom.className = 'upgrade-slot filled';
     const rColor = upgFrom ? RARITY[upgFrom.rarity].color : 'var(--accent)';
     slotFrom.style.setProperty('--rc', rColor);
     let inner = '';
-    if (upgFrom) {
-      inner += `<img src="${upgFrom.img}" alt="">`;
-    } else {
-      inner += `<div style="font-size:56px;color:var(--accent);font-weight:800;position:relative;z-index:1;line-height:1;display:flex;align-items:center;justify-content:center;"><span class="ruble-symbol" style="width:1em;height:1em;"></span></div>`;
-    }
+    if (upgFrom) inner += `<img src="${upgFrom.img}" alt="">`;
+    else inner += `<div style="font-size:56px;color:var(--accent);font-weight:800;position:relative;z-index:1;line-height:1;display:flex;align-items:center;justify-content:center;"><span class="ruble-symbol" style="width:1em;height:1em;"></span></div>`;
     inner += `<div class="u-price-tl">${fmt(totalFromValue)}</div>`;
     let nameText;
     if (upgFrom && betValue > 0) nameText = `${upgFrom.name} + ${fmt(betValue)}`;
@@ -1876,199 +1477,64 @@ function updateUpgradeUI() {
     slotFrom.style.removeProperty('--rc');
     slotFrom.innerHTML = `<div class="upgrade-placeholder">Выберите авто<br>или введите сумму</div>`;
   }
-
   const slotTo = $('slotTo');
   if (upgTo) {
     const r = RARITY[upgTo.rarity];
     slotTo.className = 'upgrade-slot filled';
     slotTo.style.setProperty('--rc', r.color);
-    slotTo.innerHTML = `
-      <img src="${upgTo.img}" alt="">
-      <div class="u-price-tl">${fmt(upgTo.sell)}</div>
-      <div class="u-name-bl">${escapeHtml(upgTo.name)}</div>
-    `;
+    slotTo.innerHTML = `<img src="${upgTo.img}" alt=""><div class="u-price-tl">${fmt(upgTo.sell)}</div><div class="u-name-bl">${escapeHtml(upgTo.name)}</div>`;
   } else {
     slotTo.className = 'upgrade-slot';
     slotTo.style.removeProperty('--rc');
     slotTo.innerHTML = `<div class="upgrade-placeholder">Выберите предмет,<br>который хотите<br>получить</div>`;
   }
-
   updateSideToggleUI();
-
-  const btn = $('doUpgradeBtn');
-  const circle = $('upgradeCircle');
-  const chanceEl = $('upgradeChance');
-  const percentBox = $('percentContainer');
-
+  const btn = $('doUpgradeBtn'); const circle = $('upgradeCircle'); const chanceEl = $('upgradeChance'); const percentBox = $('percentContainer');
   if (isUpgrading) return;
-
   if (totalFromValue > 0 && upgTo) {
-    if (betValue > balance) {
-      chanceEl.textContent = 'Ошибка';
-      circle.style.setProperty('--p', '0%');
-      btn.disabled = true;
-      btn.textContent = 'Не хватает';
-      btn.classList.remove('ready');
-      percentBox.classList.remove('ready');
-      return;
-    }
-    
-    if (totalFromValue >= upgTo.sell) {
-      chanceEl.textContent = '0.00%';
-      circle.style.setProperty('--p', '0%');
-      btn.disabled = true;
-      btn.textContent = 'Слишком много';
-      btn.classList.remove('ready');
-      percentBox.classList.remove('ready');
-      return;
-    }
-
+    if (betValue > balance) { chanceEl.textContent = 'Ошибка'; circle.style.setProperty('--p', '0%'); btn.disabled = true; btn.textContent = 'Не хватает'; btn.classList.remove('ready'); percentBox.classList.remove('ready'); return; }
+    if (totalFromValue >= upgTo.sell) { chanceEl.textContent = '0.00%'; circle.style.setProperty('--p', '0%'); btn.disabled = true; btn.textContent = 'Слишком много'; btn.classList.remove('ready'); percentBox.classList.remove('ready'); return; }
     let chance = (totalFromValue / upgTo.sell) * 100;
-    chanceEl.textContent = chance.toFixed(2) + '%';
-    circle.style.setProperty('--p', chance + '%');
-    btn.disabled = false;
-    btn.textContent = 'АПГРЕЙД';
-    btn.classList.add('ready');
-    percentBox.classList.add('ready');
-  } else {
-    chanceEl.textContent = '0.00%';
-    circle.style.setProperty('--p', '0%');
-    btn.disabled = true;
-    btn.textContent = 'АПГРЕЙД';
-    btn.classList.remove('ready');
-    percentBox.classList.remove('ready');
-  }
+    chanceEl.textContent = chance.toFixed(2) + '%'; circle.style.setProperty('--p', chance + '%');
+    btn.disabled = false; btn.textContent = 'АПГРЕЙД'; btn.classList.add('ready'); percentBox.classList.add('ready');
+  } else { chanceEl.textContent = '0.00%'; circle.style.setProperty('--p', '0%'); btn.disabled = true; btn.textContent = 'АПГРЕЙД'; btn.classList.remove('ready'); percentBox.classList.remove('ready'); }
 }
 
-document.querySelectorAll('.upgrade-tab').forEach(t => {
-  t.addEventListener('click', () => {
-    if (isUpgrading) return;
-    setActiveUpgTab(t.dataset.tab);
-  });
-});
+document.querySelectorAll('.upgrade-tab').forEach(t => t.addEventListener('click', () => { if (isUpgrading) return; setActiveUpgTab(t.dataset.tab); }));
+document.querySelectorAll('.side-btn').forEach(btn => btn.addEventListener('click', () => { if (isUpgrading) return; upgSide = btn.dataset.side; updateSideToggleUI(); const circle = $('upgradeCircle'); if (upgSide === 'right') { circle.classList.add('right-zone'); circle.classList.remove('left-zone'); } else { circle.classList.add('left-zone'); circle.classList.remove('right-zone'); } }));
 
-document.querySelectorAll('.side-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (isUpgrading) return;
-    upgSide = btn.dataset.side;
-    updateSideToggleUI();
-    
-    const circle = $('upgradeCircle');
-    if (upgSide === 'right') {
-      circle.classList.add('right-zone');
-      circle.classList.remove('left-zone');
-    } else {
-      circle.classList.add('left-zone');
-      circle.classList.remove('right-zone');
-    }
-  });
-});
+$('filterPriceFrom').addEventListener('input', () => { upgFilterPriceFrom = parseInt($('filterPriceFrom').value) || 0; renderUpgradeView(); });
+$('filterPriceTo').addEventListener('input', () => { const v = $('filterPriceTo').value; upgFilterPriceTo = v === '' ? Infinity : (parseInt(v) || 0); renderUpgradeView(); });
+$('filterSort').addEventListener('change', () => { upgFilterSort = $('filterSort').value; renderUpgradeView(); });
+$('filterSearch').addEventListener('input', () => { upgFilterSearch = $('filterSearch').value.trim(); renderUpgradeView(); });
 
-$('filterPriceFrom').addEventListener('input', () => {
-  upgFilterPriceFrom = parseInt($('filterPriceFrom').value) || 0;
-  renderUpgradeView();
-});
-$('filterPriceTo').addEventListener('input', () => {
-  const v = $('filterPriceTo').value;
-  upgFilterPriceTo = v === '' ? Infinity : (parseInt(v) || 0);
-  renderUpgradeView();
-});
-$('filterSort').addEventListener('change', () => {
-  upgFilterSort = $('filterSort').value;
-  renderUpgradeView();
-});
-$('filterSearch').addEventListener('input', () => {
-  upgFilterSearch = $('filterSearch').value.trim();
-  renderUpgradeView();
-});
-
-$('betSlider').addEventListener('input', () => {
-  if (isUpgrading) return;
-  const v = parseInt($('betSlider').value) || 0;
-  $('betAmount').value = v;
-  updateSliderFill();
-  updateUpgradeUI();
-});
-
+$('betSlider').addEventListener('input', () => { if (isUpgrading) return; const v = parseInt($('betSlider').value) || 0; $('betAmount').value = v; updateSliderFill(); updateUpgradeUI(); });
 $('betAmount').addEventListener('input', () => {
   if (isUpgrading) return;
   const raw = $('betAmount').value;
-  if (raw === '') {
-    $('betSlider').value = 0;
-    updateSliderFill();
-    updateUpgradeUI();
-    return;
-  }
-  let v = parseInt(raw);
-  if (isNaN(v) || v < 0) v = 0;
-  if (v > balance) {
-    v = balance;
-    $('betAmount').value = v;
-  }
-  $('betSlider').value = Math.min(v, parseInt($('betSlider').max) || balance);
-  updateSliderFill();
-  updateUpgradeUI();
+  if (raw === '') { $('betSlider').value = 0; updateSliderFill(); updateUpgradeUI(); return; }
+  let v = parseInt(raw); if (isNaN(v) || v < 0) v = 0;
+  if (v > balance) { v = Math.max(balance, 0); $('betAmount').value = v; }
+  $('betSlider').value = Math.min(v, parseInt($('betSlider').max) || Math.max(balance, 0));
+  updateSliderFill(); updateUpgradeUI();
 });
+$('upgradeInvGrid').addEventListener('click', e => { if (isUpgrading) return; const card = e.target.closest('.u-card'); if (!card) return; const uid = +card.dataset.uid; upgFrom = inventory.find(c => c.uid === uid) || null; renderUpgradeView(); });
+$('upgradeCatalogGrid').addEventListener('click', e => { if (isUpgrading) return; const card = e.target.closest('.u-card'); if (!card) return; const name = card.dataset.name; const all = getAllCars(); upgTo = all.find(c => c.name === name) || null; renderUpgradeView(); });
+$('slotFrom').addEventListener('click', () => { if (isUpgrading) return; upgFrom = null; $('betAmount').value = ''; $('betSlider').value = 0; updateSliderFill(); renderUpgradeView(); });
+$('slotTo').addEventListener('click', () => { if (isUpgrading) return; upgTo = null; renderUpgradeView(); });
 
-$('upgradeInvGrid').addEventListener('click', e => {
+document.querySelectorAll('.mult-btn').forEach(btn => btn.addEventListener('click', () => {
   if (isUpgrading) return;
-  const card = e.target.closest('.u-card');
-  if (!card) return;
-  const uid = +card.dataset.uid;
-  upgFrom = inventory.find(c => c.uid === uid) || null;
-  renderUpgradeView();
-});
-
-$('upgradeCatalogGrid').addEventListener('click', e => {
-  if (isUpgrading) return;
-  const card = e.target.closest('.u-card');
-  if (!card) return;
-  const name = card.dataset.name;
-  const all = getAllCars();
-  upgTo = all.find(c => c.name === name) || null;
-  renderUpgradeView();
-});
-
-$('slotFrom').addEventListener('click', () => {
-  if (isUpgrading) return;
-  upgFrom = null;
-  $('betAmount').value = '';
-  $('betSlider').value = 0;
-  updateSliderFill();
-  renderUpgradeView();
-});
-$('slotTo').addEventListener('click', () => {
-  if (isUpgrading) return;
-  upgTo = null;
-  renderUpgradeView();
-});
-
-document.querySelectorAll('.mult-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (isUpgrading) return;
-    const mult = parseFloat(btn.dataset.mult) || 1;
-    const betValue = parseInt($('betAmount').value) || 0;
-    const carValue = upgFrom ? upgFrom.sell : 0;
-    const baseValue = carValue + betValue;
-    if (baseValue <= 0) {
-      toast('Сначала выберите авто или введите сумму');
-      return;
-    }
-    const target = baseValue * mult;
-    const allCars = getAllCars();
-    let bestCar = null, bestDiff = Infinity;
-    for (const c of allCars) {
-      const d = Math.abs(c.sell - target);
-      if (d < bestDiff) { bestDiff = d; bestCar = c; }
-    }
-    if (bestCar) {
-      upgTo = bestCar;
-      renderUpgradeView();
-      haptic(10);
-      toast(`×${mult}: выбран ${bestCar.name} — ${fmt(bestCar.sell)}`);
-    }
-  });
-});
+  const mult = parseFloat(btn.dataset.mult) || 1;
+  const betValue = parseInt($('betAmount').value) || 0;
+  const carValue = upgFrom ? upgFrom.sell : 0;
+  const baseValue = carValue + betValue;
+  if (baseValue <= 0) { toast('Сначала выберите авто или введите сумму'); return; }
+  const target = baseValue * mult; const allCars = getAllCars();
+  let bestCar = null, bestDiff = Infinity;
+  for (const c of allCars) { const d = Math.abs(c.sell - target); if (d < bestDiff) { bestDiff = d; bestCar = c; } }
+  if (bestCar) { upgTo = bestCar; renderUpgradeView(); haptic(10); toast(`×${mult}: выбран ${bestCar.name} — ${fmt(bestCar.sell)}`); }
+}));
 
 $('doUpgradeBtn').addEventListener('click', () => {
   if (!upgTo || isUpgrading) return;
@@ -2077,45 +1543,17 @@ $('doUpgradeBtn').addEventListener('click', () => {
   const totalFromValue = carValue + betValue;
   if (totalFromValue <= 0) return;
   if (betValue > balance) { toast('Недостаточно средств на балансе'); return; }
-  
-  if (totalFromValue >= upgTo.sell) {
-    toast('Сумма должна быть меньше стоимости предмета');
-    return;
-  }
-
+  if (totalFromValue >= upgTo.sell) { toast('Сумма должна быть меньше стоимости предмета'); return; }
   initAud();
-  let chance = (totalFromValue / upgTo.sell) * 100;
-  lastUpgradeChance = chance;
-
+  let chance = (totalFromValue / upgTo.sell) * 100; lastUpgradeChance = chance;
   isUpgrading = true;
-  $('doUpgradeBtn').disabled = true;
-  $('doUpgradeBtn').classList.remove('ready');
-  $('percentContainer').classList.remove('ready');
-
-  if (betValue > 0) {
-    balance -= betValue;
-    updBal();
-  }
-  if (upgFrom) {
-    const invIdx = inventory.findIndex(c => c.uid === upgFrom.uid);
-    if (invIdx >= 0) inventory.splice(invIdx, 1);
-    save();
-    updateInvBadge();
-  }
-
-  const targetAngle = Math.random() * 360;
-  const winAngle = (chance / 100) * 360;
+  $('doUpgradeBtn').disabled = true; $('doUpgradeBtn').classList.remove('ready'); $('percentContainer').classList.remove('ready');
+  if (betValue > 0) { balance -= betValue; updBal(); }
+  if (upgFrom) { const invIdx = inventory.findIndex(c => c.uid === upgFrom.uid); if (invIdx >= 0) inventory.splice(invIdx, 1); save(); updateInvBadge(); }
+  const targetAngle = Math.random() * 360; const winAngle = (chance / 100) * 360;
   let isSuccess;
-
-  if (upgSide === 'right') {
-    isSuccess = targetAngle <= winAngle;
-  } else {
-    isSuccess = targetAngle >= (360 - winAngle);
-  }
-
-  const instantUpgrade = $('instantUpgradeToggle').checked;
-  const arrow = $('arrowWrap');
-
+  if (upgSide === 'right') isSuccess = targetAngle <= winAngle; else isSuccess = targetAngle >= (360 - winAngle);
+  const instantUpgrade = $('instantUpgradeToggle').checked; const arrow = $('arrowWrap');
   if (instantUpgrade) {
     $('doUpgradeBtn').textContent = '...';
     const totalRotation = 360 * 2 + targetAngle;
@@ -2127,39 +1565,20 @@ $('doUpgradeBtn').addEventListener('click', () => {
     const totalRotation = 360 * 5 + targetAngle;
     arrow.style.transition = 'transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
     arrow.style.transform = `rotate(${totalRotation}deg)`;
-    upgradeSpinSound();
-    setTimeout(() => resolveUpgrade(isSuccess), 3600);
+    upgradeSpinSound(); setTimeout(() => resolveUpgrade(isSuccess), 3600);
   }
 });
 
 function resolveUpgrade(isSuccess) {
-  clearTimeout(upgradeSoundInterval);
-  isUpgrading = false;
-
+  clearTimeout(upgradeSoundInterval); isUpgrading = false;
   if (isSuccess) {
-    const wonCar = upgTo;
-    winSound();
-    confetti(RARITY[wonCar.rarity].color);
-    haptic(30);
-    
-    inventory.push({ ...wonCar, uid: ++uid });
-    save();
-    updateInvBadge();
-    toast('Апгрейд успешен! Авто в инвентаре');
-    
-    setTimeout(() => initUpgrade(), 200);
+    const wonCar = upgTo; winSound(); confetti(RARITY[wonCar.rarity].color); haptic(30);
+    inventory.push({ ...wonCar, uid: ++uid }); save(); updateInvBadge();
+    toast('Апгрейд успешен! Авто в инвентаре'); setTimeout(() => initUpgrade(), 200);
   } else {
-    toast('Провал! Вы потеряли средства и авто.');
-    loseSound();
-    haptic(30);
-    upgFrom = null;
-    $('betAmount').value = '';
-    $('betSlider').value = 0;
-    updateSliderFill();
-    save();
-    updateInvBadge();
-    $('arrowWrap').style.transition = 'none';
-    $('arrowWrap').style.transform = 'rotate(0deg)';
+    toast('Провал! Вы потеряли средства и авто.'); loseSound(); haptic(30);
+    upgFrom = null; $('betAmount').value = ''; $('betSlider').value = 0; updateSliderFill(); save(); updateInvBadge();
+    $('arrowWrap').style.transition = 'none'; $('arrowWrap').style.transform = 'rotate(0deg)';
     setTimeout(() => renderUpgradeView(), 300);
   }
 }
@@ -2169,13 +1588,8 @@ function renderProfile() {
   $('displayName').textContent = profile.name;
   $('userName').textContent = '@' + profile.username;
   $('userId').textContent = 'ID: ' + profile.id;
-  
-  if (profile.photo) {
-    $('avatarBox').innerHTML = `<img src="${profile.photo}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-user\\'></i>';">`;
-  } else {
-    $('avatarBox').innerHTML = '<i class="fa-solid fa-user"></i>';
-  }
-  
+  if (profile.photo) $('avatarBox').innerHTML = `<img src="${profile.photo}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fa-solid fa-user\\'></i>';">`;
+  else $('avatarBox').innerHTML = '<i class="fa-solid fa-user"></i>';
   $('statBal').innerHTML = fmt(balance);
   $('statOpened').textContent = stats.opened;
   $('statSpent').innerHTML = fmt(stats.spent);
@@ -2185,51 +1599,19 @@ function renderProfile() {
   $('profileAch').textContent = `${stats.achievements.length}/${ACHIEVEMENTS.length}`;
   renderBest();
 }
-
 function renderBest() {
   const block = $('bestBlock');
   if (stats.best) {
     const r = RARITY[stats.best.rarity];
-    block.innerHTML = `<div class="best-card" style="--rc:${r.color}">
-      <div class="best-card-capsule" style="background:${r.color};"></div>
-      <div class="best-card-price">${fmt(stats.best.sell)}</div>
-      <img src="${stats.best.img}" alt="" class="best-card-img">
-      <div class="best-card-overlay"></div>
-      <div class="best-card-info">
-        <div class="best-card-type">${r.label}</div>
-        <div class="best-card-name">${escapeHtml(stats.best.name)}</div>
-        <div class="best-card-gov">Гос. стоимость: ${fmtR(stats.best.gov)}</div>
-      </div>
-    </div>`;
-  } else {
-    block.innerHTML = `<div class="best-empty">Пока нет лучшего дропа</div>`;
-  }
+    block.innerHTML = `<div class="best-card" style="--rc:${r.color}"><div class="best-card-capsule" style="background:${r.color};"></div><div class="best-card-price">${fmt(stats.best.sell)}</div><img src="${stats.best.img}" alt="" class="best-card-img"><div class="best-card-overlay"></div><div class="best-card-info"><div class="best-card-type">${r.label}</div><div class="best-card-name">${escapeHtml(stats.best.name)}</div><div class="best-card-gov">Гос. стоимость: ${fmtR(stats.best.gov)}</div></div></div>`;
+  } else block.innerHTML = `<div class="best-empty">Пока нет лучшего дропа</div>`;
 }
 
 /* ========== ДОСТИЖЕНИЯ ========== */
-function renderAchievements() {
-  const grid = $('achGrid');
-  grid.innerHTML = ACHIEVEMENTS.map(a => {
-    const unlocked = stats.achievements.includes(a.id);
-    return `<div class="ach-card ${unlocked ? 'unlocked' : 'locked'}">
-      <i class="fa-solid ${a.icon}"></i>
-      <div class="ach-name">${a.name}</div>
-      <div class="ach-desc">${a.desc}</div>
-    </div>`;
-  }).join('');
-}
-
+function renderAchievements() { const grid = $('achGrid'); grid.innerHTML = ACHIEVEMENTS.map(a => { const u = stats.achievements.includes(a.id); return `<div class="ach-card ${u ? 'unlocked' : 'locked'}"><i class="fa-solid ${a.icon}"></i><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>`; }).join(''); }
 function checkAchievements() {
   let changed = false;
-  const unlock = id => {
-    if (!stats.achievements.includes(id)) {
-      stats.achievements.push(id);
-      const a = ACHIEVEMENTS.find(x => x.id === id);
-      if (a) toast(`🏆 Достижение: ${a.name}`);
-      haptic(20);
-      changed = true;
-    }
-  };
+  const unlock = id => { if (!stats.achievements.includes(id)) { stats.achievements.push(id); const a = ACHIEVEMENTS.find(x => x.id === id); if (a) toast(`🏆 Достижение: ${a.name}`); haptic(20); changed = true; } };
   if (stats.opened >= 1) unlock('first');
   if (stats.opened >= 10) unlock('ten');
   if (stats.opened >= 50) unlock('fifty');
@@ -2239,42 +1621,18 @@ function checkAchievements() {
   if (stats.sold >= 10) unlock('seller');
   if (inventory.length >= 20) unlock('collector');
   $('profileAch').textContent = `${stats.achievements.length}/${ACHIEVEMENTS.length}`;
-  if (changed) {
-    save();
-    if ($('achModal').classList.contains('show')) renderAchievements();
-  }
+  if (changed) { save(); if ($('achModal').classList.contains('show')) renderAchievements(); }
 }
-
-$('openAchBtn').addEventListener('click', () => {
-  renderAchievements();
-  $('achModal').classList.add('show');
-  haptic(8);
-});
+$('openAchBtn').addEventListener('click', () => { renderAchievements(); $('achModal').classList.add('show'); haptic(8); });
 $('achClose').addEventListener('click', () => $('achModal').classList.remove('show'));
 $('achModal').addEventListener('click', e => { if (e.target === $('achModal')) $('achModal').classList.remove('show'); });
 
-/* ========== SOUND BTN ========== */
-$('soundBtn').addEventListener('click', () => {
-  soundOn = !soundOn;
-  $('soundBtn').innerHTML = soundOn ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
-  if (soundOn) initAud();
-  haptic(8);
-});
+/* ========== SOUND ========== */
+$('soundBtn').addEventListener('click', () => { soundOn = !soundOn; $('soundBtn').innerHTML = soundOn ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>'; if (soundOn) initAud(); haptic(8); });
 
-/* ========== ИНИЦИАЛИЗАЦИЯ ========== */
+/* ========== INIT ========== */
 load();
-
-(function applyTelegramProfile() {
-  if (!tgUserData) return;
-  const u = tgUserData;
-  const fullName = [u.first_name, u.last_name].filter(Boolean).join(' ').trim();
-  if (fullName) profile.name = fullName;
-  if (u.username) profile.username = u.username;
-  if (u.id) profile.id = u.id;
-  if (u.photo_url) profile.photo = u.photo_url;
-  save();
-})();
-
+(function applyTelegramProfile() { if (!tgUserData) return; const u = tgUserData; const fullName = [u.first_name, u.last_name].filter(Boolean).join(' ').trim(); if (fullName) profile.name = fullName; if (u.username) profile.username = u.username; if (u.id) profile.id = u.id; if (u.photo_url) profile.photo = u.photo_url; save(); })();
 preloadAllImages();
 updBal();
 show('cases');
